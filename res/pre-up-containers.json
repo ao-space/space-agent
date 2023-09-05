@@ -1,0 +1,9 @@
+{
+    "version": "0.1.0",
+    "preUpContainers": [
+        "aospace-postgresql", 
+        "aospace-redis", 
+        "aospace-radicale", 
+        "aospace-filepreview"
+    ]
+}

@@ -1,0 +1,93 @@
+# Copyright (c) 2022 Institute of Software, Chinese Academy of Sciences (ISCAS)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: container build and push
+
+on:
+  push:
+    branches: [ "*" ]
+    tags: [ '*.*.*' ]
+  pull_request:
+    branches: [ "*" ]
+
+env:
+  REGISTRY: ghcr.io
+  EULIX_REGISTRY: ${{ secrets.EULIX_REGISTRY }}
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+
+  build:
+    runs-on: [self-hosted, linux, x64]
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Inspect builder
+      run: |
+        echo "Name:      ${{ steps.buildx.outputs.name }}"
+        echo "Endpoint:  ${{ steps.buildx.outputs.endpoint }}"
+        echo "Status:    ${{ steps.buildx.outputs.status }}"
+        echo "Flags:     ${{ steps.buildx.outputs.flags }}"
+        echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
+
+    - name: Log into registry ${{ env.REGISTRY }}
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Log into registry ${{ env.EULIX_REGISTRY }}
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.EULIX_REGISTRY }}
+        username: ${{ secrets.EULIX_REGISTRY_USERNAME }}
+        password: ${{ secrets.EULIX_REGISTRY_PASSWORD }}
+
+    - name: Extract Docker metadata
+      id: meta
+      uses: docker/metadata-action@v2
+      with:
+        images: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          ${{ env.EULIX_REGISTRY }}/${{ env.IMAGE_NAME }}
+
+    - name: Build and push Docker image
+      id: build-and-push 
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        builder: ${{ steps.buildx.outputs.name }}
+        platforms: linux/amd64,linux/arm64
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        file: Dockerfile

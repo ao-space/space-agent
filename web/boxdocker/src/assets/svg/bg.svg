@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2022 Institute of Software, Chinese Academy of Sciences (ISCAS)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+-->
+
+<svg width="1920px" height="1080px" viewBox="0 0 1920 1080" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>bg</title>
+    <defs>
+        <linearGradient x1="52.0838701%" y1="0%" x2="52.0838701%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#E1EDFF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="1920" height="1080"></rect>
+        <linearGradient x1="10.6028444%" y1="72.537821%" x2="84.3703289%" y2="18.9840676%" id="linearGradient-4">
+            <stop stop-color="#337AFF" offset="0%"></stop>
+            <stop stop-color="#16B9FF" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-33.0%" y="-33.1%" width="166.1%" height="166.2%" filterUnits="objectBoundingBox" id="filter-5">
+            <feGaussianBlur stdDeviation="50" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="80.3085028%" y1="17.5204398%" x2="14.0922959%" y2="84.4382026%" id="linearGradient-6">
+            <stop stop-color="#FFB5B6" offset="0%"></stop>
+            <stop stop-color="#FF5082" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-52.1%" y="-52.1%" width="204.2%" height="204.2%" filterUnits="objectBoundingBox" id="filter-7">
+            <feGaussianBlur stdDeviation="50" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="100%" y1="0%" x2="0%" y2="88.936608%" id="linearGradient-8">
+            <stop stop-color="#5DF5C7" offset="0%"></stop>
+            <stop stop-color="#00BC91" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-42.6%" y="-42.6%" width="185.2%" height="185.2%" filterUnits="objectBoundingBox" id="filter-9">
+            <feGaussianBlur stdDeviation="50" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Mask">
+            <mask id="mask-3" fill="white">
+                <use xlink:href="#path-2"></use>
+            </mask>
+            <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            <ellipse fill="url(#linearGradient-4)" opacity="0.170224144" filter="url(#filter-5)" mask="url(#mask-3)" cx="468" cy="674.5" rx="227" ry="226.5"></ellipse>
+            <circle fill="url(#linearGradient-6)" opacity="0.155133929" filter="url(#filter-7)" mask="url(#mask-3)" cx="1743" cy="496" r="144"></circle>
+            <circle fill="url(#linearGradient-8)" opacity="0.145740327" filter="url(#filter-9)" mask="url(#mask-3)" cx="1002" cy="94" r="176"></circle>
+        </g>
+    </g>
+</svg>

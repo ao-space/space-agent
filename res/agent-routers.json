@@ -1,0 +1,18 @@
+{
+    "version": "0.1.0",
+    "valid-paths": {
+      "eulixspace-gateway": [
+        "/v1/api/security/message/poll/local",
+          "/v1/api/security/passwd/reset/binder/local",
+          "/v1/api/security/email/set/binder/local",
+          "/v1/api/security/email/modify/binder/local",
+          "/v1/api/security/passwd/reset/auther/local",
+          "/v1/api/security/email/set/auther/local",
+          "/v1/api/security/email/modify/auther/local",
+          "/v1/api/security/passwd/reset/newdevice/apply/local",
+          "/v1/api/security/passwd/reset/newdevice/local",
+          "/v1/api/security/email/verify/local",
+          "/v1/api/security/email/setting/local"
+        ]
+    }
+}

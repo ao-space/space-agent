@@ -1,0 +1,3004 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/agent/info": {
+            "get": {
+                "description": "get server info",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "get server info",
+                "operationId": "info",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/status.Info"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/logs": {
+            "get": {
+                "description": "get server info",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "get server info",
+                "operationId": "logs",
+                "responses": {
+                    "200": {
+                        "description": "code=0 success;",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/status": {
+            "get": {
+                "description": "get server status by this api.",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "get server status",
+                "operationId": "status",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/status.Status"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/admin/revoke": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "admin unbinding from the server [for client]",
+                "operationId": "PairAdminRevoke",
+                "parameters": [
+                    {
+                        "description": "server admin pass",
+                        "name": "revokeReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pair.RevokeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/call.MicroServerRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/bind/com/progress": {
+            "get": {
+                "description": "client query aospace microservice starting progress。",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "client query aospace microservice starting progress [for client bluetooth/LAN]",
+                "operationId": "BindComProgress",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success; code=AG-460 have been bound; ProgressRsp: {\"comStatus\":1,\"progress\":100}, comStatus=0 starting, comStatus=1 started, comStatus=2 failed to start , comStatus\u003c0 docker engine is starting",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/progress.ProgressRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/bind/com/start": {
+            "post": {
+                "description": "APP start to pull and run aospace mircoservice。",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "run docker containers [for client bluetooth/LAN]",
+                "operationId": "BindComStart",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success; code=AG-460 have been bound; code=AG-470 containers is starting; code=AG-471 containers is started; ",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BaseRspStr"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/bind/init": {
+            "get": {
+                "description": "get aospace server base info.",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "APP get aospace server base info [for client bluetooth/LAN]",
+                "operationId": "BindInit",
+                "parameters": [
+                    {
+                        "description": "query params",
+                        "name": "initReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bindinit.InitReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/pair.InitResult"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/bind/internet/service/config": {
+            "get": {
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "get internet tunnel config [for client/gateway bluetooth/LAN]",
+                "operationId": "InternetServiceGetConfig",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "clientUuid and aoid",
+                        "name": "body",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/config.GetConfigRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "When the Internet tunnel is configured,\nsystem-agent starts to register the server with the platform, and when it succeeds,\nit calls the gateway interface, and the gateway registers the member information with the platform. And return the result to client.",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "config internet tunnel [for client/gateway bluetooth/LAN]",
+                "operationId": "InternetServicePostConfig",
+                "parameters": [
+                    {
+                        "description": "config params",
+                        "name": "configReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/config.ConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/config.ConfigRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/bind/password/verify": {
+            "post": {
+                "description": "if verified , return new access token。",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "client verify aospace server admin password [for client bluetooth/LAN]",
+                "operationId": "PasswordVerify",
+                "parameters": [
+                    {
+                        "description": "admin password",
+                        "name": "verifyReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/password.VerifyReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/password.VerifyRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/bind/revoke": {
+            "post": {
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "admin unbind with server [for client bluetooth/LAN]",
+                "operationId": "BindRevoke",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "verifyReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/revoke.RevokeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/revoke.RevokeRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/bind/space/create": {
+            "post": {
+                "description": "This interface will submit the form data for space configuration on client,\nsuch as space identification information, administrator space password and server Internet service configuration, etc.\nWhen client calls this interface, it will synchronize the binding success status with server and store the status data of both sides. server will return the access_token to client.\n解绑后重新绑定情况下，创建空间时不传 SpaceName 和 EnableInternetAccess，传 Password 参数。",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "create aospace account(finished bind progress) [for client bluetooth/LAN]",
+                "operationId": "SpaceCreate",
+                "parameters": [
+                    {
+                        "description": "admin password",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/create.CreateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success; AG-577 register failed on self-host platform; AG-560 failed to create member",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/create.CreateRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/cert/get": {
+            "get": {
+                "description": "get certificate(self sign)",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cert"
+                ],
+                "summary": "get certificate(self sign) [for client /gateway]",
+                "operationId": "GetLanCert",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/certificate.LanCert"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/device/ability": {
+            "get": {
+                "description": "get device ability",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "device"
+                ],
+                "summary": "get device ability [client bluetooth/LAN/ gateway]",
+                "operationId": "device.DeviceAbility",
+                "responses": {
+                    "200": {
+                        "description": "code=ACC-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/device_ability.DeviceAbility"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/device/info": {
+            "get": {
+                "description": "get device info",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "device"
+                ],
+                "summary": "get device info [for mirco service]",
+                "operationId": "device.info",
+                "responses": {
+                    "200": {
+                        "description": "code=0 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/device.StorageInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/device/localips": {
+            "get": {
+                "description": "get server's ip",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "device"
+                ],
+                "summary": "get server's ip [for gateway]",
+                "operationId": "PairNetLocalIpsDevice",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/pair.Network"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/device/netconfig": {
+            "get": {
+                "description": "get Wi-Fi list",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "device"
+                ],
+                "summary": "get Wi-Fi list [for gateway]",
+                "operationId": "PairNetNetConfigDevice",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/pair.WifiListRsp"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "set Wi-Fi password",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "device"
+                ],
+                "summary": "set Wi-Fi password [for gateway]",
+                "operationId": "PairNetNetConfigSettingDevice",
+                "parameters": [
+                    {
+                        "description": "Wi-Fi ssid and password.",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pair.WifiPwdReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success; code=AG-561 connect failed",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/pair.WifiStatusRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/device/version": {
+            "get": {
+                "description": "get version info",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "device"
+                ],
+                "summary": "get version info [for mirco service]",
+                "operationId": "device.BoxDeviceVersion",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/device.BoxDeviceVersion"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/did/document": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "did"
+                ],
+                "summary": "get did document [for gateway]",
+                "operationId": "GetDIDDoc",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "getDocumentReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/document.GetDocumentReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success.",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/document.GetDocumentRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/did/document/method": {
+            "put": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "did"
+                ],
+                "summary": "get UpdateDocumentMethod [for gateway]",
+                "operationId": "UpdateDocumentMethod",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "updateDocumentMethodReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/method.UpdateDocumentMethodReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 成功.",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/method.UpdateDocumentMethodRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/did/document/password": {
+            "put": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "did"
+                ],
+                "summary": "get UpdateDocumentPassword [client call through gateway ,for gateway]",
+                "operationId": "UpdateDocumentPassword",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "updateDocumentPasswordReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/password.UpdateDocumentPasswordReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success.",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BaseRspStr"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/initial": {
+            "post": {
+                "description": "query init progress ,return after done init progress",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "init aospace bind progress [For Client]",
+                "operationId": "initial",
+                "parameters": [
+                    {
+                        "description": "admin pass",
+                        "name": "passwordInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pair.PasswordInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success.",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/call.MicroServerRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/keyexchange": {
+            "post": {
+                "description": "client request server generate Symmetric key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "exchange Symmetric key [for client]",
+                "operationId": "KeyExchange",
+                "parameters": [
+                    {
+                        "description": "{clientPreSecret: client generate random string，32 byte,encBtid:String obtained by base64 after encrypting the btid with the public key of the server}",
+                        "name": "keyExchangeReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pair.KeyExchangeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/pair.KeyExchangeRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/network/config": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "network"
+                ],
+                "summary": "get network info。[for client LAN/call]",
+                "operationId": "GETNetworkStatus",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success.",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/network.NetworkStatusRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "network"
+                ],
+                "summary": "network config[for client LAN/Call]",
+                "operationId": "POSTNetworkConfig",
+                "parameters": [
+                    {
+                        "description": "网络配置参数",
+                        "name": "networkConfigReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/network.NetworkConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 成功.",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BaseRspStr"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/network/ignore": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "network"
+                ],
+                "summary": "ignore this network(SSID) ,delete net link。[for client LAN/call]",
+                "operationId": "NetworkIgnore",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "networkIgnoreReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/network.NetworkIgnoreReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success.",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BaseRspStr"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/pair/init": {
+            "get": {
+                "description": "wired network binding",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "wired network binding [for client]",
+                "operationId": "PairInit",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/pair.InitResult"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/pair/net/localips": {
+            "get": {
+                "description": "client can get server's ip by using this api",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "net"
+                ],
+                "summary": "get server's ip in binding progress [for client]",
+                "operationId": "PairNetLocalIps",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/pair.Network"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/pair/net/netconfig": {
+            "get": {
+                "description": "get Wi-Fi list",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "net"
+                ],
+                "summary": "get Wi-Fi list  [for client]",
+                "operationId": "PairNetNetConfig",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/pair.WifiListRsp"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "set Wi-Fi password",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "net"
+                ],
+                "summary": "set Wi-Fi password [for client]",
+                "operationId": "PairNetNetConfigSetting",
+                "parameters": [
+                    {
+                        "description": "Wi-Fi ssid and password.",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pair.WifiPwdReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success; code=AG-561 connect failed",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/pair.WifiStatusRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/pair/tryout/code": {
+            "post": {
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "TryOut"
+                ],
+                "summary": "verify trial code [for web client LAN]",
+                "operationId": "TryOutCode",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BaseRspStr"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/pairing": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "aospace client bind to aospace server [for client]",
+                "operationId": "Pairing",
+                "parameters": [
+                    {
+                        "description": "pair params",
+                        "name": "pairingBoxInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pair.PairingReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=200 success; 410 clientUuid have been registered as member,it could not register as admin",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/call.MicroServerRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/passthrough": {
+            "post": {
+                "description": "client pass through call gateway api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passthrough"
+                ],
+                "summary": "pass through gateway interface [for client bluetooth/LAN]",
+                "operationId": "Passthrough",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "request id ",
+                        "name": "Request-Id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "pass through params",
+                        "name": "lanInvokeReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.LanInvokeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/pubkeyexchange": {
+            "post": {
+                "description": "client send public key to aospace server",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "exchange public key [for client]",
+                "operationId": "PubKeyExchange",
+                "parameters": [
+                    {
+                        "description": "{clientPubKey: client public key , clientPriKey:not required}",
+                        "name": "pubKeyExchangeReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pair.PubKeyExchangeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/pair.PubKeyExchangeRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/setpassword": {
+            "post": {
+                "description": "client set admin pass",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pair"
+                ],
+                "summary": "set admin pass [for client]",
+                "operationId": "setpassword",
+                "parameters": [
+                    {
+                        "description": "admin pass",
+                        "name": "passwordInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pair.PasswordInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/call.MicroServerRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/space/ready/check": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "space"
+                ],
+                "summary": "check if space is ready [for client bluetooth|LAN]",
+                "operationId": "ReadyCheck",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success.",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/space.ReadyCheckRsp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/switch": {
+            "post": {
+                "description": "switch platform to self-host platform",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Switch"
+                ],
+                "summary": "switch platform",
+                "operationId": "SwitchPlatform",
+                "parameters": [
+                    {
+                        "description": "new platform params",
+                        "name": "SwitchPlatformReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/switchplatform.SwitchPlatformReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/switchplatform.SwitchPlatformResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/switch/status": {
+            "get": {
+                "description": "query switch platform status",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Switch"
+                ],
+                "summary": "switch platform",
+                "operationId": "SwitchStatusQuery",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "switch platform params",
+                        "name": "transId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code=200 success;",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.BaseRspStr"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "$ref": "#/definitions/switchplatform.SwitchStatusQueryResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/system/reboot": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "system"
+                ],
+                "summary": "restart [bluetooth、LAN、Call]",
+                "operationId": "SystemReboot",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success.",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BaseRspStr"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/system/shutdown": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "system"
+                ],
+                "summary": "shuwdown  [bluetooth、LAN、Call]",
+                "operationId": "SystemShutdown",
+                "responses": {
+                    "200": {
+                        "description": "code=AG-200 success.",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BaseRspStr"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/upgrade/config": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "upgrade"
+                ],
+                "summary": "get current upgrade config",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.UpgradeConfig"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "upgrade"
+                ],
+                "summary": "set auto upgrade config",
+                "parameters": [
+                    {
+                        "description": "upgrade config",
+                        "name": "config",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.UpgradeConfig"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.UpgradeConfig"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/upgrade/download": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "upgrade"
+                ],
+                "summary": "add a new download task",
+                "parameters": [
+                    {
+                        "description": "download params",
+                        "name": "down",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.StartDownRes"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.Task"
+                        }
+                    },
+                    "208": {
+                        "description": "new server version is downloaded,but not installed",
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.Task"
+                        }
+                    },
+                    "400": {
+                        "description": "new version does not exist",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "failed , please try again",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/upgrade/install": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "upgrade"
+                ],
+                "summary": "POST:/upgrade/start-upgrade start to install new version",
+                "parameters": [
+                    {
+                        "description": "install params",
+                        "name": "upgrade",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.StartUpgradeRes"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.Task"
+                        }
+                    },
+                    "400": {
+                        "description": "version have not been downloaded",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "there is task which is running",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "failed ,please try again",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/agent/v1/api/upgrade/status": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "upgrade"
+                ],
+                "summary": "get upgrade task status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/upgrade.Task"
+                        }
+                    },
+                    "400": {
+                        "description": "there is no task",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "please try after seconds",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "bindinit.InitReq": {
+            "type": "object",
+            "properties": {
+                "clientUuid": {
+                    "type": "string"
+                },
+                "clientVersion": {
+                    "type": "string"
+                }
+            }
+        },
+        "call.MicroServerRsp": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "requestId": {
+                    "type": "string"
+                },
+                "results": {}
+            }
+        },
+        "certificate.LanCert": {
+            "type": "object",
+            "properties": {
+                "cert": {
+                    "type": "string"
+                }
+            }
+        },
+        "config.ConfigReq": {
+            "type": "object",
+            "properties": {
+                "clientUUID": {
+                    "type": "string"
+                },
+                "enableInternetAccess": {
+                    "type": "boolean"
+                },
+                "platformApiBase": {
+                    "description": "Platform api url setting, e.g. \"https://ao.space\"`",
+                    "type": "string"
+                }
+            }
+        },
+        "config.ConfigRsp": {
+            "type": "object",
+            "properties": {
+                "connectedNetwork": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pair.Network"
+                    }
+                },
+                "enableInternetAccess": {
+                    "type": "boolean"
+                },
+                "enableLAN": {
+                    "type": "boolean"
+                },
+                "enableP2P": {
+                    "type": "boolean"
+                },
+                "userDomain": {
+                    "type": "string"
+                }
+            }
+        },
+        "config.GetConfigRsp": {
+            "type": "object",
+            "properties": {
+                "connectedNetwork": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pair.Network"
+                    }
+                },
+                "enableInternetAccess": {
+                    "type": "boolean"
+                },
+                "enableLAN": {
+                    "type": "boolean"
+                },
+                "enableP2P": {
+                    "type": "boolean"
+                },
+                "platformApiBase": {
+                    "type": "string"
+                },
+                "userDomain": {
+                    "type": "string"
+                }
+            }
+        },
+        "create.CreateReq": {
+            "type": "object",
+            "required": [
+                "clientPhoneModel",
+                "clientUuid",
+                "password",
+                "spaceName",
+                "verificationMethod"
+            ],
+            "properties": {
+                "clientPhoneModel": {
+                    "description": "客户端手机型号.",
+                    "type": "string"
+                },
+                "clientUuid": {
+                    "description": "客户端 uuid",
+                    "type": "string"
+                },
+                "enableInternetAccess": {
+                    "description": "是否启用互联网通道",
+                    "type": "boolean"
+                },
+                "password": {
+                    "description": "空间密码",
+                    "type": "string"
+                },
+                "platformApiBase": {
+                    "description": "Platform api url setting, e.g. \"https://ao.space\"`",
+                    "type": "string"
+                },
+                "spaceName": {
+                    "description": "空间名称",
+                    "type": "string"
+                },
+                "verificationMethod": {
+                    "description": "did 的验证方法",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/document.VerificationMethod"
+                    }
+                }
+            }
+        },
+        "create.CreateRsp": {
+            "type": "object",
+            "properties": {
+                "agentToken": {
+                    "description": "agent 接口的访问 token. 暂未启用.",
+                    "type": "string"
+                },
+                "connectedNetwork": {
+                    "description": "设备连接的网络情况",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pair.Network"
+                    }
+                },
+                "didDoc": {
+                    "description": "did 文档",
+                    "type": "string"
+                },
+                "enableInternetAccess": {
+                    "description": "是否启用互联网通道",
+                    "type": "boolean"
+                },
+                "encryptedPriKeyBytes": {
+                    "description": "加密的空间密码凭证对应的私钥密文",
+                    "type": "string"
+                },
+                "spaceUserInfo": {
+                    "description": "空间信息"
+                }
+            }
+        },
+        "device.BoxDeviceVersion": {
+            "type": "object",
+            "properties": {
+                "deviceAbility": {
+                    "description": "设备能力模型",
+                    "$ref": "#/definitions/device_ability.DeviceAbility"
+                },
+                "deviceLogoUrl": {
+                    "description": "设备图片链接",
+                    "type": "string"
+                },
+                "deviceName": {
+                    "description": "设备名称",
+                    "type": "string"
+                },
+                "deviceNameEn": {
+                    "description": "英文名称",
+                    "type": "string"
+                },
+                "generationEn": {
+                    "description": "英文代系",
+                    "type": "string"
+                },
+                "generationZh": {
+                    "description": "中文代系",
+                    "type": "string"
+                },
+                "osVersion": {
+                    "description": "操作系统版本",
+                    "type": "string"
+                },
+                "productModel": {
+                    "description": "产品型号",
+                    "type": "string"
+                },
+                "serviceDetail": {
+                    "description": "ServiceDetail  []*dockermodel.DockerImage `json:\"serviceDetail\"`  // 容器版本",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dockermodel.DockerContainer"
+                    }
+                },
+                "serviceVersion": {
+                    "description": "容器版本",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/device.ServiceVersion"
+                    }
+                },
+                "snNumber": {
+                    "description": "sn号",
+                    "type": "string"
+                },
+                "spaceVersion": {
+                    "description": "傲空间版本",
+                    "type": "string"
+                }
+            }
+        },
+        "device.DeviceInfo": {
+            "type": "object",
+            "properties": {
+                "apiBaseUrl": {
+                    "description": "空间平台的基础部分",
+                    "type": "string"
+                },
+                "boxQrCode": {
+                    "description": "盒子的二维码数据.",
+                    "type": "string"
+                },
+                "boxRegKey": {
+                    "description": "平台端授权给盒子端的凭证. 空间平台使用，过期则重新申请",
+                    "type": "string"
+                },
+                "boxRegisterTime": {
+                    "type": "integer"
+                },
+                "boxUuid": {
+                    "description": "盒子端唯一id.",
+                    "type": "string"
+                },
+                "btid": {
+                    "description": "二维码中的蓝牙id.",
+                    "type": "string"
+                },
+                "btidHash": {
+                    "description": "mdns广播使用的id.",
+                    "type": "string"
+                },
+                "expiresAt": {
+                    "type": "string"
+                },
+                "isBoxRegistered": {
+                    "type": "boolean"
+                },
+                "networkClient": {
+                    "$ref": "#/definitions/device.NetworkClientInfo"
+                }
+            }
+        },
+        "device.NetworkClientInfo": {
+            "type": "object",
+            "properties": {
+                "clientId": {
+                    "type": "string"
+                },
+                "secretKey": {
+                    "type": "string"
+                }
+            }
+        },
+        "device.ServiceVersion": {
+            "type": "object",
+            "properties": {
+                "created": {
+                    "type": "integer"
+                },
+                "serviceName": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "device.StorageInfo": {
+            "type": "object",
+            "properties": {
+                "free": {
+                    "description": "空闲, Bytes",
+                    "type": "integer"
+                },
+                "total": {
+                    "description": "总计, Bytes",
+                    "type": "integer"
+                },
+                "used": {
+                    "description": "已用, Bytes",
+                    "type": "integer"
+                }
+            }
+        },
+        "device_ability.DeviceAbility": {
+            "type": "object",
+            "properties": {
+                "aospaceDevOptionSupport": {
+                    "description": "是否支持开发者选项 PC: true",
+                    "type": "boolean"
+                },
+                "aospaceSwitchPlatformSupport": {
+                    "description": "是否支持切换平台 PC: false",
+                    "type": "boolean"
+                },
+                "aospaceappSupport": {
+                    "description": "当前设备是否支持傲空间应用 PC: true",
+                    "type": "boolean"
+                },
+                "backupRestoreSupport": {
+                    "description": "当前设备是否支持备份恢复",
+                    "type": "boolean"
+                },
+                "bluetoothSupport": {
+                    "description": "当前设备是否支持蓝牙",
+                    "type": "boolean"
+                },
+                "deviceModelNumber": {
+                    "description": "产品型号数字(内部使用, 1xx: 树莓派, 2xx: 二代, ...)",
+                    "type": "integer"
+                },
+                "innerDiskSupport": {
+                    "description": "内部磁盘支持(SATA 和 m.2)",
+                    "type": "boolean"
+                },
+                "ledSupport": {
+                    "description": "当前设备是否支持 Led",
+                    "type": "boolean"
+                },
+                "networkConfigSupport": {
+                    "description": "当前设备是否支持网络配置",
+                    "type": "boolean"
+                },
+                "openSource": {
+                    "type": "boolean"
+                },
+                "runInDocker": {
+                    "description": "以容器方式运行",
+                    "type": "boolean"
+                },
+                "securityChipSupport": {
+                    "description": "支持加密芯片",
+                    "type": "boolean"
+                },
+                "snNumber": {
+                    "type": "string"
+                },
+                "supportUSBDisk": {
+                    "description": "是否支持 USB 磁盘. 210型号 及以上不支持",
+                    "type": "boolean"
+                },
+                "upgradeApiSupport": {
+                    "description": "当前设备是否支持升级API",
+                    "type": "boolean"
+                }
+            }
+        },
+        "dockermodel.DockerContainer": {
+            "type": "object",
+            "properties": {
+                "created": {
+                    "type": "integer"
+                },
+                "hostConfig": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "imageID": {
+                    "type": "string"
+                },
+                "mounts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "names": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "ports": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "document.GetDocumentReq": {
+            "type": "object",
+            "properties": {
+                "aoId": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
+                }
+            }
+        },
+        "document.GetDocumentRsp": {
+            "type": "object",
+            "properties": {
+                "didDoc": {
+                    "type": "string"
+                },
+                "encryptedPriKeyBytes": {
+                    "type": "string"
+                }
+            }
+        },
+        "document.VerificationMethod": {
+            "type": "object",
+            "required": [
+                "id",
+                "publicKeyPem",
+                "type"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "publicKeyPem": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BaseRspStr": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "requestId": {
+                    "type": "string"
+                },
+                "results": {}
+            }
+        },
+        "dto.LanInvokeReq": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "description": "请求体",
+                    "type": "string"
+                }
+            }
+        },
+        "method.UpdateDocumentMethodReq": {
+            "type": "object",
+            "properties": {
+                "aoId": {
+                    "type": "string"
+                },
+                "did": {
+                    "description": "did 和 aoId 需要至少传一个参数.",
+                    "type": "string"
+                },
+                "newPassword": {
+                    "description": "重置空间密码时需要传入密码",
+                    "type": "string"
+                },
+                "verificationMethod": {
+                    "description": "增加的验证方法",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/document.VerificationMethod"
+                    }
+                }
+            }
+        },
+        "method.UpdateDocumentMethodRsp": {
+            "type": "object",
+            "properties": {
+                "did": {
+                    "type": "string"
+                },
+                "didDoc": {
+                    "type": "string"
+                }
+            }
+        },
+        "network.NetworkAdapter": {
+            "type": "object",
+            "properties": {
+                "adapterName": {
+                    "description": "网卡名称 eth0, eth1, wlan0 (获取网络信息: 返回;  其他: 不传;)",
+                    "type": "string"
+                },
+                "connected": {
+                    "description": "是否已连接 (获取网络信息: 返回;  其他: 不传;)",
+                    "type": "boolean"
+                },
+                "defaultGateway": {
+                    "description": "默认网关 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)",
+                    "type": "string"
+                },
+                "ipv4": {
+                    "description": "ipv4 地址 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)",
+                    "type": "string"
+                },
+                "ipv4DNS1": {
+                    "description": "ipv4 dNS1 地址 (获取网络信息: 返回; 其他: 选传)",
+                    "type": "string"
+                },
+                "ipv4DNS2": {
+                    "description": "ipv4 dNS2 地址 (获取网络信息: 返回; 其他: 选传)",
+                    "type": "string"
+                },
+                "ipv4UseDhcp": {
+                    "description": "ipv4 使用 dhcp 自动获取。 (获取网络信息: 返回;  其他: 必传;)",
+                    "type": "boolean"
+                },
+                "ipv6": {
+                    "description": "ipv6  (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)",
+                    "type": "string"
+                },
+                "ipv6DefaultGateway": {
+                    "description": "ipv6 默认网关 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)",
+                    "type": "string"
+                },
+                "ipv6UseDhcp": {
+                    "description": "ipv6 使用 dhcp 自动获取 (获取网络信息: 返回;  其他: 必传;)",
+                    "type": "boolean"
+                },
+                "mACAddress": {
+                    "description": "盒子网卡地址(不是路由器的网络地址)  (获取网络信息: 返回;  其他: 不传;)",
+                    "type": "string"
+                },
+                "subNetMask": {
+                    "description": "子网掩码 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)",
+                    "type": "string"
+                },
+                "subNetPreLen": {
+                    "description": "子网前缀长度 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)",
+                    "type": "string"
+                },
+                "wIFIAddress": {
+                    "description": "路由器无线网络地址(不是盒子网卡地址)。有线连接时为空串。 (获取网络信息: 不返回;  无线连上修改配置: 不传;  无线未连上修改配置:  必传;  有线时修改配置:  不传;)",
+                    "type": "string"
+                },
+                "wIFIName": {
+                    "description": "WIFI名称。有线连接时为空串。 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  必传;  有线时修改配置:  不传;)",
+                    "type": "string"
+                },
+                "wIFIPassword": {
+                    "description": "WIFI密码。有线连接时为空串。 (获取网络信息: 不返回;  无线连上修改配置: 不传;  无线未连上修改配置:  必传;  有线时修改配置:  不传;)",
+                    "type": "string"
+                },
+                "wired": {
+                    "description": "有线还是无线网卡。 true: 有线; false: 无线。 (获取网络信息: 返回;  其他: 必传;)",
+                    "type": "boolean"
+                }
+            }
+        },
+        "network.NetworkConfigReq": {
+            "type": "object",
+            "properties": {
+                "dNS1": {
+                    "description": "ipv4 dNS1 地址",
+                    "type": "string"
+                },
+                "dNS2": {
+                    "description": "ipv4 dNS2 地址",
+                    "type": "string"
+                },
+                "ipv6DNS1": {
+                    "description": "ipv6 dNS1 地址",
+                    "type": "string"
+                },
+                "ipv6DNS2": {
+                    "description": "ipv6 dNS2 地址",
+                    "type": "string"
+                },
+                "networkAdapters": {
+                    "description": "网络适配器列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/network.NetworkAdapter"
+                    }
+                }
+            }
+        },
+        "network.NetworkIgnoreReq": {
+            "type": "object",
+            "properties": {
+                "wIFIName": {
+                    "description": "WIFI名称。有线连接时为空串。",
+                    "type": "string"
+                }
+            }
+        },
+        "network.NetworkStatusRsp": {
+            "type": "object",
+            "properties": {
+                "dNS1": {
+                    "description": "ipv4 dNS1 地址 (获取网络信息: 返回; 其他: 选传)",
+                    "type": "string"
+                },
+                "dNS2": {
+                    "description": "ipv4 dNS2 地址 (获取网络信息: 返回; 其他: 选传)",
+                    "type": "string"
+                },
+                "internetAccess": {
+                    "description": "是否可以访问互联网 (获取网络信息: 返回;  其他: 不传;)",
+                    "type": "boolean"
+                },
+                "ipv6DNS1": {
+                    "description": "ipv6 dNS1 地址 (获取网络信息: 返回; 其他: 选传)",
+                    "type": "string"
+                },
+                "ipv6DNS2": {
+                    "description": "ipv6 dNS2 地址 (获取网络信息: 返回; 其他: 选传)",
+                    "type": "string"
+                },
+                "lanAccessPort": {
+                    "description": "局域网访问网关服务的端口号 (获取网络信息: 返回;  其他: 不传;)",
+                    "type": "integer"
+                },
+                "networkAdapters": {
+                    "description": "网络适配器列表 (获取网络信息: 返回; 其他: 必传)",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/network.NetworkAdapter"
+                    }
+                }
+            }
+        },
+        "pair.InitResult": {
+            "type": "object",
+            "properties": {
+                "boxName": {
+                    "type": "string"
+                },
+                "boxUuid": {
+                    "type": "string"
+                },
+                "clientUuid": {
+                    "type": "string"
+                },
+                "connected": {
+                    "type": "integer"
+                },
+                "deviceAbility": {
+                    "description": "设备能力模型",
+                    "$ref": "#/definitions/device_ability.DeviceAbility"
+                },
+                "deviceLogoUrl": {
+                    "description": "设备图片链接",
+                    "type": "string"
+                },
+                "deviceName": {
+                    "description": "设备名称",
+                    "type": "string"
+                },
+                "deviceNameEn": {
+                    "description": "英文名称",
+                    "type": "string"
+                },
+                "generationEn": {
+                    "description": "英文代系",
+                    "type": "string"
+                },
+                "generationZh": {
+                    "description": "中文代系",
+                    "type": "string"
+                },
+                "initialEstimateTimeSec": {
+                    "type": "integer"
+                },
+                "network": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pair.Network"
+                    }
+                },
+                "newBindProcessSupport": {
+                    "type": "boolean"
+                },
+                "osVersion": {
+                    "description": "操作系统版本",
+                    "type": "string"
+                },
+                "paired": {
+                    "type": "integer"
+                },
+                "pairedBool": {
+                    "type": "boolean"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productModel": {
+                    "description": "产品型号",
+                    "type": "string"
+                },
+                "spaceVersion": {
+                    "description": "傲空间版本",
+                    "type": "string"
+                },
+                "sspUrl": {
+                    "type": "string"
+                }
+            }
+        },
+        "pair.KeyExchangeReq": {
+            "type": "object",
+            "properties": {
+                "clientPreSecret": {
+                    "description": "必填,客户端对称密钥种子",
+                    "type": "string"
+                },
+                "encBtid": {
+                    "description": "必填,使用盒子端公钥加密btid后进行base64得到的字符串",
+                    "type": "string"
+                }
+            }
+        },
+        "pair.KeyExchangeRsp": {
+            "type": "object",
+            "properties": {
+                "iv": {
+                    "description": "iv.",
+                    "type": "string"
+                },
+                "sharedSecret": {
+                    "description": "对称密钥.",
+                    "type": "string"
+                }
+            }
+        },
+        "pair.Network": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "tlsPort": {
+                    "type": "integer"
+                },
+                "wifiName": {
+                    "type": "string"
+                },
+                "wire": {
+                    "description": "有线",
+                    "type": "boolean"
+                }
+            }
+        },
+        "pair.PairingReq": {
+            "type": "object",
+            "properties": {
+                "clientPhoneModel": {
+                    "description": "客户端手机型号.",
+                    "type": "string"
+                },
+                "clientPriKey": {
+                    "description": "客户端私钥.",
+                    "type": "string"
+                },
+                "clientPubKey": {
+                    "description": "客户端公钥.",
+                    "type": "string"
+                },
+                "clientUuid": {
+                    "description": "客户端唯一id.",
+                    "type": "string"
+                }
+            }
+        },
+        "pair.PasswordInfo": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "description": "管理员密码",
+                    "type": "string"
+                }
+            }
+        },
+        "pair.PubKeyExchangeReq": {
+            "type": "object",
+            "properties": {
+                "clientPriKey": {
+                    "description": "客户端私钥.",
+                    "type": "string"
+                },
+                "clientPubKey": {
+                    "description": "客户端公钥.",
+                    "type": "string"
+                },
+                "signedBtid": {
+                    "description": "用客户端私钥签名btid. 盒子端用客户端公钥进行验证.",
+                    "type": "string"
+                }
+            }
+        },
+        "pair.PubKeyExchangeRsp": {
+            "type": "object",
+            "properties": {
+                "boxPubKey": {
+                    "description": "盒子端公钥.",
+                    "type": "string"
+                },
+                "signedBtid": {
+                    "description": "用盒子端端私钥签名btid. 客户端用盒子端公钥进行验证.",
+                    "type": "string"
+                }
+            }
+        },
+        "pair.RevokeReq": {
+            "type": "object",
+            "properties": {
+                "clientUUID": {
+                    "description": "发起者的 clientUUID",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "管理员密码",
+                    "type": "string"
+                }
+            }
+        },
+        "pair.WifiListRsp": {
+            "type": "object",
+            "properties": {
+                "addr": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "signal": {
+                    "type": "integer"
+                }
+            }
+        },
+        "pair.WifiPwdReq": {
+            "type": "object",
+            "properties": {
+                "addr": {
+                    "type": "string"
+                },
+                "pwd": {
+                    "type": "string"
+                }
+            }
+        },
+        "pair.WifiStatusRsp": {
+            "type": "object",
+            "properties": {
+                "addr": {
+                    "type": "string"
+                },
+                "ipAddress": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "password.UpdateDocumentPasswordReq": {
+            "type": "object",
+            "required": [
+                "newPassword",
+                "oldPassword"
+            ],
+            "properties": {
+                "aoId": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
+                },
+                "newPassword": {
+                    "type": "string"
+                },
+                "oldPassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "password.VerifyReq": {
+            "type": "object",
+            "properties": {
+                "clientUuid": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "password.VerifyRsp": {
+            "type": "object",
+            "properties": {
+                "agentToken": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "requestId": {
+                    "type": "string"
+                },
+                "results": {}
+            }
+        },
+        "progress.ProgressRsp": {
+            "type": "object",
+            "properties": {
+                "comStatus": {
+                    "description": "ContainersStarting = 0, ContainersStarted = 1,\tContainersStartedFail = 2,  其他值: 系统启动中.",
+                    "type": "integer"
+                },
+                "progress": {
+                    "description": "0-100",
+                    "type": "integer"
+                }
+            }
+        },
+        "revoke.RevokeReq": {
+            "type": "object",
+            "properties": {
+                "clientUuid": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "revoke.RevokeRsp": {
+            "type": "object",
+            "properties": {
+                "agentToken": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "requestId": {
+                    "type": "string"
+                },
+                "results": {}
+            }
+        },
+        "space.ReadyCheckRsp": {
+            "type": "object",
+            "properties": {
+                "diskInitialCode": {
+                    "description": "1: 磁盘正常; 2: 未初始化;3: 正在格式化; 4: 正在数据同步; 100: 未知错误; 101:  磁盘格式化错误; \u003e101: 其他初始化错误;",
+                    "type": "integer"
+                },
+                "missingMainStorage": {
+                    "description": "缺少主存储",
+                    "type": "boolean"
+                },
+                "paired": {
+                    "description": "0: 已经绑定; 1: 新盒子; 2: 已解绑",
+                    "type": "integer"
+                }
+            }
+        },
+        "status.Info": {
+            "type": "object",
+            "properties": {
+                "boxInfo": {
+                    "$ref": "#/definitions/device.DeviceInfo"
+                },
+                "boxPriKeyBytes": {
+                    "type": "string"
+                },
+                "boxPublicKey": {
+                    "type": "string"
+                },
+                "boxQrCode": {
+                    "description": "绑定二维码",
+                    "type": "string"
+                },
+                "dockerStatus": {
+                    "description": "Docker是否已经初始化完成",
+                    "type": "integer"
+                },
+                "isBoxInit": {
+                    "description": "是否已经初始化",
+                    "type": "boolean"
+                },
+                "isClientPaired": {
+                    "description": "是否已经配对",
+                    "type": "boolean"
+                },
+                "status": {
+                    "description": "状态",
+                    "type": "string"
+                },
+                "tryoutCodeVerified": {
+                    "description": "试用码是否验证通过(仅在 PC 试用场景下使用).",
+                    "type": "boolean"
+                },
+                "version": {
+                    "description": "客户端版本",
+                    "type": "string"
+                }
+            }
+        },
+        "status.Status": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "description": "状态",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "客户端版本",
+                    "type": "string"
+                }
+            }
+        },
+        "switchplatform.SwitchPlatformReq": {
+            "type": "object",
+            "properties": {
+                "domain": {
+                    "description": "切换目标空间平台域名",
+                    "type": "string"
+                },
+                "transId": {
+                    "description": "切换任务id，管理员绑定端保证不能重复",
+                    "type": "string"
+                }
+            }
+        },
+        "switchplatform.SwitchPlatformResp": {
+            "type": "object",
+            "properties": {
+                "transId": {
+                    "description": "切换任务id，请求传入的值。",
+                    "type": "string"
+                },
+                "userDomain": {
+                    "description": "用户的新域名",
+                    "type": "string"
+                }
+            }
+        },
+        "switchplatform.SwitchStatusQueryResp": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "description": "状态值",
+                    "type": "integer"
+                },
+                "transId": {
+                    "description": "切换任务id，管理员绑定端保证不能重复",
+                    "type": "string"
+                },
+                "userDomain": {
+                    "description": "用户的新域名",
+                    "type": "string"
+                }
+            }
+        },
+        "upgrade.StartDownRes": {
+            "type": "object",
+            "properties": {
+                "anew": {
+                    "description": "重新下载：当已经有任务在下载的时候，用户仍然想重新开始下载，使用此选项",
+                    "type": "boolean"
+                },
+                "versionId": {
+                    "type": "string"
+                }
+            }
+        },
+        "upgrade.StartUpgradeRes": {
+            "type": "object",
+            "properties": {
+                "versionId": {
+                    "type": "string"
+                }
+            }
+        },
+        "upgrade.Task": {
+            "type": "object",
+            "properties": {
+                "KernelImg": {
+                    "$ref": "#/definitions/upgrade.VersionDownInfo"
+                },
+                "cFile": {
+                    "description": "docker-compose.yml",
+                    "$ref": "#/definitions/upgrade.VersionDownInfo"
+                },
+                "containerImg": {
+                    "$ref": "#/definitions/upgrade.VersionDownInfo"
+                },
+                "doneDownTime": {
+                    "type": "string"
+                },
+                "doneInstallTime": {
+                    "type": "string"
+                },
+                "downStatus": {
+                    "description": "下载状态：\"\", ing, done, err",
+                    "type": "string"
+                },
+                "installStatus": {
+                    "description": "安装状态：\"\", ing, done, err",
+                    "type": "string"
+                },
+                "reboot": {
+                    "type": "boolean"
+                },
+                "rpmPkg": {
+                    "$ref": "#/definitions/upgrade.VersionDownInfo"
+                },
+                "startDownTime": {
+                    "type": "string"
+                },
+                "startInstallTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "整体流程状态：\"\", downloading, downloaded, installing, installed, download-err，install-err",
+                    "type": "string"
+                },
+                "versionId": {
+                    "type": "string"
+                }
+            }
+        },
+        "upgrade.UpgradeConfig": {
+            "type": "object",
+            "properties": {
+                "autoDownload": {
+                    "type": "boolean"
+                },
+                "autoInstall": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "upgrade.VersionDownInfo": {
+            "type": "object",
+            "properties": {
+                "downloaded": {
+                    "type": "boolean"
+                },
+                "pkgPath": {
+                    "type": "string"
+                },
+                "updateTime": {
+                    "type": "string"
+                },
+                "versionId": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

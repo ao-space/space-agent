@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2022 Institute of Software, Chinese Academy of Sciences (ISCAS)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+-->
+
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ts</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="试用码失效" transform="translate(-760.000000, -531.000000)" fill="#85899C" fill-rule="nonzero">
+            <g id="分组-17" transform="translate(760.000000, 531.000000)">
+                <path d="M6.99996798,6.83897383e-14 C3.13402052,6.83897383e-14 0,3.13402052 0,6.99995195 C0,10.8659635 3.13402052,14 6.99996798,14 C10.8659795,14 14,10.8659635 14,6.99995195 C14,3.13402052 10.8659795,6.83897383e-14 6.99996798,6.83897383e-14 L6.99996798,6.83897383e-14 Z M6.99996798,12.9996774 C3.68642455,12.9996774 1.00024249,10.3134794 1.00024249,6.99995197 C1.00024249,3.68640854 3.68644057,1.00024249 6.99996798,1.00024249 C10.3135755,1.00024249 12.9997575,3.68642455 12.9997575,6.99995197 C12.9997575,10.3134794 10.3135755,12.9996774 6.99996798,12.9996774 L6.99996798,12.9996774 Z M6.12273815,3.00948662 L8.12439208,3.00948662 L8.12439208,5.00745752 L6.12273815,5.00745752 L6.12273815,3.00948662 L6.12273815,3.00948662 Z M6.12273815,5.66303397 L8.12439208,5.66303397 L8.12439208,11.015702 L6.12273815,11.015702 L6.12273815,5.66303397 L6.12273815,5.66303397 Z" id="形状"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,197 @@
+# Copyright (c) 2022 Institute of Software, Chinese Academy of Sciences (ISCAS)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+version: '2.4'
+
+services:
+  aospace-postgresql:
+    container_name: aospace-postgresql
+    image: hub.eulix.xyz/cicada-private/aospace-postgresql:v1.0.0
+    restart: always
+    healthcheck:
+      test: pg_isready
+      interval: 15s
+      timeout: 2s
+      retries: 20
+      start_period: 10s
+    environment:
+      POSTGRES_PASSWORD: placeholder_mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_FILEDB: file
+      POSTGRES_MAILDB: mail
+      POSTGRES_GATEWAYDB: gateway
+      POSTGRES_ACCOUNTDB: account
+      PGDATA: /data
+    volumes:
+      - /home/eulixspace_link/postgresql/data:/data
+
+  aospace-redis:
+    container_name: aospace-redis
+    image: redis:6.0.20
+    command: redis-server --requirepass placeholder_mysecretpassword --appendonly yes --appendfsync everysec --auto-aof-rewrite-percentage 100 --auto-aof-rewrite-min-size 100mb
+    restart: always
+    ports:
+      - "127.0.0.1:placeholder_6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      interval: 5s
+      timeout: 2s
+      retries: 3
+      start_period: 5s
+    volumes:
+      - /home/eulixspace_link/redis/data:/data
+
+  aospace-filepreview:
+    container_name: aospace-filepreview
+    image: hub.eulix.xyz/ao-space/space-filepreview:v1.0.0
+    restart: always
+    depends_on:
+      aospace-redis:
+        condition: service_started
+    volumes:
+      - /home/eulixspace_file_storage/parts:/data
+    environment:
+      REDIS_HOST: aospace-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "placeholder_mysecretpassword"
+      BUCKET_SOURCE: "eulixspace-files"
+      BUCKET_TARGET: "eulixspace-files-processed"
+      ROOT_DATA_DIR: "/data/"
+      LIBREOFFICE_PROCESS_TIMEOUT: 900
+      DEBUG_MODE: 1
+
+  aospace-fileapi:
+    container_name: aospace-fileapi
+    image: hub.eulix.xyz/ao-space/space-aofs:v1.0.0
+    restart: always
+    depends_on:
+      aospace-postgresql:
+        condition: service_healthy
+    privileged: true
+    ports:
+      - "127.0.0.1:2001:2001"
+    volumes:
+       - /home/eulixspace_file_storage/parts:/data  # 在多块磁盘间存储
+       - /opt/eulixspace/image:/headimage
+       - /etc/ao-space/meta/shared:/shared
+       - /home/eulixspace_file_storage/parts/ao_part_dummy/dav/cards/collections/collection-root/root:/addressbook
+    environment:
+      SQL_DATABASE: file
+      SQL_HOST: aospace-postgresql
+      SQL_PORT: 5432
+      SQL_USER: postgres
+      SQL_PASSWORD: placeholder_mysecretpassword
+      REDIS_URL: aospace-redis:6379
+      REDIS_PASS: placeholder_mysecretpassword
+      DATA_PATH: /data/
+      HEAD_IMAGE_PATH: /headimage/
+      PUBLIC_SHARED_INFO_FILE: shared_info.json
+      GIN_MODE: release
+      SENTRY_DSN: https://99fb77b329b64e10833741dc4835a94f@sentry.eulix.xyz/14
+      SENTRY_RELEASE: eulixspace-fileapi@1.0.3
+      SENTRY_ENVIRONMENT: release
+      DISK_INFO_FILE_NAME: "disk_info.json"
+      DISK_PART_FOLDER_PREFIX: "ao_part_"
+      APP_BOX_DEPLOY_METHOD: DockerBox # agent 以 docker方式 运行在 PC 上
+      ACCOUNT_URL: http://aospace-gateway:8080
+      RADICALE: http://root:root@aospace-radicale:5232/root/
+
+  aospace-gateway:
+    container_name: aospace-gateway
+    image: hub.eulix.xyz/ao-space/space-gateway:v1.0.0
+    restart: always
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      aospace-fileapi:
+        condition: service_started
+      aospace-filepreview:
+        condition: service_started
+      aospace-postgresql:
+        condition: service_healthy    
+    env_file:
+      - aospace-gateway.env
+    environment:
+      APP_BOX_PUBLIC_KEY_LOCATION: /etc/ao-space/box_key_pub.pem
+      APP_BOX_PRIVATE_KEY_LOCATION: /etc/ao-space/box_key.pem
+      APP_CLIENT_PUBLIC_KEY_LOCATION: /etc/ao-space/client_key_pub.pem
+      APP_GATEWAY_FILE_SYSTEM_LOCATION: /eulixspace-data/symlink/
+      APP_SHARED_INFO_FILE: /data/shared/shared_info.json
+      APP_ACCOUNT_IMAGE_LOCATION: /opt/eulixspace/image/
+      QUARKUS_DATASOURCE_USERNAME: postgres
+      QUARKUS_DATASOURCE_PASSWORD: placeholder_mysecretpassword
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://aospace-postgresql:5432/account
+      QUARKUS_REDIS_HOSTS: redis://aospace-redis:6379
+      QUARKUS_REDIS_PASSWORD: placeholder_mysecretpassword
+      APP_FILEAPI_URL: http://aospace-fileapi:2001/space/v1/api
+      APP_ACCOUNT_DATA_LOCATION: /opt/eulixspace/data/
+      MAX_INVITE_MEMBER_COUNT: 9
+      APP_INTERNET_SERVICE_CONFIG: /etc/ao-space/internet_service_config.json
+    volumes:
+      - /opt/eulix:/opt/eulix
+      - /etc/ao-space:/etc/ao-space
+      - /home/eulixspace_file_storage/parts/ao_part_dummy/eulixspace-files:/eulixspace-data
+      - /etc/ao-space/meta/shared:/data/shared
+      - /opt/logs/gateway:/logs
+      - /opt/eulixspace/image:/opt/eulixspace/image
+      - /opt/eulixspace/applet:/opt/eulixspace/applet
+      - /etc/ao-space/meta/admin:/opt/eulixspace/data
+      - /opt/eulixspace-web/space/applet/:/opt/eulixspace-web/space/applet/  
+
+  aonetwork-client:
+    container_name: aonetwork-client
+    image: hub.eulix.xyz/ao-space/gt:client-v2.0.4
+    restart: always
+    network_mode: "host"
+    volumes:
+      - /etc/ao-space/gt:/opt/config
+
+  aospace-nginx:
+    container_name: aospace-nginx
+    image: hub.eulix.xyz/ao-space/space-web:v1.0.0
+    restart: always
+    network_mode: "host"
+      #   以容器运行时，去掉了 host 网络。如果 nginx 和 network-client 指定 host 网络，那么这2个容器会处于 docker-desktop 的子网中，比如 192.168.65.x 的网络。和宿主机、还有 网关(ao-space) 网络隔离的。不容易相互访问。
+    env_file:
+      aospace-nginx.env
+    depends_on:
+      aospace-fileapi:
+        condition: service_started
+      aospace-gateway:
+        condition: service_started
+      aospace-media-vod:
+        condition: service_started
+    environment:
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: placeholder_6379
+      REDIS_PASSWORD: "placeholder_mysecretpassword"
+    volumes:
+      - /opt/eulixspace/image:/opt/eulixspace/image
+      - /opt/eulixspace-web/space/applet/:/opt/eulixspace-web/space/applet/
+      - /home/eulixspace_link/nginx/conf.d:/etc/nginx/conf.d
+      - /etc/ao-space/certs:/etc/nginx/certs
+
+  aospace-media-vod:
+    container_name: aospace-media-vod
+    image: hub.eulix.xyz/ao-space/space-media-vod:v1.0.0
+    restart: always
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - /home/eulixspace_file_storage/parts:/home/eulixspace/data
+
+networks:
+  default:
+    external:
+      name: ao-space

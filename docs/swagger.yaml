@@ -1,0 +1,1949 @@
+# Copyright (c) 2022 Institute of Software, Chinese Academy of Sciences (ISCAS)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+definitions:
+  bindinit.InitReq:
+    properties:
+      clientUuid:
+        type: string
+      clientVersion:
+        type: string
+    type: object
+  call.MicroServerRsp:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+      requestId:
+        type: string
+      results: {}
+    type: object
+  certificate.LanCert:
+    properties:
+      cert:
+        type: string
+    type: object
+  config.ConfigReq:
+    properties:
+      clientUUID:
+        type: string
+      enableInternetAccess:
+        type: boolean
+      platformApiBase:
+        description: Platform api url setting, e.g. "https://ao.space"`
+        type: string
+    type: object
+  config.ConfigRsp:
+    properties:
+      connectedNetwork:
+        items:
+          $ref: '#/definitions/pair.Network'
+        type: array
+      enableInternetAccess:
+        type: boolean
+      enableLAN:
+        type: boolean
+      enableP2P:
+        type: boolean
+      userDomain:
+        type: string
+    type: object
+  config.GetConfigRsp:
+    properties:
+      connectedNetwork:
+        items:
+          $ref: '#/definitions/pair.Network'
+        type: array
+      enableInternetAccess:
+        type: boolean
+      enableLAN:
+        type: boolean
+      enableP2P:
+        type: boolean
+      platformApiBase:
+        type: string
+      userDomain:
+        type: string
+    type: object
+  create.CreateReq:
+    properties:
+      clientPhoneModel:
+        description: 客户端手机型号.
+        type: string
+      clientUuid:
+        description: 客户端 uuid
+        type: string
+      enableInternetAccess:
+        description: 是否启用互联网通道
+        type: boolean
+      password:
+        description: 空间密码
+        type: string
+      platformApiBase:
+        description: Platform api url setting, e.g. "https://ao.space"`
+        type: string
+      spaceName:
+        description: 空间名称
+        type: string
+      verificationMethod:
+        description: did 的验证方法
+        items:
+          $ref: '#/definitions/document.VerificationMethod'
+        type: array
+    required:
+    - clientPhoneModel
+    - clientUuid
+    - password
+    - spaceName
+    - verificationMethod
+    type: object
+  create.CreateRsp:
+    properties:
+      agentToken:
+        description: agent 接口的访问 token. 暂未启用.
+        type: string
+      connectedNetwork:
+        description: 设备连接的网络情况
+        items:
+          $ref: '#/definitions/pair.Network'
+        type: array
+      didDoc:
+        description: did 文档
+        type: string
+      enableInternetAccess:
+        description: 是否启用互联网通道
+        type: boolean
+      encryptedPriKeyBytes:
+        description: 加密的空间密码凭证对应的私钥密文
+        type: string
+      spaceUserInfo:
+        description: 空间信息
+    type: object
+  device.BoxDeviceVersion:
+    properties:
+      deviceAbility:
+        $ref: '#/definitions/device_ability.DeviceAbility'
+        description: 设备能力模型
+      deviceLogoUrl:
+        description: 设备图片链接
+        type: string
+      deviceName:
+        description: 设备名称
+        type: string
+      deviceNameEn:
+        description: 英文名称
+        type: string
+      generationEn:
+        description: 英文代系
+        type: string
+      generationZh:
+        description: 中文代系
+        type: string
+      osVersion:
+        description: 操作系统版本
+        type: string
+      productModel:
+        description: 产品型号
+        type: string
+      serviceDetail:
+        description: ServiceDetail  []*dockermodel.DockerImage `json:"serviceDetail"`  //
+          容器版本
+        items:
+          $ref: '#/definitions/dockermodel.DockerContainer'
+        type: array
+      serviceVersion:
+        description: 容器版本
+        items:
+          $ref: '#/definitions/device.ServiceVersion'
+        type: array
+      snNumber:
+        description: sn号
+        type: string
+      spaceVersion:
+        description: 傲空间版本
+        type: string
+    type: object
+  device.DeviceInfo:
+    properties:
+      apiBaseUrl:
+        description: 空间平台的基础部分
+        type: string
+      boxQrCode:
+        description: 盒子的二维码数据.
+        type: string
+      boxRegKey:
+        description: 平台端授权给盒子端的凭证. 空间平台使用，过期则重新申请
+        type: string
+      boxRegisterTime:
+        type: integer
+      boxUuid:
+        description: 盒子端唯一id.
+        type: string
+      btid:
+        description: 二维码中的蓝牙id.
+        type: string
+      btidHash:
+        description: mdns广播使用的id.
+        type: string
+      expiresAt:
+        type: string
+      isBoxRegistered:
+        type: boolean
+      networkClient:
+        $ref: '#/definitions/device.NetworkClientInfo'
+    type: object
+  device.NetworkClientInfo:
+    properties:
+      clientId:
+        type: string
+      secretKey:
+        type: string
+    type: object
+  device.ServiceVersion:
+    properties:
+      created:
+        type: integer
+      serviceName:
+        type: string
+      version:
+        type: string
+    type: object
+  device.StorageInfo:
+    properties:
+      free:
+        description: 空闲, Bytes
+        type: integer
+      total:
+        description: 总计, Bytes
+        type: integer
+      used:
+        description: 已用, Bytes
+        type: integer
+    type: object
+  device_ability.DeviceAbility:
+    properties:
+      aospaceDevOptionSupport:
+        description: '是否支持开发者选项 PC: true'
+        type: boolean
+      aospaceSwitchPlatformSupport:
+        description: '是否支持切换平台 PC: false'
+        type: boolean
+      aospaceappSupport:
+        description: '当前设备是否支持傲空间应用 PC: true'
+        type: boolean
+      backupRestoreSupport:
+        description: 当前设备是否支持备份恢复
+        type: boolean
+      bluetoothSupport:
+        description: 当前设备是否支持蓝牙
+        type: boolean
+      deviceModelNumber:
+        description: '产品型号数字(内部使用, 1xx: 树莓派, 2xx: 二代, ...)'
+        type: integer
+      innerDiskSupport:
+        description: 内部磁盘支持(SATA 和 m.2)
+        type: boolean
+      ledSupport:
+        description: 当前设备是否支持 Led
+        type: boolean
+      networkConfigSupport:
+        description: 当前设备是否支持网络配置
+        type: boolean
+      openSource:
+        type: boolean
+      runInDocker:
+        description: 以容器方式运行
+        type: boolean
+      securityChipSupport:
+        description: 支持加密芯片
+        type: boolean
+      snNumber:
+        type: string
+      supportUSBDisk:
+        description: 是否支持 USB 磁盘. 210型号 及以上不支持
+        type: boolean
+      upgradeApiSupport:
+        description: 当前设备是否支持升级API
+        type: boolean
+    type: object
+  dockermodel.DockerContainer:
+    properties:
+      created:
+        type: integer
+      hostConfig:
+        additionalProperties:
+          type: string
+        type: object
+      id:
+        type: string
+      image:
+        type: string
+      imageID:
+        type: string
+      mounts:
+        items:
+          type: string
+        type: array
+      names:
+        items:
+          type: string
+        type: array
+      ports:
+        items:
+          type: string
+        type: array
+      state:
+        type: string
+    type: object
+  document.GetDocumentReq:
+    properties:
+      aoId:
+        type: string
+      did:
+        type: string
+    type: object
+  document.GetDocumentRsp:
+    properties:
+      didDoc:
+        type: string
+      encryptedPriKeyBytes:
+        type: string
+    type: object
+  document.VerificationMethod:
+    properties:
+      id:
+        type: string
+      publicKeyPem:
+        type: string
+      type:
+        type: string
+    required:
+    - id
+    - publicKeyPem
+    - type
+    type: object
+  dto.BaseRspStr:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+      requestId:
+        type: string
+      results: {}
+    type: object
+  dto.LanInvokeReq:
+    properties:
+      body:
+        description: 请求体
+        type: string
+    type: object
+  method.UpdateDocumentMethodReq:
+    properties:
+      aoId:
+        type: string
+      did:
+        description: did 和 aoId 需要至少传一个参数.
+        type: string
+      newPassword:
+        description: 重置空间密码时需要传入密码
+        type: string
+      verificationMethod:
+        description: 增加的验证方法
+        items:
+          $ref: '#/definitions/document.VerificationMethod'
+        type: array
+    type: object
+  method.UpdateDocumentMethodRsp:
+    properties:
+      did:
+        type: string
+      didDoc:
+        type: string
+    type: object
+  network.NetworkAdapter:
+    properties:
+      adapterName:
+        description: '网卡名称 eth0, eth1, wlan0 (获取网络信息: 返回;  其他: 不传;)'
+        type: string
+      connected:
+        description: '是否已连接 (获取网络信息: 返回;  其他: 不传;)'
+        type: boolean
+      defaultGateway:
+        description: '默认网关 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)'
+        type: string
+      ipv4:
+        description: 'ipv4 地址 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)'
+        type: string
+      ipv4DNS1:
+        description: 'ipv4 dNS1 地址 (获取网络信息: 返回; 其他: 选传)'
+        type: string
+      ipv4DNS2:
+        description: 'ipv4 dNS2 地址 (获取网络信息: 返回; 其他: 选传)'
+        type: string
+      ipv4UseDhcp:
+        description: 'ipv4 使用 dhcp 自动获取。 (获取网络信息: 返回;  其他: 必传;)'
+        type: boolean
+      ipv6:
+        description: 'ipv6  (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)'
+        type: string
+      ipv6DefaultGateway:
+        description: 'ipv6 默认网关 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)'
+        type: string
+      ipv6UseDhcp:
+        description: 'ipv6 使用 dhcp 自动获取 (获取网络信息: 返回;  其他: 必传;)'
+        type: boolean
+      mACAddress:
+        description: '盒子网卡地址(不是路由器的网络地址)  (获取网络信息: 返回;  其他: 不传;)'
+        type: string
+      subNetMask:
+        description: '子网掩码 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)'
+        type: string
+      subNetPreLen:
+        description: '子网前缀长度 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  可选;  有线时修改配置:  必传;)'
+        type: string
+      wIFIAddress:
+        description: '路由器无线网络地址(不是盒子网卡地址)。有线连接时为空串。 (获取网络信息: 不返回;  无线连上修改配置: 不传;  无线未连上修改配置:  必传;  有线时修改配置:  不传;)'
+        type: string
+      wIFIName:
+        description: 'WIFI名称。有线连接时为空串。 (获取网络信息: 返回;  无线连上修改配置: 必传;  无线未连上修改配置:  必传;  有线时修改配置:  不传;)'
+        type: string
+      wIFIPassword:
+        description: 'WIFI密码。有线连接时为空串。 (获取网络信息: 不返回;  无线连上修改配置: 不传;  无线未连上修改配置:  必传;  有线时修改配置:  不传;)'
+        type: string
+      wired:
+        description: '有线还是无线网卡。 true: 有线; false: 无线。 (获取网络信息: 返回;  其他: 必传;)'
+        type: boolean
+    type: object
+  network.NetworkConfigReq:
+    properties:
+      dNS1:
+        description: ipv4 dNS1 地址
+        type: string
+      dNS2:
+        description: ipv4 dNS2 地址
+        type: string
+      ipv6DNS1:
+        description: ipv6 dNS1 地址
+        type: string
+      ipv6DNS2:
+        description: ipv6 dNS2 地址
+        type: string
+      networkAdapters:
+        description: 网络适配器列表
+        items:
+          $ref: '#/definitions/network.NetworkAdapter'
+        type: array
+    type: object
+  network.NetworkIgnoreReq:
+    properties:
+      wIFIName:
+        description: WIFI名称。有线连接时为空串。
+        type: string
+    type: object
+  network.NetworkStatusRsp:
+    properties:
+      dNS1:
+        description: 'ipv4 dNS1 地址 (获取网络信息: 返回; 其他: 选传)'
+        type: string
+      dNS2:
+        description: 'ipv4 dNS2 地址 (获取网络信息: 返回; 其他: 选传)'
+        type: string
+      internetAccess:
+        description: '是否可以访问互联网 (获取网络信息: 返回;  其他: 不传;)'
+        type: boolean
+      ipv6DNS1:
+        description: 'ipv6 dNS1 地址 (获取网络信息: 返回; 其他: 选传)'
+        type: string
+      ipv6DNS2:
+        description: 'ipv6 dNS2 地址 (获取网络信息: 返回; 其他: 选传)'
+        type: string
+      lanAccessPort:
+        description: '局域网访问网关服务的端口号 (获取网络信息: 返回;  其他: 不传;)'
+        type: integer
+      networkAdapters:
+        description: '网络适配器列表 (获取网络信息: 返回; 其他: 必传)'
+        items:
+          $ref: '#/definitions/network.NetworkAdapter'
+        type: array
+    type: object
+  pair.InitResult:
+    properties:
+      boxName:
+        type: string
+      boxUuid:
+        type: string
+      clientUuid:
+        type: string
+      connected:
+        type: integer
+      deviceAbility:
+        $ref: '#/definitions/device_ability.DeviceAbility'
+        description: 设备能力模型
+      deviceLogoUrl:
+        description: 设备图片链接
+        type: string
+      deviceName:
+        description: 设备名称
+        type: string
+      deviceNameEn:
+        description: 英文名称
+        type: string
+      generationEn:
+        description: 英文代系
+        type: string
+      generationZh:
+        description: 中文代系
+        type: string
+      initialEstimateTimeSec:
+        type: integer
+      network:
+        items:
+          $ref: '#/definitions/pair.Network'
+        type: array
+      newBindProcessSupport:
+        type: boolean
+      osVersion:
+        description: 操作系统版本
+        type: string
+      paired:
+        type: integer
+      pairedBool:
+        type: boolean
+      productId:
+        type: string
+      productModel:
+        description: 产品型号
+        type: string
+      spaceVersion:
+        description: 傲空间版本
+        type: string
+      sspUrl:
+        type: string
+    type: object
+  pair.KeyExchangeReq:
+    properties:
+      clientPreSecret:
+        description: 必填,客户端对称密钥种子
+        type: string
+      encBtid:
+        description: 必填,使用盒子端公钥加密btid后进行base64得到的字符串
+        type: string
+    type: object
+  pair.KeyExchangeRsp:
+    properties:
+      iv:
+        description: iv.
+        type: string
+      sharedSecret:
+        description: 对称密钥.
+        type: string
+    type: object
+  pair.Network:
+    properties:
+      ip:
+        type: string
+      port:
+        type: integer
+      tlsPort:
+        type: integer
+      wifiName:
+        type: string
+      wire:
+        description: 有线
+        type: boolean
+    type: object
+  pair.PairingReq:
+    properties:
+      clientPhoneModel:
+        description: 客户端手机型号.
+        type: string
+      clientPriKey:
+        description: 客户端私钥.
+        type: string
+      clientPubKey:
+        description: 客户端公钥.
+        type: string
+      clientUuid:
+        description: 客户端唯一id.
+        type: string
+    type: object
+  pair.PasswordInfo:
+    properties:
+      password:
+        description: 管理员密码
+        type: string
+    type: object
+  pair.PubKeyExchangeReq:
+    properties:
+      clientPriKey:
+        description: 客户端私钥.
+        type: string
+      clientPubKey:
+        description: 客户端公钥.
+        type: string
+      signedBtid:
+        description: 用客户端私钥签名btid. 盒子端用客户端公钥进行验证.
+        type: string
+    type: object
+  pair.PubKeyExchangeRsp:
+    properties:
+      boxPubKey:
+        description: 盒子端公钥.
+        type: string
+      signedBtid:
+        description: 用盒子端端私钥签名btid. 客户端用盒子端公钥进行验证.
+        type: string
+    type: object
+  pair.RevokeReq:
+    properties:
+      clientUUID:
+        description: 发起者的 clientUUID
+        type: string
+      password:
+        description: 管理员密码
+        type: string
+    type: object
+  pair.WifiListRsp:
+    properties:
+      addr:
+        type: string
+      name:
+        type: string
+      signal:
+        type: integer
+    type: object
+  pair.WifiPwdReq:
+    properties:
+      addr:
+        type: string
+      pwd:
+        type: string
+    type: object
+  pair.WifiStatusRsp:
+    properties:
+      addr:
+        type: string
+      ipAddress:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      status:
+        type: integer
+    type: object
+  password.UpdateDocumentPasswordReq:
+    properties:
+      aoId:
+        type: string
+      did:
+        type: string
+      newPassword:
+        type: string
+      oldPassword:
+        type: string
+    required:
+    - newPassword
+    - oldPassword
+    type: object
+  password.VerifyReq:
+    properties:
+      clientUuid:
+        type: string
+      password:
+        type: string
+    type: object
+  password.VerifyRsp:
+    properties:
+      agentToken:
+        type: string
+      code:
+        type: string
+      message:
+        type: string
+      requestId:
+        type: string
+      results: {}
+    type: object
+  progress.ProgressRsp:
+    properties:
+      comStatus:
+        description: "ContainersStarting = 0, ContainersStarted = 1,\tContainersStartedFail
+          = 2,  其他值: 系统启动中."
+        type: integer
+      progress:
+        description: 0-100
+        type: integer
+    type: object
+  revoke.RevokeReq:
+    properties:
+      clientUuid:
+        type: string
+      password:
+        type: string
+    type: object
+  revoke.RevokeRsp:
+    properties:
+      agentToken:
+        type: string
+      code:
+        type: string
+      message:
+        type: string
+      requestId:
+        type: string
+      results: {}
+    type: object
+  space.ReadyCheckRsp:
+    properties:
+      diskInitialCode:
+        description: '1: 磁盘正常; 2: 未初始化;3: 正在格式化; 4: 正在数据同步; 100: 未知错误; 101:  磁盘格式化错误;
+          >101: 其他初始化错误;'
+        type: integer
+      missingMainStorage:
+        description: 缺少主存储
+        type: boolean
+      paired:
+        description: '0: 已经绑定; 1: 新盒子; 2: 已解绑'
+        type: integer
+    type: object
+  status.Info:
+    properties:
+      boxInfo:
+        $ref: '#/definitions/device.DeviceInfo'
+      boxPriKeyBytes:
+        type: string
+      boxPublicKey:
+        type: string
+      boxQrCode:
+        description: 绑定二维码
+        type: string
+      dockerStatus:
+        description: Docker是否已经初始化完成
+        type: integer
+      isBoxInit:
+        description: 是否已经初始化
+        type: boolean
+      isClientPaired:
+        description: 是否已经配对
+        type: boolean
+      status:
+        description: 状态
+        type: string
+      tryoutCodeVerified:
+        description: 试用码是否验证通过(仅在 PC 试用场景下使用).
+        type: boolean
+      version:
+        description: 客户端版本
+        type: string
+    type: object
+  status.Status:
+    properties:
+      status:
+        description: 状态
+        type: string
+      version:
+        description: 客户端版本
+        type: string
+    type: object
+  switchplatform.SwitchPlatformReq:
+    properties:
+      domain:
+        description: 切换目标空间平台域名
+        type: string
+      transId:
+        description: 切换任务id，管理员绑定端保证不能重复
+        type: string
+    type: object
+  switchplatform.SwitchPlatformResp:
+    properties:
+      transId:
+        description: 切换任务id，请求传入的值。
+        type: string
+      userDomain:
+        description: 用户的新域名
+        type: string
+    type: object
+  switchplatform.SwitchStatusQueryResp:
+    properties:
+      status:
+        description: 状态值
+        type: integer
+      transId:
+        description: 切换任务id，管理员绑定端保证不能重复
+        type: string
+      userDomain:
+        description: 用户的新域名
+        type: string
+    type: object
+  upgrade.StartDownRes:
+    properties:
+      anew:
+        description: 重新下载：当已经有任务在下载的时候，用户仍然想重新开始下载，使用此选项
+        type: boolean
+      versionId:
+        type: string
+    type: object
+  upgrade.StartUpgradeRes:
+    properties:
+      versionId:
+        type: string
+    type: object
+  upgrade.Task:
+    properties:
+      KernelImg:
+        $ref: '#/definitions/upgrade.VersionDownInfo'
+      cFile:
+        $ref: '#/definitions/upgrade.VersionDownInfo'
+        description: docker-compose.yml
+      containerImg:
+        $ref: '#/definitions/upgrade.VersionDownInfo'
+      doneDownTime:
+        type: string
+      doneInstallTime:
+        type: string
+      downStatus:
+        description: 下载状态："", ing, done, err
+        type: string
+      installStatus:
+        description: 安装状态："", ing, done, err
+        type: string
+      reboot:
+        type: boolean
+      rpmPkg:
+        $ref: '#/definitions/upgrade.VersionDownInfo'
+      startDownTime:
+        type: string
+      startInstallTime:
+        type: string
+      status:
+        description: 整体流程状态："", downloading, downloaded, installing, installed, download-err，install-err
+        type: string
+      versionId:
+        type: string
+    type: object
+  upgrade.UpgradeConfig:
+    properties:
+      autoDownload:
+        type: boolean
+      autoInstall:
+        type: boolean
+    type: object
+  upgrade.VersionDownInfo:
+    properties:
+      downloaded:
+        type: boolean
+      pkgPath:
+        type: string
+      updateTime:
+        type: string
+      versionId:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /agent/info:
+    get:
+      consumes:
+      - text/plain
+      description: get server info
+      operationId: info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/status.Info'
+              type: object
+      summary: get server info
+      tags:
+      - Info
+  /agent/logs:
+    get:
+      consumes:
+      - text/plain
+      description: get server info
+      operationId: logs
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: code=0 success;
+          schema:
+            type: string
+      summary: get server info
+      tags:
+      - Info
+  /agent/status:
+    get:
+      consumes:
+      - text/plain
+      description: get server status by this api.
+      operationId: status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/status.Status'
+              type: object
+      summary: get server status
+      tags:
+      - Info
+  /agent/v1/api/admin/revoke:
+    post:
+      consumes:
+      - application/json
+      operationId: PairAdminRevoke
+      parameters:
+      - description: server admin pass
+        in: body
+        name: revokeReq
+        required: true
+        schema:
+          $ref: '#/definitions/pair.RevokeReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/call.MicroServerRsp'
+              type: object
+      summary: admin unbinding from the server [for client]
+      tags:
+      - Pair
+  /agent/v1/api/bind/com/progress:
+    get:
+      consumes:
+      - text/plain
+      description: client query aospace microservice starting progress。
+      operationId: BindComProgress
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code=AG-200 success; code=AG-460 have been bound; ProgressRsp:
+            {"comStatus":1,"progress":100}, comStatus=0 starting, comStatus=1 started,
+            comStatus=2 failed to start , comStatus<0 docker engine is starting'
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/progress.ProgressRsp'
+              type: object
+      summary: client query aospace microservice starting progress [for client bluetooth/LAN]
+      tags:
+      - Pair
+  /agent/v1/api/bind/com/start:
+    post:
+      consumes:
+      - text/plain
+      description: APP start to pull and run aospace mircoservice。
+      operationId: BindComStart
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code=AG-200 success; code=AG-460 have been bound; code=AG-470
+            containers is starting; code=AG-471 containers is started; '
+          schema:
+            $ref: '#/definitions/dto.BaseRspStr'
+      summary: run docker containers [for client bluetooth/LAN]
+      tags:
+      - Pair
+  /agent/v1/api/bind/init:
+    get:
+      consumes:
+      - text/plain
+      description: get aospace server base info.
+      operationId: BindInit
+      parameters:
+      - description: query params
+        in: body
+        name: initReq
+        required: true
+        schema:
+          $ref: '#/definitions/bindinit.InitReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/pair.InitResult'
+              type: object
+      summary: APP get aospace server base info [for client bluetooth/LAN]
+      tags:
+      - Pair
+  /agent/v1/api/bind/internet/service/config:
+    get:
+      consumes:
+      - text/plain
+      operationId: InternetServiceGetConfig
+      parameters:
+      - description: clientUuid and aoid
+        in: query
+        name: body
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/config.GetConfigRsp'
+              type: object
+      summary: get internet tunnel config [for client/gateway bluetooth/LAN]
+      tags:
+      - Pair
+    post:
+      consumes:
+      - text/plain
+      description: |-
+        When the Internet tunnel is configured,
+        system-agent starts to register the server with the platform, and when it succeeds,
+        it calls the gateway interface, and the gateway registers the member information with the platform. And return the result to client.
+      operationId: InternetServicePostConfig
+      parameters:
+      - description: config params
+        in: body
+        name: configReq
+        required: true
+        schema:
+          $ref: '#/definitions/config.ConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/config.ConfigRsp'
+              type: object
+      summary: config internet tunnel [for client/gateway bluetooth/LAN]
+      tags:
+      - Pair
+  /agent/v1/api/bind/password/verify:
+    post:
+      consumes:
+      - text/plain
+      description: if verified , return new access token。
+      operationId: PasswordVerify
+      parameters:
+      - description: admin password
+        in: body
+        name: verifyReq
+        required: true
+        schema:
+          $ref: '#/definitions/password.VerifyReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/password.VerifyRsp'
+              type: object
+      summary: client verify aospace server admin password [for client bluetooth/LAN]
+      tags:
+      - Pair
+  /agent/v1/api/bind/revoke:
+    post:
+      consumes:
+      - text/plain
+      operationId: BindRevoke
+      parameters:
+      - description: params
+        in: body
+        name: verifyReq
+        required: true
+        schema:
+          $ref: '#/definitions/revoke.RevokeReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/revoke.RevokeRsp'
+              type: object
+      summary: admin unbind with server [for client bluetooth/LAN]
+      tags:
+      - Pair
+  /agent/v1/api/bind/space/create:
+    post:
+      consumes:
+      - text/plain
+      description: |-
+        This interface will submit the form data for space configuration on client,
+        such as space identification information, administrator space password and server Internet service configuration, etc.
+        When client calls this interface, it will synchronize the binding success status with server and store the status data of both sides. server will return the access_token to client.
+        解绑后重新绑定情况下，创建空间时不传 SpaceName 和 EnableInternetAccess，传 Password 参数。
+      operationId: SpaceCreate
+      parameters:
+      - description: admin password
+        in: body
+        name: createReq
+        required: true
+        schema:
+          $ref: '#/definitions/create.CreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success; AG-577 register failed on self-host platform;
+            AG-560 failed to create member
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/create.CreateRsp'
+              type: object
+      summary: create aospace account(finished bind progress) [for client bluetooth/LAN]
+      tags:
+      - Pair
+  /agent/v1/api/cert/get:
+    get:
+      consumes:
+      - text/plain
+      description: get certificate(self sign)
+      operationId: GetLanCert
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/certificate.LanCert'
+              type: object
+      summary: get certificate(self sign) [for client /gateway]
+      tags:
+      - cert
+  /agent/v1/api/device/ability:
+    get:
+      consumes:
+      - text/plain
+      description: get device ability
+      operationId: device.DeviceAbility
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=ACC-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/device_ability.DeviceAbility'
+              type: object
+      summary: get device ability [client bluetooth/LAN/ gateway]
+      tags:
+      - device
+  /agent/v1/api/device/info:
+    get:
+      consumes:
+      - text/plain
+      description: get device info
+      operationId: device.info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=0 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/device.StorageInfo'
+              type: object
+      summary: get device info [for mirco service]
+      tags:
+      - device
+  /agent/v1/api/device/localips:
+    get:
+      consumes:
+      - text/plain
+      description: get server's ip
+      operationId: PairNetLocalIpsDevice
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  items:
+                    $ref: '#/definitions/pair.Network'
+                  type: array
+              type: object
+      summary: get server's ip [for gateway]
+      tags:
+      - device
+  /agent/v1/api/device/netconfig:
+    get:
+      consumes:
+      - text/plain
+      description: get Wi-Fi list
+      operationId: PairNetNetConfigDevice
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  items:
+                    $ref: '#/definitions/pair.WifiListRsp'
+                  type: array
+              type: object
+      summary: get Wi-Fi list [for gateway]
+      tags:
+      - device
+    post:
+      consumes:
+      - text/plain
+      description: set Wi-Fi password
+      operationId: PairNetNetConfigSettingDevice
+      parameters:
+      - description: Wi-Fi ssid and password.
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/pair.WifiPwdReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success; code=AG-561 connect failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/pair.WifiStatusRsp'
+              type: object
+      summary: set Wi-Fi password [for gateway]
+      tags:
+      - device
+  /agent/v1/api/device/version:
+    get:
+      consumes:
+      - text/plain
+      description: get version info
+      operationId: device.BoxDeviceVersion
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/device.BoxDeviceVersion'
+              type: object
+      summary: get version info [for mirco service]
+      tags:
+      - device
+  /agent/v1/api/did/document:
+    get:
+      operationId: GetDIDDoc
+      parameters:
+      - description: params
+        in: body
+        name: getDocumentReq
+        required: true
+        schema:
+          $ref: '#/definitions/document.GetDocumentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success.
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/document.GetDocumentRsp'
+              type: object
+      summary: get did document [for gateway]
+      tags:
+      - did
+  /agent/v1/api/did/document/method:
+    put:
+      operationId: UpdateDocumentMethod
+      parameters:
+      - description: params
+        in: body
+        name: updateDocumentMethodReq
+        required: true
+        schema:
+          $ref: '#/definitions/method.UpdateDocumentMethodReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 成功.
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/method.UpdateDocumentMethodRsp'
+              type: object
+      summary: get UpdateDocumentMethod [for gateway]
+      tags:
+      - did
+  /agent/v1/api/did/document/password:
+    put:
+      operationId: UpdateDocumentPassword
+      parameters:
+      - description: params
+        in: body
+        name: updateDocumentPasswordReq
+        required: true
+        schema:
+          $ref: '#/definitions/password.UpdateDocumentPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success.
+          schema:
+            $ref: '#/definitions/dto.BaseRspStr'
+      summary: get UpdateDocumentPassword [client call through gateway ,for gateway]
+      tags:
+      - did
+  /agent/v1/api/initial:
+    post:
+      consumes:
+      - application/json
+      description: query init progress ,return after done init progress
+      operationId: initial
+      parameters:
+      - description: admin pass
+        in: body
+        name: passwordInfo
+        required: true
+        schema:
+          $ref: '#/definitions/pair.PasswordInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success.
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/call.MicroServerRsp'
+              type: object
+      summary: init aospace bind progress [For Client]
+      tags:
+      - Pair
+  /agent/v1/api/keyexchange:
+    post:
+      consumes:
+      - application/json
+      description: client request server generate Symmetric key
+      operationId: KeyExchange
+      parameters:
+      - description: '{clientPreSecret: client generate random string，32 byte,encBtid:String
+          obtained by base64 after encrypting the btid with the public key of the
+          server}'
+        in: body
+        name: keyExchangeReq
+        required: true
+        schema:
+          $ref: '#/definitions/pair.KeyExchangeReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/pair.KeyExchangeRsp'
+              type: object
+      summary: exchange Symmetric key [for client]
+      tags:
+      - Pair
+  /agent/v1/api/network/config:
+    get:
+      operationId: GETNetworkStatus
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success.
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/network.NetworkStatusRsp'
+              type: object
+      summary: get network info。[for client LAN/call]
+      tags:
+      - network
+    post:
+      consumes:
+      - application/json
+      operationId: POSTNetworkConfig
+      parameters:
+      - description: 网络配置参数
+        in: body
+        name: networkConfigReq
+        required: true
+        schema:
+          $ref: '#/definitions/network.NetworkConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 成功.
+          schema:
+            $ref: '#/definitions/dto.BaseRspStr'
+      summary: network config[for client LAN/Call]
+      tags:
+      - network
+  /agent/v1/api/network/ignore:
+    post:
+      operationId: NetworkIgnore
+      parameters:
+      - description: params
+        in: body
+        name: networkIgnoreReq
+        required: true
+        schema:
+          $ref: '#/definitions/network.NetworkIgnoreReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success.
+          schema:
+            $ref: '#/definitions/dto.BaseRspStr'
+      summary: ignore this network(SSID) ,delete net link。[for client LAN/call]
+      tags:
+      - network
+  /agent/v1/api/pair/init:
+    get:
+      consumes:
+      - text/plain
+      description: wired network binding
+      operationId: PairInit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/pair.InitResult'
+              type: object
+      summary: wired network binding [for client]
+      tags:
+      - Pair
+  /agent/v1/api/pair/net/localips:
+    get:
+      consumes:
+      - text/plain
+      description: client can get server's ip by using this api
+      operationId: PairNetLocalIps
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  items:
+                    $ref: '#/definitions/pair.Network'
+                  type: array
+              type: object
+      summary: get server's ip in binding progress [for client]
+      tags:
+      - net
+  /agent/v1/api/pair/net/netconfig:
+    get:
+      consumes:
+      - text/plain
+      description: get Wi-Fi list
+      operationId: PairNetNetConfig
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  items:
+                    $ref: '#/definitions/pair.WifiListRsp'
+                  type: array
+              type: object
+      summary: get Wi-Fi list  [for client]
+      tags:
+      - net
+    post:
+      consumes:
+      - text/plain
+      description: set Wi-Fi password
+      operationId: PairNetNetConfigSetting
+      parameters:
+      - description: Wi-Fi ssid and password.
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/pair.WifiPwdReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success; code=AG-561 connect failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/pair.WifiStatusRsp'
+              type: object
+      summary: set Wi-Fi password [for client]
+      tags:
+      - net
+  /agent/v1/api/pair/tryout/code:
+    post:
+      consumes:
+      - text/plain
+      operationId: TryOutCode
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            $ref: '#/definitions/dto.BaseRspStr'
+      summary: verify trial code [for web client LAN]
+      tags:
+      - TryOut
+  /agent/v1/api/pairing:
+    post:
+      consumes:
+      - application/json
+      operationId: Pairing
+      parameters:
+      - description: pair params
+        in: body
+        name: pairingBoxInfo
+        required: true
+        schema:
+          $ref: '#/definitions/pair.PairingReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=200 success; 410 clientUuid have been registered as member,it
+            could not register as admin
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/call.MicroServerRsp'
+              type: object
+      summary: aospace client bind to aospace server [for client]
+      tags:
+      - Pair
+  /agent/v1/api/passthrough:
+    post:
+      consumes:
+      - application/json
+      description: client pass through call gateway api
+      operationId: Passthrough
+      parameters:
+      - description: 'request id '
+        in: header
+        name: Request-Id
+        required: true
+        type: string
+      - description: pass through params
+        in: body
+        name: lanInvokeReq
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LanInvokeReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  type: string
+              type: object
+      summary: pass through gateway interface [for client bluetooth/LAN]
+      tags:
+      - Passthrough
+  /agent/v1/api/pubkeyexchange:
+    post:
+      consumes:
+      - application/json
+      description: client send public key to aospace server
+      operationId: PubKeyExchange
+      parameters:
+      - description: '{clientPubKey: client public key , clientPriKey:not required}'
+        in: body
+        name: pubKeyExchangeReq
+        required: true
+        schema:
+          $ref: '#/definitions/pair.PubKeyExchangeReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/pair.PubKeyExchangeRsp'
+              type: object
+      summary: exchange public key [for client]
+      tags:
+      - Pair
+  /agent/v1/api/setpassword:
+    post:
+      consumes:
+      - application/json
+      description: client set admin pass
+      operationId: setpassword
+      parameters:
+      - description: admin pass
+        in: body
+        name: passwordInfo
+        required: true
+        schema:
+          $ref: '#/definitions/pair.PasswordInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/call.MicroServerRsp'
+              type: object
+      summary: set admin pass [for client]
+      tags:
+      - Pair
+  /agent/v1/api/space/ready/check:
+    get:
+      operationId: ReadyCheck
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success.
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/space.ReadyCheckRsp'
+              type: object
+      summary: check if space is ready [for client bluetooth|LAN]
+      tags:
+      - space
+  /agent/v1/api/switch:
+    post:
+      consumes:
+      - application/json
+      description: switch platform to self-host platform
+      operationId: SwitchPlatform
+      parameters:
+      - description: new platform params
+        in: body
+        name: SwitchPlatformReq
+        required: true
+        schema:
+          $ref: '#/definitions/switchplatform.SwitchPlatformReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/switchplatform.SwitchPlatformResp'
+              type: object
+      summary: switch platform
+      tags:
+      - Switch
+  /agent/v1/api/switch/status:
+    get:
+      consumes:
+      - application/json
+      description: query switch platform status
+      operationId: SwitchStatusQuery
+      parameters:
+      - description: switch platform params
+        in: query
+        name: transId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code=200 success;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/switchplatform.SwitchStatusQueryResp'
+              type: object
+      summary: switch platform
+      tags:
+      - Switch
+  /agent/v1/api/system/reboot:
+    post:
+      consumes:
+      - application/json
+      operationId: SystemReboot
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success.
+          schema:
+            $ref: '#/definitions/dto.BaseRspStr'
+      summary: restart [bluetooth、LAN、Call]
+      tags:
+      - system
+  /agent/v1/api/system/shutdown:
+    post:
+      consumes:
+      - application/json
+      operationId: SystemShutdown
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 success.
+          schema:
+            $ref: '#/definitions/dto.BaseRspStr'
+      summary: shuwdown  [bluetooth、LAN、Call]
+      tags:
+      - system
+  /agent/v1/api/upgrade/config:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/upgrade.UpgradeConfig'
+      summary: get current upgrade config
+      tags:
+      - upgrade
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: upgrade config
+        in: body
+        name: config
+        required: true
+        schema:
+          $ref: '#/definitions/upgrade.UpgradeConfig'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/upgrade.UpgradeConfig'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: set auto upgrade config
+      tags:
+      - upgrade
+  /agent/v1/api/upgrade/download:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: download params
+        in: body
+        name: down
+        required: true
+        schema:
+          $ref: '#/definitions/upgrade.StartDownRes'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/upgrade.Task'
+        "208":
+          description: new server version is downloaded,but not installed
+          schema:
+            $ref: '#/definitions/upgrade.Task'
+        "400":
+          description: new version does not exist
+          schema:
+            type: string
+        "500":
+          description: failed , please try again
+          schema:
+            type: string
+      summary: add a new download task
+      tags:
+      - upgrade
+  /agent/v1/api/upgrade/install:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: install params
+        in: body
+        name: upgrade
+        required: true
+        schema:
+          $ref: '#/definitions/upgrade.StartUpgradeRes'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/upgrade.Task'
+        "400":
+          description: version have not been downloaded
+          schema:
+            type: string
+        "409":
+          description: there is task which is running
+          schema:
+            type: string
+        "500":
+          description: failed ,please try again
+          schema:
+            type: string
+      summary: POST:/upgrade/start-upgrade start to install new version
+      tags:
+      - upgrade
+  /agent/v1/api/upgrade/status:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/upgrade.Task'
+        "400":
+          description: there is no task
+          schema:
+            type: string
+        "500":
+          description: please try after seconds
+          schema:
+            type: string
+      summary: get upgrade task status
+      tags:
+      - upgrade
+swagger: "2.0"
