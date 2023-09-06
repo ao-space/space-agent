@@ -96,16 +96,17 @@ You can replace it yourself at startup
 - Linux
 
 ```shell
-        sudo docker run -d --name aospace-all-in-one  \
+DATADIR="$HOME/aospace"
+sudo docker run -d --name aospace-all-in-one  \
         --restart always  \
         --network=ao-space  \
         --publish 5678:5678  \
         --publish 127.0.0.1:5680:5680  \
-        -v $AOSPACE_HOME_DIR:/aospace  \
+        -v $DATADIR:/aospace  \
         -v /var/run/docker.sock:/var/run/docker.sock:ro  \
-        -e AOSPACE_DATADIR=$AOSPACE_HOME_DIR \
+        -e AOSPACE_DATADIR=$DATADIR \
         -e RUN_NETWORK_MODE="host"  \
-        hub.eulix.xyz/ao-space/space-agent:dev
+        ghcr.io/ao-space/space-agent:latest
 ```
 
 if you want to run ao.space on other os, refer to [ao.space self-hosting doc](https://ao.space/docs/install-opensource-linux)
