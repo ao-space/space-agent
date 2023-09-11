@@ -17,7 +17,7 @@ version: '2.4'
 services:
   aospace-postgresql:
     container_name: aospace-postgresql
-    image: hub.eulix.xyz/cicada-private/aospace-postgresql:v1.0.0
+    image: registry.ao.space/ao-space/space-postgresql:dev
     restart: always
     healthcheck:
       test: pg_isready
@@ -54,7 +54,7 @@ services:
 
   aospace-filepreview:
     container_name: aospace-filepreview
-    image: hub.eulix.xyz/ao-space/space-filepreview:v1.0.0
+    image: registry.ao.space/ao-space/space-filepreview:dev
     restart: always
     depends_on:
       aospace-redis:
@@ -73,7 +73,7 @@ services:
 
   aospace-fileapi:
     container_name: aospace-fileapi
-    image: hub.eulix.xyz/ao-space/space-aofs:v1.0.0
+    image: registry.ao.space/ao-space/space-aofs:dev
     restart: always
     depends_on:
       aospace-postgresql:
@@ -112,7 +112,7 @@ services:
 
   aospace-gateway:
     container_name: aospace-gateway
-    image: hub.eulix.xyz/ao-space/space-gateway:v1.0.0
+    image: registry.ao.space/ao-space/space-gateway:dev
     restart: always
     ports:
       - "127.0.0.1:8080:8080"
@@ -154,14 +154,14 @@ services:
 
   aonetwork-client:
     container_name: aonetwork-client
-    image: hub.eulix.xyz/ao-space/gt:client-v2.0.4
+    image: registry.ao.space/ao-space/gt:client-dev
     restart: always
     volumes:
       - /etc/ao-space/gt:/opt/config
       
   aospace-nginx:
     container_name: aospace-nginx
-    image: hub.eulix.xyz/ao-space/space-web:v1.0.0
+    image: registry.ao.space/ao-space/space-web:dev
     restart: always
     ports:
       - "9980:80"
@@ -190,7 +190,7 @@ services:
 
   aospace-media-vod:
     container_name: aospace-media-vod
-    image: hub.eulix.xyz/ao-space/space-media-vod:v1.0.0
+    image: registry.ao.space/ao-space/space-media-vod:dev
     restart: always
     ports:
       - "127.0.0.1:3001:3001"
