@@ -21,10 +21,10 @@
         <div class="black-20 fw-b mt-44">傲空间设备码</div>
         <img class="img" :src="imgUrl" />
         <div class="black-18 fw-b">
-          请使用 <span class="blue-18">傲空间 App (V1.9.3及更高版本)</span> 扫码绑定后使用
+          请使用 <span class="blue-18">傲空间开源版 App</span> 扫码绑定后使用
         </div>
         <div class="mt-20 gray-14">
-          未安装傲空间 App 请先 <a target="_blank" href="https://ao.space/download" class="download blue-14">下载傲空间</a>
+          未安装傲空间 App 请先 <a target="_blank" href="https://ao.space/download/opensource" class="download blue-14">下载傲空间</a>
         </div>
       </div>
     </div>
