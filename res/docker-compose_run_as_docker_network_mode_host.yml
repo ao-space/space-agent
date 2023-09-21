@@ -17,7 +17,7 @@ version: '2.4'
 services:
   aospace-postgresql:
     container_name: aospace-postgresql
-    image: registry.ao.space/ao-space/space-postgresql:dev
+    image: registry.ao.space/ao-space/space-postgresql:v1.0.1
     restart: always
     healthcheck:
       test: pg_isready
@@ -54,7 +54,7 @@ services:
 
   aospace-filepreview:
     container_name: aospace-filepreview
-    image: registry.ao.space/ao-space/space-filepreview:dev
+    image: registry.ao.space/ao-space/space-filepreview:v1.0.1
     restart: always
     depends_on:
       aospace-redis:
@@ -73,7 +73,7 @@ services:
 
   aospace-fileapi:
     container_name: aospace-fileapi
-    image: registry.ao.space/ao-space/space-aofs:dev
+    image: registry.ao.space/ao-space/space-aofs:v1.0.1
     restart: always
     depends_on:
       aospace-postgresql:
@@ -109,7 +109,7 @@ services:
 
   aospace-gateway:
     container_name: aospace-gateway
-    image: registry.ao.space/ao-space/space-gateway:dev
+    image: registry.ao.space/ao-space/space-gateway:v1.0.1
     restart: always
     ports:
       - "127.0.0.1:8080:8080"
@@ -151,7 +151,7 @@ services:
 
   aonetwork-client:
     container_name: aonetwork-client
-    image: registry.ao.space/ao-space/gt:client-dev
+    image: registry.ao.space/ao-space/gt:client-v2.0.7
     restart: always
     network_mode: "host"
     volumes:
@@ -159,7 +159,7 @@ services:
 
   aospace-nginx:
     container_name: aospace-nginx
-    image: registry.ao.space/ao-space/space-web:dev
+    image: registry.ao.space/ao-space/space-web:v1.0.1
     restart: always
     network_mode: "host"
       #   以容器运行时，去掉了 host 网络。如果 nginx 和 network-client 指定 host 网络，那么这2个容器会处于 docker-desktop 的子网中，比如 192.168.65.x 的网络。和宿主机、还有 网关(ao-space) 网络隔离的。不容易相互访问。
@@ -184,7 +184,7 @@ services:
 
   aospace-media-vod:
     container_name: aospace-media-vod
-    image: registry.ao.space/ao-space/space-media-vod:dev
+    image: registry.ao.space/ao-space/space-media-vod:v1.0.1
     restart: always
     ports:
       - "127.0.0.1:3001:3001"
