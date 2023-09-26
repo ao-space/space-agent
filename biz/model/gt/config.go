@@ -96,8 +96,8 @@ func (conf *Config) AddNewService(appName string, port string, token string) err
 	}
 	// 新增Service节点
 	newService := Service{
-		Local:      "http://127.0.0.1:443", // 第三方应用的server and port
-		HostPrefix: appName + "-" + token,  // 第三方应用的子域名
+		Local:      "https://" + config.Config.Docker.NginxContainerName + ":443", // 第三方应用的server and port
+		HostPrefix: appName + "-" + token,                                         // 第三方应用的子域名
 	}
 	currentConf.Services = append(currentConf.Services, newService)
 	err = currentConf.Save()
