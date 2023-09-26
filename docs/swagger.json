@@ -666,51 +666,6 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "set Wi-Fi password",
-                "consumes": [
-                    "text/plain"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "device"
-                ],
-                "summary": "set Wi-Fi password [for gateway]",
-                "operationId": "PairNetNetConfigSettingDevice",
-                "parameters": [
-                    {
-                        "description": "Wi-Fi ssid and password.",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/pair.WifiPwdReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "code=AG-200 success; code=AG-561 connect failed",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/dto.BaseRspStr"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "results": {
-                                            "$ref": "#/definitions/pair.WifiStatusRsp"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
             }
         },
         "/agent/v1/api/device/version": {
@@ -1160,51 +1115,6 @@
                                             "items": {
                                                 "$ref": "#/definitions/pair.WifiListRsp"
                                             }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "set Wi-Fi password",
-                "consumes": [
-                    "text/plain"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "net"
-                ],
-                "summary": "set Wi-Fi password [for client]",
-                "operationId": "PairNetNetConfigSetting",
-                "parameters": [
-                    {
-                        "description": "Wi-Fi ssid and password.",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/pair.WifiPwdReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "code=AG-200 success; code=AG-561 connect failed",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/dto.BaseRspStr"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "results": {
-                                            "$ref": "#/definitions/pair.WifiStatusRsp"
                                         }
                                     }
                                 }
@@ -2662,37 +2572,6 @@
                     "type": "string"
                 },
                 "signal": {
-                    "type": "integer"
-                }
-            }
-        },
-        "pair.WifiPwdReq": {
-            "type": "object",
-            "properties": {
-                "addr": {
-                    "type": "string"
-                },
-                "pwd": {
-                    "type": "string"
-                }
-            }
-        },
-        "pair.WifiStatusRsp": {
-            "type": "object",
-            "properties": {
-                "addr": {
-                    "type": "string"
-                },
-                "ipAddress": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "name": {
-                    "type": "string"
-                },
-                "status": {
                     "type": "integer"
                 }
             }

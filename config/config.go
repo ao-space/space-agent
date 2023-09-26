@@ -18,7 +18,6 @@ import (
 	hardware_util "agent/utils/hardware"
 	"flag"
 	"fmt"
-	"os"
 	"strings"
 	"testing"
 	"time"
@@ -523,15 +522,9 @@ func modifyConfigWhenRunInDocker() {
 			*v = strings.ReplaceAll(*v, "127.0.0.1:6379", "aospace-redis:6379")
 		}
 
-		networkModekey := Config.Box.RunInDocker.RunNetworkModeEnv
-		networkMode := os.Getenv(networkModekey)
-		if len(networkMode) > 0 && strings.EqualFold(networkMode, "host") { // Ubuntu
-			Config.GateWay.LanPort = 80
-			Config.GateWay.TlsLanPort = 443
-		} else {
-			Config.GateWay.LanPort = 9980
-			Config.GateWay.TlsLanPort = 9443
-		}
+		// All
+		Config.GateWay.LanPort = 12841
+		Config.GateWay.TlsLanPort = 18569
 
 	}
 	// fmt.Printf("######################## Config.Log.Path:%v\n",
@@ -582,14 +575,4 @@ func UpdateRedisConfig(addr, password string) {
 	Config.Redis.Addr = addr
 	Config.Redis.Password = password
 	writeDefaultConfigFile(*flagConfFile)
-}
-
-func RunningOnLinux() bool {
-	networkModekey := Config.Box.RunInDocker.RunNetworkModeEnv
-	networkMode := os.Getenv(networkModekey)
-	if len(networkMode) > 0 && strings.EqualFold(networkMode, "host") { // Ubuntu
-		return true
-	} else {
-		return false
-	}
 }
