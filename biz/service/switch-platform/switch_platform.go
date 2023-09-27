@@ -22,6 +22,7 @@ import (
 	"agent/utils"
 	"errors"
 	"fmt"
+	"github.com/jinzhu/copier"
 	"net"
 	"strings"
 
@@ -131,6 +132,7 @@ func doSwitch(transId string, domain string) (dto.BaseRspStr, error) {
 
 	//执行迁入
 	imigrateRsp, err := imigrate()
+	logger.AppLogger().Debugf("imigrateRsp:%+v, ", imigrateRsp)
 	if err != nil {
 		var basersp dto.BaseRspStr
 		basersp.Code = dto.AgentCodeSwitchImigrateErr
@@ -138,7 +140,7 @@ func doSwitch(transId string, domain string) (dto.BaseRspStr, error) {
 		UpdateStatus(StatusAbort, basersp.Message)
 		return basersp, err
 	}
-	si.ImigrateResult = *imigrateRsp
+	copier.Copy(&si.ImigrateResult, imigrateRsp)
 
 	logger.AppLogger().Debugf("transId=%v, imigrateRsp:%+v, ",
 		transId, imigrateRsp)
@@ -159,7 +161,7 @@ func doSwitch(transId string, domain string) (dto.BaseRspStr, error) {
 		transId)
 
 	//进行测试
-	if err := networkDetect(transId, domain, imigrateRsp); err != nil {
+	if err := networkDetect(transId, domain, &si.ImigrateResult); err != nil {
 		logger.AppLogger().Debugf("transId=%v, testNetwork:%+v, ",
 			transId, err)
 		networkSwitchV2(false)
