@@ -16,3 +16,4 @@ build
 debug
 #/*.sh
 res/loadbin.go
+.idea
