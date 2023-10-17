@@ -56,14 +56,15 @@ const (
 	AgentCodeCallDiskUsageFailedStr      = "AG-563"
 	AgentCodeMissingMainStorageFailedStr = "AG-590"
 
-	AgentCodeSwitchDomainErr        = "AG-570" //域名错误
-	AgentCodeSwitchToNewSSPErr      = "AG-571" //临时指向到新的空间平台错误
-	AgentCodeSwitchNetworkTestErr   = "AG-572" //网络测试失败
-	AgentCodeSwitchRecallGatewayErr = "AG-573" //回写网关失败
-	AgentCodeSwitchDoingErr         = "AG-574" //切换任务正在执行
-	AgentCodeSwitchGetAccountErr    = "AG-575" //从网关获取账号失败
-	AgentCodeSwitchImigrateErr      = "AG-576" //新空间平台迁入失败
-	AgentCodePrivateSSPRegBoxErr    = "AG-577" //私有空间平台注册盒子错误
+	AgentCodeSwitchDomainErr         = "AG-570" //域名错误
+	AgentCodeSwitchToNewSSPErr       = "AG-571" //临时指向到新的空间平台错误
+	AgentCodeSwitchNetworkTestErr    = "AG-572" //网络测试失败
+	AgentCodeSwitchRecallGatewayErr  = "AG-573" //回写网关失败
+	AgentCodeSwitchDoingErr          = "AG-574" //切换任务正在执行
+	AgentCodeSwitchGetAccountErr     = "AG-575" //从网关获取账号失败
+	AgentCodeSwitchImigrateErr       = "AG-576" //新空间平台迁入失败
+	AgentCodePrivateSSPRegBoxErr     = "AG-577" //私有空间平台注册盒子错误
+	AgentCodeCopyDataToStatusInfoErr = "AG-578" //将迁入请求数据转移到状态信息失败
 
 	AgentCodeSwitchTaskNotFoundErr = "AG-580" //切换任务未找到
 	AgentCodeConnectErr            = "AG-581" //连接错误

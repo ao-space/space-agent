@@ -140,7 +140,15 @@ func doSwitch(transId string, domain string) (dto.BaseRspStr, error) {
 		UpdateStatus(StatusAbort, basersp.Message)
 		return basersp, err
 	}
-	copier.Copy(&si.ImigrateResult, imigrateRsp)
+
+	err = copier.Copy(&si.ImigrateResult, imigrateRsp)
+	if err != nil {
+		var basersp dto.BaseRspStr
+		basersp.Code = dto.AgentCodeCopyDataToStatusInfoErr
+		basersp.Message = "failed to transport data to StatusInfo."
+		UpdateStatus(StatusAbort, basersp.Message)
+		return basersp, err
+	}
 
 	logger.AppLogger().Debugf("transId=%v, imigrateRsp:%+v, ",
 		transId, imigrateRsp)
