@@ -44,9 +44,9 @@ func CheckPlatformAbility(uri string) bool {
 		platformApis = InitPlatformAbility()
 	}
 
-	for _, apis := range platformApis.PlatformApis {
+	for _, api := range platformApis.PlatformApis {
 		//logger.AppLogger().Debugf(apis.URI)
-		if uri == apis.Uri {
+		if uri == api.Uri {
 			return true
 		}
 	}
