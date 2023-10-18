@@ -22,38 +22,19 @@
 package switchplatform
 
 import (
-	"agent/biz/model/device"
 	"agent/biz/service/pair"
-	"agent/config"
-	"agent/utils"
-	"fmt"
-	"net/http"
-	"strings"
-	"time"
-
 	"agent/utils/logger"
-	utilshttp "agent/utils/network/http"
+	"github.com/big-dust/platform-sdk-go/v2"
+	"time"
 )
 
 func emigrate() {
-	type UserDomainRoute struct {
-		UserId             string `json:"userId"`
-		UserDomainRedirect string `json:"userDomainRedirect"`
-	}
-	type RouteReq struct {
-		UserDomainRoutes []UserDomainRoute `json:"userDomainRouteInfos"`
-	}
 
-	type RouteRsp struct {
-		BoxUUID          string            `json:"boxUUID"`
-		UserDomainRoutes []UserDomainRoute `json:"userDomainRouteInfos"`
-	}
-
-	var params RouteReq
+	var params platform.SpacePlatformMigrationOutRequest
 	for _, oldAC := range si.OldAccount {
 		for _, newAC := range si.ImigrateResult.UserInfos {
 			if oldAC.UserId == newAC.UserId {
-				params.UserDomainRoutes = append(params.UserDomainRoutes, UserDomainRoute{UserId: oldAC.UserId, UserDomainRedirect: newAC.UserDomain})
+				params.UserDomainRouteInfos = append(params.UserDomainRouteInfos, platform.UserDomainRouteInfo{UserId: oldAC.UserId, UserDomainRedirect: newAC.UserDomain})
 			}
 		}
 	}
@@ -63,34 +44,19 @@ func emigrate() {
 
 		time.Sleep(time.Second * 5)
 
-		url, _ := utils.JoinUrl(si.OldApiBaseUrl, strings.ReplaceAll(config.Config.Platform.Route.Path, "{box_uuid}", device.GetDeviceInfo().BoxUuid))
-
-		destBRK, err := pair.GetDeviceRegKey(si.OldApiBaseUrl)
+		client, err := pair.GetSdkClientWithDeviceRegKey(si.NewApiBaseUrl)
 		if err != nil {
-			logger.AppLogger().Infof("transId:%v,Failed to get box-reg-key", si.TransId)
-			continue
+			logger.AppLogger().Warnf("Failed new SDK Client: err: %v", err.Error())
+			return
 		}
+		resp, err := client.SpacePlatformMigrationOut(&params)
 
-		headers := map[string]string{"Box-Reg-Key": destBRK.BoxRegKey, "Request-Id": si.TransId}
-		rsp := RouteRsp{}
-
-		httpReq, httpRsp, body, err := utilshttp.PostJsonWithHeaders(url, params, headers, &rsp)
 		if err != nil {
-			logger.AppLogger().Warnf("Failed PostJson, transId:%v,  err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@body:%v", si.TransId, err, httpReq, httpRsp, string(body))
+			logger.AppLogger().Warnf("Space Platform Migrate Out Failed by SDK: transId:%v,emigrate, err:%+v ", si.TransId, err)
 			continue
 		}
 		logger.AppLogger().Infof("transId:%v,emigrate, parms:%+v", si.TransId, params)
-		logger.AppLogger().Infof("transId:%v,emigrate, rsp:%+v", si.TransId, rsp)
-		logger.AppLogger().Infof("transId:%v,emigrate, httpReq:%+v", si.TransId, httpReq)
-		logger.AppLogger().Infof("transId:%v,emigrate, httpRsp:%+v", si.TransId, httpRsp)
-		logger.AppLogger().Infof("transId:%v,emigrate, body:%v", si.TransId, string(body))
-
-		if httpRsp.StatusCode != http.StatusOK {
-			logger.AppLogger().Infof("transId:%v, Failed to route. httpRsp.StatusCode:%v", si.TransId, httpRsp.StatusCode)
-			UpdateStatus(StatusAbort, fmt.Sprintf("url:%v, StatusCode:%v", url, httpRsp.StatusCode))
-		} else {
-			UpdateStatus(StatusOK, "OK")
-		}
+		logger.AppLogger().Infof("transId:%v,emigrate, rsp:%+v", si.TransId, resp)
 
 		return
 	}

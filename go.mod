@@ -15,6 +15,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/imdario/mergo v0.3.12
 	github.com/jinzhu/configor v1.2.1
+	github.com/jinzhu/copier v0.4.0
 	github.com/mr-tron/base58 v1.2.0
 	github.com/nanobox-io/golang-scribble v0.0.0-20190309225732-aa3e7c118975
 	github.com/paypal/gatt v0.0.0-20151011220935-4ae819d591cf

@@ -18,20 +18,15 @@
  * @Last Modified by: zhongguang
  * @Last Modified time: 2022-11-16 10:39:30
  */
-
 package switchplatform
 
 import (
 	"agent/biz/model/device"
 	"agent/biz/service/pair"
-	"agent/config"
-	"agent/utils"
-	"fmt"
-	"net/http"
-	"strings"
-
 	"agent/utils/logger"
-	utilshttp "agent/utils/network/http"
+	"fmt"
+	"github.com/big-dust/platform-sdk-go/v2"
+	"github.com/jinzhu/copier"
 )
 
 type ImigrateRsp struct {
@@ -48,36 +43,37 @@ func (r *ImigrateRsp) GetAdminDomain() (string, error) {
 	return "", fmt.Errorf("not found admin")
 }
 
-func imigrate() (*ImigrateRsp, error) {
+func imigrate() (*platform.SpacePlatformMigrationResponse, error) {
 
 	var mi MigrateInfo
 	mi.NetworkClinetId = device.GetDeviceInfo().NetworkClient.ClientID
 
 	mi.UserInfos = si.OldAccount
-	url, _ := utils.JoinUrl(si.NewApiBaseUrl, strings.ReplaceAll(config.Config.Platform.Migration.Path, "{box_uuid}", device.GetDeviceInfo().BoxUuid))
 
-	destBRK, err := pair.GetDeviceRegKey(si.NewApiBaseUrl)
+	client, err := pair.GetSdkClientWithDeviceRegKey(si.NewApiBaseUrl)
 	if err != nil {
+		logger.AppLogger().Warnf("Failed new SDK Client: err: %v", err.Error())
 		return nil, err
 	}
 
-	headers := map[string]string{"Box-Reg-Key": destBRK.BoxRegKey, "Request-Id": si.TransId}
-	rsp := ImigrateRsp{}
-
-	httpReq, httpRsp, body, err1 := utilshttp.PostJsonWithHeaders(url, mi, headers, &rsp)
-	if err1 != nil {
-		logger.AppLogger().Warnf("Failed PostJson, transId:%v, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@body:%v", si.TransId, err1, httpReq, httpRsp, string(body))
-		return nil, err1
-	}
-	logger.AppLogger().Infof("transId:%v, imigrate, parms:%+v", si.TransId, mi)
-	logger.AppLogger().Infof("transId:%v, imigrate, rsp:%+v", si.TransId, rsp)
-	logger.AppLogger().Infof("transId:%v, imigrate, httpReq:%+v", si.TransId, httpReq)
-	logger.AppLogger().Infof("transId:%v, imigrate, httpRsp:%+v", si.TransId, httpRsp)
-	logger.AppLogger().Infof("transId:%v, imigrate, body:%v", si.TransId, string(body))
-
-	if httpRsp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("http code:%v", httpRsp.StatusCode)
+	input := &platform.SpacePlatformMigrationRequest{
+		NetworkClientId: mi.NetworkClinetId,
+		UserInfos:       []platform.UserMigrationInfo{},
 	}
 
-	return &rsp, nil
+	err = copier.Copy(&input.UserInfos, &mi.UserInfos)
+	if err != nil {
+		logger.AppLogger().Warnf("Copy UserInfos: err: %v", err.Error())
+		return nil, err
+	}
+	resp, err := client.SpacePlatformMigration(input)
+
+	if err != nil {
+		logger.AppLogger().Warnf("Imgrate By Sdk Failed: %v", err.Error())
+		return nil, err
+	}
+
+	logger.AppLogger().Infof("transId:%v, imigrate, rsp:%+v", si.TransId, resp)
+
+	return resp, nil
 }
