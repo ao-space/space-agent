@@ -16,28 +16,24 @@ package platform
 
 import (
 	"agent/biz/model/device"
-	"agent/biz/model/platform"
-	"agent/biz/service/call"
-	"agent/config"
-	"agent/utils"
+	"agent/biz/service/pair"
 	"agent/utils/logger"
-	"github.com/dungeonsnd/gocom/encrypt/random"
+	"github.com/big-dust/platform-sdk-go/v2"
 )
 
-var platformApis *platform.PlatformAPIs
+var platformApis *platform.GetAbilityResponse
 
-func InitPlatformAbility() *platform.PlatformAPIs {
-	var headers = map[string]string{
-		"Request-Id": random.GenUUID(),
-	}
+func InitPlatformAbility() *platform.GetAbilityResponse {
+
 	apiBaseUrl := device.GetApiBaseUrl()
 	logger.AppLogger().Debugf("apiBaseUrl:%s", apiBaseUrl)
-	url, _ := utils.JoinUrl(apiBaseUrl, config.Config.Platform.Ability.Path)
-	err := call.CallServiceByGet(url, headers, nil, &platformApis)
+
+	client, err := pair.GetSdkClientWithDeviceRegKey(apiBaseUrl)
 	if err != nil {
-		logger.AppLogger().Errorf("Get Platform Ability Request error:%v", err)
+		logger.AppLogger().Errorf("Get SDK Client Request error:%v", err)
 		return nil
 	}
+	platformApis, err = client.GetAbility()
 	logger.AppLogger().Infof("Get Platform Ability Request Successfully")
 	logger.AppLogger().Debugf("platformApis: %v", platformApis)
 	return platformApis
@@ -48,9 +44,9 @@ func CheckPlatformAbility(uri string) bool {
 		platformApis = InitPlatformAbility()
 	}
 
-	for _, apis := range platformApis.PlatformAPIs {
+	for _, api := range platformApis.PlatformApis {
 		//logger.AppLogger().Debugf(apis.URI)
-		if uri == apis.URI {
+		if uri == api.Uri {
 			return true
 		}
 	}
