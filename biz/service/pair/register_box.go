@@ -66,7 +66,9 @@ func ServiceRegisterBox() error {
 	}
 
 	logger.AppLogger().Infof("ServiceRegisterBox, rsp:%+v", resp)
-
+	// 保存盒子信息
+	device.SetNetworkClient(&device.NetworkClientInfo{ClientID: resp.NetWorkClient.ClientId,
+		SecretKey: resp.NetWorkClient.SecretKey})
 	return nil
 }
 
