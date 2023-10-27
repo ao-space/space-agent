@@ -16,7 +16,7 @@ NAME=system-agent
 EXE=$(NAME)$(shell go env GOEXE)
 DATE=$(shell date '+%F-%T')
 VERSION=$(NAME)-AO.space-$(DATE)
-VERSIONNUMBER=1.0.0
+VERSIONNUMBER=1.0.1
 LDFLAGS=-ldflags "-s -w -X 'main.Version=${VERSION}' -X 'main.VersionNumber=${VERSIONNUMBER}'"
 SOURCES=$(shell ls **/*.go)
 
