@@ -28,9 +28,6 @@ import (
 	_ "embed"
 )
 
-//go:embed docker-compose_run_as_docker_network_mode_host.yml
-var Content_docker_compose_run_as_docker_network_mode_host_yml []byte
-
 //go:embed docker-compose_run_as_docker.yml
 var Content_docker_compose_run_as_docker_yml []byte
 
@@ -57,15 +54,7 @@ func GetContentDockerCompose() []byte {
 		//	current_yml_content = Content_docker_compose_gen2_yml
 		//} else
 		if m.DeviceModelNumber <= device_ability.SN_GEN_CLOUD_DOCKER {
-
-			networkModekey := config.Config.Box.RunInDocker.RunNetworkModeEnv
-			networkMode := os.Getenv(networkModekey)
-
-			if len(networkMode) > 0 && strings.EqualFold(networkMode, "host") { // Ubuntu
-				current_yml_content = Content_docker_compose_run_as_docker_network_mode_host_yml
-			} else {
-				current_yml_content = Content_docker_compose_run_as_docker_yml
-			}
+			current_yml_content = Content_docker_compose_run_as_docker_yml
 		}
 
 	}

@@ -164,8 +164,8 @@ services:
     image: registry.ao.space/ao-space/space-web:v1.0.1
     restart: always
     ports:
-      - "9980:80"
-      - "9443:443"
+      - "12841:80"
+      - "18569:443"
     # network_mode: "host"
       #   以容器运行时，去掉了 host 网络。如果 nginx 和 network-client 指定 host 网络，那么这2个容器会处于 docker-desktop 的子网中，比如 192.168.65.x 的网络。和宿主机、还有 网关(ao-space) 网络隔离的。不容易相互访问。
     env_file:
