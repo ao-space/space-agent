@@ -44,7 +44,7 @@ func emigrate() {
 
 		time.Sleep(time.Second * 5)
 
-		client, err := pair.GetSdkClientWithDeviceRegKey(si.NewApiBaseUrl)
+		client, err := pair.GetSdkClientWithDeviceRegKey(si.OldApiBaseUrl)
 		if err != nil {
 			logger.AppLogger().Warnf("Failed new SDK Client: err: %v", err.Error())
 			return
