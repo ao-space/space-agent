@@ -16,7 +16,7 @@ version: '2.4'
 services:
   aospace-upgrade:
     container_name: aospace-upgrade
-    image: registry.ao.space/ao-space/space-upgrade:dev
+    image: registry.ao.space/ao-space/space-upgrade:v1.0.1
     ports:
       - "127.0.0.1:5681:5681"
     environment:

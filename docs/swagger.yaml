@@ -1,17 +1,3 @@
-# Copyright (c) 2022 Institute of Software, Chinese Academy of Sciences (ISCAS)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 definitions:
   bindinit.InitReq:
     properties:
@@ -623,26 +609,6 @@ definitions:
       name:
         type: string
       signal:
-        type: integer
-    type: object
-  pair.WifiPwdReq:
-    properties:
-      addr:
-        type: string
-      pwd:
-        type: string
-    type: object
-  pair.WifiStatusRsp:
-    properties:
-      addr:
-        type: string
-      ipAddress:
-        items:
-          type: string
-        type: array
-      name:
-        type: string
-      status:
         type: integer
     type: object
   password.UpdateDocumentPasswordReq:
@@ -1262,33 +1228,6 @@ paths:
       summary: get Wi-Fi list [for gateway]
       tags:
       - device
-    post:
-      consumes:
-      - text/plain
-      description: set Wi-Fi password
-      operationId: PairNetNetConfigSettingDevice
-      parameters:
-      - description: Wi-Fi ssid and password.
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/pair.WifiPwdReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: code=AG-200 success; code=AG-561 connect failed
-          schema:
-            allOf:
-            - $ref: '#/definitions/dto.BaseRspStr'
-            - properties:
-                results:
-                  $ref: '#/definitions/pair.WifiStatusRsp'
-              type: object
-      summary: set Wi-Fi password [for gateway]
-      tags:
-      - device
   /agent/v1/api/device/version:
     get:
       consumes:
@@ -1562,33 +1501,6 @@ paths:
                   type: array
               type: object
       summary: get Wi-Fi list  [for client]
-      tags:
-      - net
-    post:
-      consumes:
-      - text/plain
-      description: set Wi-Fi password
-      operationId: PairNetNetConfigSetting
-      parameters:
-      - description: Wi-Fi ssid and password.
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/pair.WifiPwdReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: code=AG-200 success; code=AG-561 connect failed
-          schema:
-            allOf:
-            - $ref: '#/definitions/dto.BaseRspStr'
-            - properties:
-                results:
-                  $ref: '#/definitions/pair.WifiStatusRsp'
-              type: object
-      summary: set Wi-Fi password [for client]
       tags:
       - net
   /agent/v1/api/pair/tryout/code:

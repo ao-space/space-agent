@@ -18,12 +18,13 @@ import (
 	"agent/biz/model/device"
 	"agent/config"
 	"agent/utils/logger"
-	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"os"
 	"path"
 	"strconv"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 // Config gt client yaml config
@@ -70,37 +71,11 @@ func (conf *Config) Init() error {
 	conf.Options.WebrtcMaxPort = 62000
 	conf.Options.LogLevel = "info"
 	strconv.Itoa(int(config.Config.GateWay.LanPort))
-	if config.RunningOnLinux() {
-		service = Service{
-			Local:      "http://127.0.0.1:" + strconv.Itoa(int(config.Config.GateWay.LanPort)),
-			HostPrefix: conf.Options.ID,
-		}
-	} else {
-		service = Service{
-			Local:      "http://" + config.Config.Docker.NginxContainerName + ":80",
-			HostPrefix: conf.Options.ID,
-		}
+	service = Service{
+		Local:      "http://" + config.Config.Docker.NginxContainerName + ":80",
+		HostPrefix: conf.Options.ID,
 	}
 
-	//
-	//if hardware.RunningInDocker() {
-	//	if config.RunningOnLinux() {
-	//		service = Service{
-	//			Local:      "http://127.0.0.1:9980",
-	//			HostPrefix: conf.Options.ID,
-	//		}
-	//	} else {
-	//		service = Service{
-	//			Local:      "http://" + config.Config.Docker.NginxContainerName + ":9980",
-	//			HostPrefix: conf.Options.ID,
-	//		}
-	//	}
-	//} else {
-	//	service = Service{
-	//		Local:      "http://127.0.0.1:80",
-	//		HostPrefix: conf.Options.ID,
-	//	}
-	//}
 	conf.Services = append(conf.Services, service)
 	conf.Version = "1.0"
 	// 将配置写入文件
@@ -121,8 +96,8 @@ func (conf *Config) AddNewService(appName string, port string, token string) err
 	}
 	// 新增Service节点
 	newService := Service{
-		Local:      "http://127.0.0.1:443", // 第三方应用的server and port
-		HostPrefix: appName + "-" + token,  // 第三方应用的子域名
+		Local:      "https://" + config.Config.Docker.NginxContainerName + ":443", // 第三方应用的server and port
+		HostPrefix: appName + "-" + token,                                         // 第三方应用的子域名
 	}
 	currentConf.Services = append(currentConf.Services, newService)
 	err = currentConf.Save()
