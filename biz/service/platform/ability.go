@@ -18,7 +18,7 @@ import (
 	"agent/biz/model/device"
 	"agent/biz/service/pair"
 	"agent/utils/logger"
-	"github.com/big-dust/platform-sdk-go/v2"
+	"github.com/ao-space/platform-sdk-go"
 )
 
 var platformApis *platform.GetAbilityResponse

@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/asaskevich/EventBus v0.0.0-20200907212545-49d423059eef
-	github.com/big-dust/platform-sdk-go v0.0.6
 	github.com/docker/docker v20.10.8+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/dungeonsnd/gocom v1.0.45
@@ -12,7 +11,7 @@ require (
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-jwt/jwt/v5 v5.0.0
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.4.0
 	github.com/imdario/mergo v0.3.12
 	github.com/jinzhu/configor v1.2.1
 	github.com/jinzhu/copier v0.4.0
@@ -29,7 +28,7 @@ require (
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.8.4
 	github.com/syndtr/goleveldb v1.0.0
-	go.uber.org/zap v1.10.0
+	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/resty.v1 v1.12.0
@@ -41,6 +40,7 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/Microsoft/go-winio v0.4.17 // indirect
+	github.com/ao-space/platform-sdk-go v0.0.0-20231204070321-7e6df26960ff // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/containerd/containerd v1.5.5 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
@@ -87,7 +87,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/ugorji/go/codec v1.1.13 // indirect
 	go.uber.org/atomic v1.4.0 // indirect
-	go.uber.org/multierr v1.1.0 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.3.8 // indirect

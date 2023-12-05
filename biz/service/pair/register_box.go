@@ -29,7 +29,7 @@ import (
 	"agent/config"
 	"agent/utils/logger"
 	"fmt"
-	"github.com/big-dust/platform-sdk-go/v2"
+	"github.com/ao-space/platform-sdk-go"
 	"github.com/dungeonsnd/gocom/encrypt/encoding"
 	"time"
 )
@@ -86,6 +86,7 @@ func GetSdkClientWithDeviceRegKey(apiBaseUrl string) (*platform.Client, error) {
 	if err != nil {
 		logger.AppLogger().Errorf("%+v", err)
 	}
+	client.SetZapLogger(logger.AppLogger())
 
 	type authStruct struct {
 		BoxUUID    string   `json:"boxUUID"`
