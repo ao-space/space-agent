@@ -29,7 +29,7 @@ import (
 	"agent/config"
 	"agent/utils/logger"
 	"fmt"
-	"github.com/ao-space/platform-sdk-go/v2"
+	"github.com/ao-space/platform-sdk-go"
 	"github.com/dungeonsnd/gocom/encrypt/encoding"
 	"time"
 )

@@ -11,7 +11,7 @@ require (
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-jwt/jwt/v5 v5.0.0
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.4.0
 	github.com/imdario/mergo v0.3.12
 	github.com/jinzhu/configor v1.2.1
 	github.com/jinzhu/copier v0.4.0
@@ -40,7 +40,7 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/Microsoft/go-winio v0.4.17 // indirect
-	github.com/ao-space/platform-sdk-go v0.0.0-20231119023920-468c12c2b776 // indirect
+	github.com/ao-space/platform-sdk-go v0.0.0-20231204070321-7e6df26960ff // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/containerd/containerd v1.5.5 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect

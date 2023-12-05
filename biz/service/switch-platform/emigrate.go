@@ -24,7 +24,7 @@ package switchplatform
 import (
 	"agent/biz/service/pair"
 	"agent/utils/logger"
-	"github.com/ao-space/platform-sdk-go/v2"
+	"github.com/ao-space/platform-sdk-go"
 	"time"
 )
 

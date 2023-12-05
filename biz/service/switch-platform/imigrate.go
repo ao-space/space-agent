@@ -25,7 +25,7 @@ import (
 	"agent/biz/service/pair"
 	"agent/utils/logger"
 	"fmt"
-	"github.com/ao-space/platform-sdk-go/v2"
+	"github.com/ao-space/platform-sdk-go"
 	"github.com/jinzhu/copier"
 )
 
