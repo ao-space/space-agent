@@ -4,7 +4,7 @@
 
 ## 简介
 
-space-agent 作为 AO.space（开源版）一体机的载体，主要为 AO.space 服务器提供统一的启动入口。
+space-agent 作为 AO.space 一体机的载体，主要为 AO.space 服务器提供统一的启动入口。
 
 space-agent 负责绑定 AO.space 服务器和客户端，启动 AO.space 微服务并进行统一管理。
 
@@ -14,11 +14,11 @@ space-agent 负责绑定 AO.space 服务器和客户端，启动 AO.space 微服
 - 设备初始化
 - 微服务启动与管理
 - 分布式数字身份（DID）生成与管理
-- 傲空间服务升级等功能
+- 服务升级等功能
 
 ## 构建
 
-我们会将傲空间（开源版）相关服务构建成容器镜像提供用户下载
+我们会将 AO.space 相关服务构建成容器镜像提供用户下载
 
 如果你希望自己尝试在本地编译与构建
 
@@ -74,7 +74,7 @@ docker build -t local/space-agent:{tag} .
 
 ### 特别提示
 
-您也可以在一些开发板上运行傲空间（开源版），例如*树莓派*等
+您也可以在一些开发板上运行 AO.space ，例如*树莓派*等
 
 ### 快速开始
 
@@ -108,7 +108,7 @@ sudo docker run -d --name aospace-all-in-one  \
         ghcr.io/ao-space/space-agent:latest
 ```
 
-其他环境的启动，可以参考[傲空间私有部署](https://ao.space/open/documentation/105001)
+其他环境的启动，可以参考[私有部署指南](https://ao.space/open/documentation/105001)
 
 ## 注意事项
 
