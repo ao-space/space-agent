@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM --platform=linux/amd64 golang:1.20.6-bookworm as builder
+FROM debian:experimental as builder
 
 WORKDIR /work/
 
 COPY . .
 
-RUN apt update && apt install npm nodejs zip -y
-RUN cd web/boxdocker && npm install && npm run build && mv dist boxdocker && \
+RUN apt-get update && apt-get install golang-go npm nodejs zip -y
+RUN cd web/boxdocker && npm update && npm install && npm run build && mv dist boxdocker && \
         zip -r static_html.zip boxdocker && mv static_html.zip ../../res && cd ../../
 RUN go env -w GO111MODULE=on && make -f Makefile
 
