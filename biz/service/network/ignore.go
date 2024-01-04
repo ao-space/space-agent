@@ -41,7 +41,7 @@ func (svc *NetworkIgnoreService) Process() dto.BaseRspStr {
 	}
 
 	req := svc.Req.(*network.NetworkIgnoreReq)
-	logger.AppLogger().Debugf("PostNetworkConfigService, req:%+v", req)
+	// logger.AppLogger().Debugf("PostNetworkConfigService, req:%+v", req)
 
 	succ, err := utilsnetwork.ForgetWifi(req.WIFIName)
 	if err != nil {

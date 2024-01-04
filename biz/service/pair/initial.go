@@ -35,7 +35,7 @@ import (
 
 func ServiceInitial(req *dtopair.PasswordInfo) (dto.BaseRspStr, error) {
 	logger.AppLogger().Debugf("ServiceInitial")
-	logger.AccessLogger().Debugf("[ServiceInitial], req:%+v", req)
+	// logger.AccessLogger().Debugf("[ServiceInitial], req:%+v", req)
 	err := encwrapper.Check()
 	if err != nil {
 		err1 := fmt.Errorf("check failed, err:%v", err)
@@ -44,7 +44,6 @@ func ServiceInitial(req *dtopair.PasswordInfo) (dto.BaseRspStr, error) {
 			Message: err1.Error()}, err1
 	}
 
-	logger.AppLogger().Debugf("ServiceInitial, req.Password:%v", req.Password)
 	rt, err := encwrapper.Dec(req.Password)
 	if err != nil {
 		logger.AppLogger().Warnf("dec, err:%+v", err)
@@ -52,30 +51,6 @@ func ServiceInitial(req *dtopair.PasswordInfo) (dto.BaseRspStr, error) {
 			Message: err.Error()}, nil
 	}
 	password := rt[0]
-	logger.AppLogger().Debugf("ServiceInitial, password:%v", password)
-	// password := ""
-
-	// pairing 里面启动了.
-	// // up一下容器
-	// go docker.PostEvent(docker.EventPairing)
-	// // 等容器启动完成
-	// dockerRet := -1
-	// for i := 0; i < 600; i++ {
-	// 	time.Sleep(time.Duration(2) * time.Second)
-	// 	dockerRet = docker.GetDockerStatus()
-	// 	if dockerRet == docker.ContainersStarted || dockerRet == docker.ContainersStartedFail {
-	// 		break
-	// 	}
-	// }
-	// logger.AppLogger().Debugf("ServiceInitial, dockerRet:%v", dockerRet)
-
-	// // 容器没启动成功
-	// if dockerRet != 1 {
-	// 	rsp := dto.BaseRspStr{Code: dto.AgentCodeServerErrorStr,
-	// 		RequestId: random.GenUUID(),
-	// 		Message:   fmt.Sprintf("GetDockerStatus: %v", dockerRet)}
-	// 	return rsp, nil
-	// }
 
 	// 等待 account 的 initial 接口调用成功
 	var err1 error

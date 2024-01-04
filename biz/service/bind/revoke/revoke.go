@@ -44,7 +44,7 @@ func (svc *RevokeService) Process() dto.BaseRspStr {
 	}
 
 	req := svc.Req.(*revoke.RevokeReq)
-	logger.AppLogger().Debugf("RevokeService Process, req:%+v", req)
+	// logger.AppLogger().Debugf("RevokeService Process, req:%+v", req)
 	microServerRsp, err := doRevoke(req.Password, req.ClientUuid)
 	if err != nil {
 		logger.AppLogger().Debugf("%v", err)

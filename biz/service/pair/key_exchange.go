@@ -36,8 +36,6 @@ import (
 )
 
 func ServiceKeyExchange(req *dtopair.KeyExchangeReq) (dto.BaseRspStr, error) {
-	logger.AppLogger().Debugf("ServiceKeyExchange, req:%+v", req)
-	logger.AccessLogger().Debugf("[ServiceKeyExchange], req:%+v", req)
 
 	if !clientinfo.ClientExchangePubKeyExchanged() {
 		err1 := fmt.Errorf("no public key exchanged")

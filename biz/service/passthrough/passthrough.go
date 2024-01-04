@@ -45,7 +45,6 @@ func (svc *PassthroughService) Process() dto.BaseRspStr {
 		return dto.BaseRspStr{Code: dto.AgentCodeBadReqStr,
 			Message: fmt.Sprintf("req.ApiPath length error")}
 	}
-	logger.AppLogger().Debugf("PassthroughService req:%+v", req)
 
 	// set headers
 	newHeaders := make(map[string]string)
@@ -153,16 +152,14 @@ func (svc *PassthroughService) Process() dto.BaseRspStr {
 		url := config.Config.GateWay.APIRoot.Url + reqPath
 		logger.AppLogger().Debugf("---- ServicePassthrough, url:%+v", url)
 		var callRsp interface{}
-		httpReq, httpRsp, rspBody, err1 := utilshttp.PostJsonWithHeaders(url,
+		_, httpRsp, rspBody, err1 := utilshttp.PostJsonWithHeaders(url,
 			req.Entity, newHeaders, callRsp)
 		if err1 != nil {
-			logger.AppLogger().Warnf("Failed CallServiceByPost, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@rspBody:%v", err1, httpReq, httpRsp, string(rspBody))
+			// logger.AppLogger().Warnf("Failed CallServiceByPost, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@rspBody:%v", err1, httpReq, httpRsp, string(rspBody))
 			return dto.BaseRspStr{Code: dto.AgentCodeCallServiceFailedStr, Message: err1.Error()}
 		} else {
-			logger.AppLogger().Debugf("ServicePassthrough, httpReq:%+v", httpReq)
 			logger.AppLogger().Debugf("ServicePassthrough, httpRsp:%+v", httpRsp)
-			logger.AppLogger().Debugf("ServicePassthrough, rspBody:%+v", string(rspBody))
-			logger.AppLogger().Debugf("ServicePassthrough, callRsp:%+v", callRsp)
+			// logger.AppLogger().Debugf("ServicePassthrough, callRsp:%+v", callRsp)
 		}
 
 		svc.RequestId = newHeaders["Request-Id"]

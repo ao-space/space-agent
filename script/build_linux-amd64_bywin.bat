@@ -15,7 +15,7 @@ rem limitations under the License.
 
 @REM go get -u github.com/swaggo/swag/cmd/swag  @REM 下载的版本较新，CI 机器 go 版本 go 1.15.7-3，可能会 CI 编译失败!!!!
 
-@REM swag init -g biz/web/http_server.go @REM 去掉本行注释，可以重新生成 swagger 文档。
+swag init -g biz/web/http_server.go @REM 去掉本行注释，可以重新生成 swagger 文档。
 
 set CGO_ENABLED=0
 set GOOS=linux

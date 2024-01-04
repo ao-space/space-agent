@@ -54,7 +54,7 @@ func (svc *InternetServiceConfig) Process() dto.BaseRspStr {
 	}
 
 	req := svc.Req.(*config.ConfigReq)
-	logger.AppLogger().Debugf("InternetServiceConfig Process, req:%+v", req)
+	// logger.AppLogger().Debugf("InternetServiceConfig Process, req:%+v", req)
 	if device.GetConfig().EnableInternetAccess { // 之前处于开启状态, 准备关闭
 		if req.EnableInternetAccess {
 			return svc.BaseService.Process()

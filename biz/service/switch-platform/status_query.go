@@ -33,7 +33,7 @@ import (
 
 // 切换盒子对接的空间平台
 func ServiceSwitchStatusQuery(req *modelsp.SwitchStatusQueryReq) (dto.BaseRspStr, error) {
-	logger.AppLogger().Debugf("ServiceSwitchStatusQuery, req:%+v", req)
+	// logger.AppLogger().Debugf("ServiceSwitchStatusQuery, req:%+v", req)
 
 	err := encwrapper.Check()
 	if err != nil {

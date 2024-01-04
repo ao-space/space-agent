@@ -44,6 +44,7 @@ type LogConfig struct {
 }
 
 var logConfig *LogConfig
+var atomicLevel = zap.NewAtomicLevelAt(zap.InfoLevel)
 
 func SetLogConfig(config *LogConfig) {
 	logConfig = config
@@ -69,10 +70,15 @@ func DefaultLogger() *zap.SugaredLogger {
 func Logger(file string) *zap.SugaredLogger {
 	log, ok := mLogger[file]
 	if !ok {
-		log = initLogger(file, zapcore.DebugLevel)
+		log = initLogger(file, atomicLevel)
 		mLogger[file] = log
 	}
 	return log
+}
+
+// "debug", "info", "warn", "error", "dpanic", "panic", and "fatal"
+func SetLevel(level string) {
+	atomicLevel.UnmarshalText([]byte(level))
 }
 
 func initLogger(file string, level zapcore.LevelEnabler) *zap.SugaredLogger {

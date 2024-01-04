@@ -37,11 +37,9 @@ import (
 )
 
 func ServicePubKeyExchange(req *dtopair.PubKeyExchangeReq) (dto.BaseRspStr, error) {
-	logger.AppLogger().Debugf("ServicePubKeyExchange, req:%+v", req)
 	logger.AppLogger().Debugf("ServicePubKeyExchange, len(req.ClientPubKey):%+v", len(req.ClientPubKey))
 	logger.AppLogger().Debugf("ServicePubKeyExchange, req.ClientPubKey:%+v", req.ClientPubKey)
 	logger.AppLogger().Debugf("ServicePubKeyExchange, req.SignedBtid:%+v", req.SignedBtid)
-	logger.AccessLogger().Debugf("[ServicePubKeyExchange], req:%+v", req)
 
 	clientinfo.SetClientExchangePubKey(req.ClientPubKey)
 	clientinfo.SetClientExchangePriKey(req.ClientPriKey)

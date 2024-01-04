@@ -15,12 +15,12 @@
 package config
 
 import (
-	"agent/biz/service/pair"
 	"agent/biz/model/device"
 	"agent/biz/model/dto"
 	"agent/biz/model/dto/bind/internet/service/config"
 	"agent/biz/service/base"
 	"agent/biz/service/call"
+	"agent/biz/service/pair"
 	cfg "agent/config"
 	"agent/utils/logger"
 	"fmt"
@@ -48,7 +48,7 @@ func GetUserInfo() ([]*UserInfo, error) {
 	var results Rsp
 	url := cfg.Config.Account.Member.Url + "?userId=1"
 	err := call.CallServiceByGet(url, nil, nil, &results)
-	logger.AppLogger().Debugf("InternetServiceGetConfig Process, err:%v, url:%v, results:%+v", err, url, results)
+	// logger.AppLogger().Debugf("InternetServiceGetConfig Process, err:%v, url:%v, results:%+v", err, url, results)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (svc *InternetServiceGetConfig) Process() dto.BaseRspStr {
 		return dto.BaseRspStr{Code: dto.AgentCodeBadReqStr, RequestId: svc.RequestId, Message: err.Error()}
 	}
 	req := svc.Req.(*config.GetConfigReq)
-	logger.AppLogger().Debugf("InternetServiceGetConfig Process, req:%v", req)
+	// logger.AppLogger().Debugf("InternetServiceGetConfig Process, req:%v", req)
 
 	userInfos, err := GetUserInfo()
 	if err != nil {

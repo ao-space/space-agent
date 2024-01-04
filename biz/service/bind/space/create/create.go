@@ -58,7 +58,7 @@ func (svc *SpaceCreateService) Process() dto.BaseRspStr {
 	rsp := &create.CreateRsp{}
 
 	req := svc.Req.(*create.CreateReq)
-	logger.AppLogger().Debugf("SpaceCreateService Process, req:%+v", req)
+	// logger.AppLogger().Debugf("SpaceCreateService Process, req:%+v", req)
 	logger.AppLogger().Debugf("SpaceCreateService Process, pairedInfo:%+v", svc.PairedInfo)
 	logger.AppLogger().Debugf("SpaceCreateService, rebind:%+v", svc.PairedInfo.Rebind())
 
@@ -163,7 +163,7 @@ func (svc *SpaceCreateService) registerDevice(req *create.CreateReq) (*dto.BaseR
 }
 
 func (svc *SpaceCreateService) callGateway(req *create.CreateReq) (call.MicroServerRsp, error) {
-	logger.AppLogger().Debugf("callGateway, req:%+v ", req)
+	// logger.AppLogger().Debugf("callGateway, req:%+v ", req)
 
 	var microServerRsp call.MicroServerRsp
 

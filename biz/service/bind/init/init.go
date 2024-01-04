@@ -38,7 +38,7 @@ type InitService struct {
 func (svc *InitService) Process() dto.BaseRspStr {
 	logger.AppLogger().Debugf("InitService Process")
 	req := svc.Req.(*bindinit.InitReq)
-	logger.AppLogger().Debugf("InitService Process, req:%+v", req)
+	// logger.AppLogger().Debugf("InitService Process, req:%+v", req)
 	if req != nil && len(req.ClientUuid) > 0 && len(req.ClientVersion) > 0 {
 		clientinfo.SetClientVersion(req.ClientUuid, req.ClientVersion)
 	}

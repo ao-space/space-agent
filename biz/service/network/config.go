@@ -153,7 +153,7 @@ type PostNetworkConfigService struct {
 
 func (svc *PostNetworkConfigService) Process() dto.BaseRspStr {
 	req := svc.Req.(*network.NetworkConfigReq)
-	logger.AppLogger().Debugf("PostNetworkConfigService, req:%+v", req)
+	// logger.AppLogger().Debugf("PostNetworkConfigService, req:%+v", req)
 	abilityModel := device_ability.GetAbilityModel()
 	if !abilityModel.InnerDiskSupport {
 		err := fmt.Errorf("unsupported function")

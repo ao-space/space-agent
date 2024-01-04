@@ -28,7 +28,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"agent/utils/logger"
 	"github.com/gin-gonic/gin"
 )
 
@@ -44,11 +43,11 @@ import (
 // @Router /agent/v1/api/setpassword [POST]
 // app与盒子的配对和初始化v1
 func SetPassword(c *gin.Context) {
-	logger.AppLogger().Debugf("setpassword POST, req=%+v", c.Request)
+	// logger.AppLogger().Debugf("setpassword POST, req=%+v", c.Request)
 	var reqObj dtopair.PasswordInfo
 	if err := c.ShouldBindJSON(&reqObj); err != nil {
 		err1 := fmt.Errorf("failed ShouldBindJSON, %+v", err)
-		logger.AppLogger().Debugf("setpassword POST, %+v", err1)
+		// logger.AppLogger().Debugf("setpassword POST, %+v", err1)
 		c.JSON(http.StatusOK, dto.BaseRspStr{Code: dto.AgentCodeBadReqStr, Message: err1.Error()})
 		return
 	}
