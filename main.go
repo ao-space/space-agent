@@ -50,6 +50,7 @@ func main() {
 		int(config.Config.Log.RotationCount),
 		int(config.Config.Log.MaxAge), false)
 	logger.PrecreateAllLoggers()
+	logger.SetLevel(config.Config.Log.LevelString)
 
 	config.Version = Version
 	config.VersionNumber = VersionNumber

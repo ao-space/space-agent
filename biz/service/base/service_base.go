@@ -110,7 +110,7 @@ func (svc *BaseService) Enter(iService IService, reqObj interface{}) dto.BaseRsp
 					Message: err1.Error()}
 			}
 
-			logger.AppLogger().Debugf("BaseService Enter, lanInvokeReq:%+v", lanInvokeReq)
+			// logger.AppLogger().Debugf("BaseService Enter, lanInvokeReq:%+v", lanInvokeReq)
 			svc.EncryptedLanRequestBodyData = []byte(lanInvokeReq.Body)
 		}
 
@@ -142,7 +142,7 @@ func (svc *BaseService) Enter(iService IService, reqObj interface{}) dto.BaseRsp
 			bodyDataDec = svc.EncryptedLanRequestBodyData
 		}
 
-		logger.AppLogger().Debugf("BaseService Enter, bodyDataDec:%+v", string(bodyDataDec))
+		// logger.AppLogger().Debugf("BaseService Enter, bodyDataDec:%+v", string(bodyDataDec))
 		err := encoding.JsonDecode(bodyDataDec, reqObj)
 		if err != nil {
 			logger.AppLogger().Warnf("BaseService.Enter, JsonDecode err:%+v", err)
@@ -163,10 +163,10 @@ func (svc *BaseService) Enter(iService IService, reqObj interface{}) dto.BaseRsp
 
 	svc.Req = reqObj
 
-	logger.AppLogger().Debugf("svc.Req:%+v", svc.Req)
+	// logger.AppLogger().Debugf("svc.Req:%+v", svc.Req) // 可能包含隐私字段，暂时不输出请求。
 	if svc.Req != nil {
 		valueOfReq := reflect.ValueOf(svc.Req)
-		logger.AppLogger().Debugf("valueOfReq:%+v", valueOfReq)
+		// logger.AppLogger().Debugf("valueOfReq:%+v", valueOfReq)
 		reqExtraInfoValue := reflect.Indirect(valueOfReq).FieldByName("ReqExtraInfo")
 		logger.AppLogger().Debugf("reqExtraInfoValue:%+v", reqExtraInfoValue)
 		if reqExtraInfoValue.IsValid() { // 如果请求结构定义中没有 ReqExtraInfo 字段，则不会继续执行.
@@ -187,8 +187,8 @@ func (svc *BaseService) Enter(iService IService, reqObj interface{}) dto.BaseRsp
 		}
 	}
 
-	logger.AppLogger().Debugf("BaseService, req: %+v", reqObj)
-	logger.AccessLogger().Debugf("[BaseService.Enter] svc.RequestId:%v, svc.Req:%+v", svc.RequestId, svc.Req)
+	// logger.AppLogger().Debugf("BaseService, req: %+v", reqObj)
+	// logger.AccessLogger().Debugf("[BaseService.Enter] svc.RequestId:%v, svc.Req:%+v", svc.RequestId, svc.Req)
 	return iService.Process()
 }
 
@@ -244,7 +244,7 @@ func (svc *BaseService) Leave() dto.BaseRspStr {
 		rsp := dto.BaseRspStr{Code: dto.AgentCodeOkStr,
 			Message: "OK",
 			Results: svc.Rsp}
-		logger.AppLogger().Debugf("BaseService Enter, Rsp:%+v", svc.Rsp)
+		// logger.AppLogger().Debugf("BaseService Enter, Rsp:%+v", svc.Rsp)
 		return rsp
 	}
 }

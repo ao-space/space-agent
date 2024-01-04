@@ -34,8 +34,6 @@ import (
 
 // 管理员解绑
 func ServiceRevoke(req *dtopair.RevokeReq) (dto.BaseRspStr, error) {
-	logger.AppLogger().Debugf("ServiceRevoke, req:%+v", req)
-	logger.AccessLogger().Debugf("[ServiceRevoke], req:%+v", req)
 
 	err := encwrapper.Check()
 	if err != nil {
@@ -63,7 +61,6 @@ func ServiceRevoke(req *dtopair.RevokeReq) (dto.BaseRspStr, error) {
 		clientUUID = rt[0]
 	}
 
-	logger.AppLogger().Debugf("password:%+v, clientUUID=%v", password, clientUUID)
 	return doRevoke(password, clientUUID)
 }
 

@@ -29,7 +29,7 @@ func PullImageByUsernameAndPasswd(cli *client.Client, imageName string, username
 	if err != nil {
 		return err
 	}
-	fmt.Printf("username: %v, password=%v \n", username, password)
+
 	return PullImageByAuthStr(cli, imageName, authStr)
 }
 

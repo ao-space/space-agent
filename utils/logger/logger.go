@@ -45,6 +45,15 @@ func SetLogConfig(MaxSize, MaxBackups, MaxAge int, Compress bool) {
 		Compress:   Compress})
 }
 
+// "debug", "info", "warn", "error", "dpanic", "panic", and "fatal"
+func SetLevel(level string) {
+	zaplogger.SetLevel(level)
+}
+
+// 注意! 所有日志都需要提前初始化。
+//
+//	日志模块为了性能, 读写 map 没加锁。
+//	所以需要提前初始化，初始化以后只会读取 map ，不会写入了。并发读取是没问题的。
 func PrecreateAllLoggers() {
 	AppLogger()
 	CheckLogger()

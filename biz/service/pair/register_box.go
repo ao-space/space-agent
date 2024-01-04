@@ -76,14 +76,14 @@ func ServiceRegisterBox() error {
 	var rsp registryRspStruct
 
 	tryTotal := 3
-	var httpReq *http.Request
+	// var httpReq *http.Request
 	var httpRsp *http.Response
 	var body []byte
 	var err1 error
 	for i := 0; i < tryTotal; i++ {
-		httpReq, httpRsp, body, err1 = utilshttp.PostJsonWithHeaders(url, parms, headers, &rsp)
+		_, httpRsp, body, err1 = utilshttp.PostJsonWithHeaders(url, parms, headers, &rsp)
 		if err1 != nil {
-			logger.AppLogger().Warnf("Failed PostJson, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@body:%v", err1, httpReq, httpRsp, string(body))
+			// logger.AppLogger().Warnf("Failed PostJson, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@body:%v", err1, httpReq, httpRsp, string(body))
 			if i == tryTotal-1 {
 				return err1
 			}
@@ -96,9 +96,7 @@ func ServiceRegisterBox() error {
 
 	logger.AppLogger().Infof("ServiceRegisterBox, parms:%+v", parms)
 	logger.AppLogger().Infof("ServiceRegisterBox, rsp:%+v", rsp)
-	logger.AppLogger().Infof("ServiceRegisterBox, httpReq:%+v", httpReq)
 	logger.AppLogger().Infof("ServiceRegisterBox, httpRsp:%+v", httpRsp)
-	logger.AppLogger().Infof("ServiceRegisterBox, body:%v", string(body))
 
 	if httpRsp.StatusCode == http.StatusOK {
 		// 保存盒子信息

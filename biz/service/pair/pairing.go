@@ -41,8 +41,6 @@ import (
 
 // app与盒子的配对和初始化v1
 func ServicePairing(req *dtopair.PairingReq) (dto.BaseRspStr, error) {
-	logger.AppLogger().Debugf("ServicePairing, req:%+v", req)
-	logger.AccessLogger().Debugf("[ServicePairing], req:%+v", req)
 
 	err := encwrapper.Check()
 	if err != nil {

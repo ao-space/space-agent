@@ -289,7 +289,7 @@ func ConnectWifi(BSSID, PWD string) (bool, error) {
 			params = []string{"dev", "wifi", "connect", BSSID, "password", `"` + PWD + `"`}
 		}
 
-		logger.AppLogger().Debugf("ConnectWifi (%v/%v), run cmd: nmcli %v", i+1, tryTtl, strings.Join(params, " "))
+		logger.AppLogger().Debugf("ConnectWifi (%v/%v), run cmd: nmcli", i+1, tryTtl)
 		stdOutput, errOutput, err1 := run.RunExe("nmcli", params)
 		// fmt.Printf("ConnectWifi, stdOutput:\n%v\n\nerrOutput:%v\n\nerr:\n\n%v\n\n",
 		// 	string(stdOutput), string(errOutput), err)
@@ -298,8 +298,8 @@ func ConnectWifi(BSSID, PWD string) (bool, error) {
 				i+1, tryTtl, params, err, string(stdOutput), string(errOutput))
 			time.Sleep(2 * time.Second)
 		} else {
-			logger.AppLogger().Debugf("run ConnectWifi(%v/%v), run cmd: nmcli %v, stdOutput is :%v, errOutput is :%v",
-				i+1, tryTtl, strings.Join(params, " "), string(stdOutput), string(errOutput))
+			logger.AppLogger().Debugf("run ConnectWifi(%v/%v), run cmd: nmcli, stdOutput is :%v, errOutput is :%v",
+				i+1, tryTtl, string(stdOutput), string(errOutput))
 
 			succ = strings.Contains(string(stdOutput), "successfully activated")
 		}

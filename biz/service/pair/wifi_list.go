@@ -32,8 +32,6 @@ import (
 )
 
 func ServiceWifiList(req *dtopair.WifiListReq, usingEncrypt bool) (dto.BaseRspStr, error) {
-	logger.AppLogger().Debugf("ServiceWifiList, req:%+v, usingEncrypt:%+v", req, usingEncrypt)
-	logger.AccessLogger().Debugf("[ServiceWifiList], req:%+v", req)
 
 	if usingEncrypt {
 		err := encwrapper.Check()

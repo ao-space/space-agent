@@ -113,12 +113,12 @@ func Dec(params ...string) ([]string, error) {
 		return nil, err1
 	}
 	rt := make([]string, 0)
-	for i, v := range params {
+	for _, v := range params {
 		d, err := DecParam(v)
 		if err != nil {
 			return nil, err
 		}
-		logger.AppLogger().Debugf("dec, parm[%v]=%v", i, v)
+		// logger.AppLogger().Debugf("dec, parm[%v]=%v", i, v)
 		rt = append(rt, string(d))
 	}
 	return rt, nil

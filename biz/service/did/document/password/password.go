@@ -35,7 +35,7 @@ func NewUpdateDocumentPassword() *UpdateDocumentPassword {
 
 func (svc *UpdateDocumentPassword) Process() dto.BaseRspStr {
 	req := svc.Req.(*password.UpdateDocumentPasswordReq)
-	logger.AppLogger().Debugf("UpdateDocumentPassword Process, svc.RequestId:%v, req:%+v", svc.RequestId, req)
+	// logger.AppLogger().Debugf("UpdateDocumentPassword Process, svc.RequestId:%v, req:%+v", svc.RequestId, req)
 	if req == nil {
 		err1 := fmt.Errorf("request is nil")
 		logger.AppLogger().Debugf(err1.Error())

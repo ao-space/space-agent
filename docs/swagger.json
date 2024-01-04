@@ -1,7 +1,11 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "contact": {
+            "name": "wenchao",
+            "url": "http://www.swagger.io/support",
+            "email": "wenchao@iscas.ac.cn"
+        }
     },
     "paths": {
         "/agent/info": {

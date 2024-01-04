@@ -45,10 +45,10 @@ func CallServiceByPost(url string, headers map[string]string, req, rsp interface
 	}
 	httpReq, httpRsp, body, err1 := utilshttp.PostJsonWithHeaders(url, req, headers, rsp)
 	if err1 != nil {
-		logger.AppLogger().Warnf("Failed CallServiceByPost, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@body:%v", err1, httpReq, httpRsp, string(body))
+		// logger.AppLogger().Warnf("Failed CallServiceByPost, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@body:%v", err1, httpReq, httpRsp, string(body))
 		return err1
 	}
-	logger.AppLogger().Debugf("CallServiceByPost, req:%+v", req)
+	// logger.AppLogger().Debugf("CallServiceByPost, req:%+v", req)
 	logger.AppLogger().Debugf("CallServiceByPost, rsp:%+v", rsp)
 	logger.AppLogger().Infof("CallServiceByPost, httpReq:%+v", httpReq)
 	logger.AppLogger().Infof("CallServiceByPost, httpRsp:%+v", httpRsp)
@@ -87,7 +87,7 @@ func CallServiceByFormStr(method, url string, reqStr string, rsp interface{}) (*
 	payload := strings.NewReader(reqStr)
 	client := &http.Client{Timeout: time.Second * 20}
 
-	logger.AppLogger().Infof("CallServiceByForm, method:%+v, url:%+v, reqStr:%+v, payload:%+v", method, url, reqStr, payload)
+	// logger.AppLogger().Infof("CallServiceByForm, method:%+v, url:%+v, reqStr:%+v, payload:%+v", method, url, reqStr, payload)
 
 	req, err := http.NewRequest(method, url, payload)
 	if err != nil {
@@ -102,14 +102,14 @@ func CallServiceByFormStr(method, url string, reqStr string, rsp interface{}) (*
 	}
 	defer resp.Body.Close()
 
-	logger.AppLogger().Infof("CallServiceByForm, httpReq:%+v", req)
+	// logger.AppLogger().Infof("CallServiceByForm, httpReq:%+v", req)
 	logger.AppLogger().Infof("CallServiceByForm, httpRsp:%+v", resp)
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return resp, fmt.Errorf("ReadAll err:%+v", err)
 	}
-	// fmt.Println(string(body))
+
 	logger.AppLogger().Infof("CallServiceByForm, string(body):%+v", string(body))
 
 	err = json.Unmarshal(body, &rsp)

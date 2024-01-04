@@ -33,11 +33,6 @@ import (
 )
 
 func ServiceTryout(req *tryout.TryoutCodeReq) (dto.BaseRspStr, error) {
-	logger.AppLogger().Debugf("ServiceTryout, req:%+v", req)
-	logger.AccessLogger().Debugf("[ServiceTryout], req:%+v", req)
-
-	// AgentCodeDockerPulling
-
 	if device_ability.GetAbilityModel().RunInDocker {
 		if docker.ContainersDownloading == docker.GetDockerStatus() {
 			err := fmt.Errorf("docker images is downloading...")
@@ -97,14 +92,14 @@ func presetBoxInfo(req *tryout.TryoutCodeReq) (dto.BaseRspStr, error) {
 	var rsp platformRspStruct
 
 	tryTotal := 6
-	var httpReq *http.Request
+	// var httpReq *http.Request
 	var httpRsp *http.Response
 	var body []byte
 	var err1 error
 	for i := 0; i < tryTotal; i++ {
-		httpReq, httpRsp, body, err1 = utilshttp.PostJsonWithHeaders(url, parms, headers, &rsp)
+		_, httpRsp, body, err1 = utilshttp.PostJsonWithHeaders(url, parms, headers, &rsp)
 		if err1 != nil {
-			logger.AppLogger().Warnf("Failed PostJson, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@body:%v", err1, httpReq, httpRsp, string(body))
+			// logger.AppLogger().Warnf("Failed PostJson, err:%v, @@httpReq:%+v, @@httpRsp:%+v, @@body:%v", err1, httpReq, httpRsp, string(body))
 			if i == tryTotal-1 {
 				return dto.BaseRspStr{Code: dto.AgentCodeServerErrorStr, Message: err1.Error(), Results: nil}, err1
 			}
@@ -116,12 +111,8 @@ func presetBoxInfo(req *tryout.TryoutCodeReq) (dto.BaseRspStr, error) {
 	}
 
 	logger.AppLogger().Infof("presetBoxInfo, rsp:%+v", rsp)
-	logger.AppLogger().Infof("presetBoxInfo, httpReq:%+v", httpReq)
 	logger.AppLogger().Infof("presetBoxInfo, httpRsp:%+v", httpRsp)
 	logger.AppLogger().Infof("presetBoxInfo, body:%v", string(body))
-	fmt.Printf("presetBoxInfo, httpReq:%+v\n", httpReq)
-	fmt.Printf("presetBoxInfo, httpRsp:%+v\n", httpRsp)
-	fmt.Printf("presetBoxInfo, rsp:%+v\n", rsp)
 
 	if httpRsp.StatusCode == http.StatusOK {
 		if rsp.State == 1 {

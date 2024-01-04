@@ -35,7 +35,7 @@ func NewGetDocument() *GetDocument {
 
 func (svc *GetDocument) Process() dto.BaseRspStr {
 	req := svc.Req.(*document.GetDocumentReq)
-	logger.AppLogger().Debugf("GetDocument Process, svc.RequestId:%v, req:%+v", svc.RequestId, req)
+	// logger.AppLogger().Debugf("GetDocument Process, svc.RequestId:%v, req:%+v", svc.RequestId, req)
 
 	didDocBytes, err := did.GetDocumentFromFile(nil, req.AOID, req.DID)
 	if err != nil {

@@ -820,7 +820,10 @@ definitions:
         type: string
     type: object
 info:
-  contact: {}
+  contact:
+    email: wenchao@iscas.ac.cn
+    name: wenchao
+    url: http://www.swagger.io/support
 paths:
   /agent/info:
     get:

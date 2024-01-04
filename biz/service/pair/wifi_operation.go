@@ -211,7 +211,7 @@ func IsNetworkConnected() (bool, error) {
 }
 
 func ConnectToWifi(BSSID, PWD string) error {
-	logger.AppLogger().Debugf("connectToWifi, BSSID:%+v, PWD:%+v", BSSID, PWD)
+	logger.AppLogger().Debugf("connectToWifi, BSSID:%+v", BSSID)
 
 	succ, err := network.ConnectWifi(BSSID, PWD)
 	if err != nil {

@@ -24,6 +24,7 @@ import (
 	"net/http"
 
 	"agent/utils/logger"
+
 	"github.com/dungeonsnd/gocom/encrypt/random"
 	"github.com/dungeonsnd/gocom/file/fileutil"
 	"github.com/gin-gonic/gin"
@@ -47,7 +48,7 @@ func TryOutCode(c *gin.Context) {
 	var reqObj tryout.TryoutCodeReq
 	if len(tryoutCode) < 1 || len(email) < 1 {
 		err1 := fmt.Errorf("request params error, tryoutCode:%+v, email:%+v", tryoutCode, email)
-		logger.AppLogger().Debugf("TryOutCode POST, %+v", err1)
+		// logger.AppLogger().Debugf("TryOutCode POST, %+v", err1)
 		c.JSON(http.StatusOK, dto.BaseRspStr{Code: dto.AgentCodeBadReqStr, Message: err1.Error()})
 		return
 	}

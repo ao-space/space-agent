@@ -34,9 +34,6 @@ import (
 
 func ServiceSetPassword(req *dtopair.PasswordInfo) (dto.BaseRspStr, error) {
 
-	logger.AppLogger().Debugf("ServiceSetPassword, req:%+v", req)
-	logger.AccessLogger().Debugf("[ServiceSetPassword], req:%+v", req)
-
 	err := encwrapper.Check()
 	if err != nil {
 		logger.AppLogger().Warnf("check, err:%+v", err)
@@ -46,13 +43,12 @@ func ServiceSetPassword(req *dtopair.PasswordInfo) (dto.BaseRspStr, error) {
 
 	rt, err := encwrapper.Dec(req.Password)
 	if err != nil {
-		logger.AppLogger().Warnf("dec, err:%+v", err)
+		// logger.AppLogger().Warnf("dec, err:%+v", err)
 		return dto.BaseRspStr{Code: dto.AgentCodeBadReqStr,
 			Message: err.Error()}, nil
 	}
 	password := rt[0]
 
-	logger.AppLogger().Debugf("password:%+v", password)
 	return doSetPassword(password)
 }
 
