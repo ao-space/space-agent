@@ -41,7 +41,6 @@ RUN set -eux; \
                 curl \
                 cronie \
         ; \
-        yum remove docker-* -y ; \
         yum clean all;
 
 COPY --from=builder /work/build/system-agent /usr/local/bin/system-agent
