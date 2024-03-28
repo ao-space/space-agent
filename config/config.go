@@ -267,6 +267,12 @@ var Config = struct {
 			Path string `default:"/v2/platform/boxes"`
 		}
 
+		GetChannelTicket struct {
+			Path string `default:"/v2/platform/channel/ticket"`
+		}
+		GetDomainTicket struct {
+			Path string `default:"/v2/platform/channel/user/ticket"`
+		}
 		PresetBoxInfo struct {
 			Path string `default:"/v2/service/trail/boxinfos"`
 		}

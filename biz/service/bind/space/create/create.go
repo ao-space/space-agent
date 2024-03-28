@@ -23,6 +23,7 @@ import (
 	"agent/biz/model/dto"
 	"agent/biz/model/dto/bind/space/create"
 	"agent/biz/model/gt"
+	"agent/biz/model/platform"
 	"agent/biz/service/base"
 	"agent/biz/service/call"
 	"agent/biz/service/pair"
@@ -32,6 +33,7 @@ import (
 	"agent/utils/retry"
 	"encoding/base64"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -63,15 +65,26 @@ func (svc *SpaceCreateService) Process() dto.BaseRspStr {
 	logger.AppLogger().Debugf("SpaceCreateService, rebind:%+v", svc.PairedInfo.Rebind())
 
 	// 注册平台
-	if req.EnableInternetAccess && !svc.PairedInfo.Rebind() { // 首次且开启互联网通道情况下。解绑后重新绑定时不改变互联网服务配置。
+	if req.ChannelIdentified && req.EnableInternetAccess && !svc.PairedInfo.Rebind() { // 首次且开启互联网通道情况下。解绑后重新绑定时不改变互联网服务配置。
 
 		if req.PlatformApiBase != "" {
+
 			device.SetApiBaseUrl(req.PlatformApiBase)
-			//envFiles := make(map[string]map[string]string)
-			//gwEnvFile := make(map[string]string)
-			//gwEnvFile["APP_SSPLATFORM_URL"] = req.PlatformApiBase
-			//envFiles["aospace-gateway.env"] = gwEnvFile
-			//docker.ProcessEnv(config.Config.Docker.ComposeFile, envFiles)
+			envFiles := make(map[string]map[string]string)
+			gwEnvFile := make(map[string]string)
+			gwEnvFile["APP_SSPLATFORM_URL"] = req.PlatformApiBase
+
+			for _, urls := range platform.BaseUrlMap {
+				if strings.Contains(urls.AppPSPlatformUrl, req.PlatformApiBase) {
+					gwEnvFile["APP_APPSTORE_APPAPI_URL"] = urls.AppAppstoreAppApiUrl
+					gwEnvFile["APP_APPSTORE_APPSIGN_URL"] = urls.AppAppstoreAppSignUrl
+					gwEnvFile["APP_PSPLATFORM_URL"] = req.PlatformApiBase
+				}
+			}
+
+			envFiles["aospace-gateway.env"] = gwEnvFile
+			docker.ProcessEnv(config.Config.Docker.ComposeFile, envFiles)
+
 		}
 
 		result, err := svc.registerDevice(req)
@@ -169,23 +182,23 @@ func (svc *SpaceCreateService) callGateway(req *create.CreateReq) (call.MicroSer
 
 	// 调用网关接口切换平台
 
-	if req.PlatformApiBase != config.Config.Platform.APIBase.Url && req.PlatformApiBase != "" {
-		type ChangePlatformReq struct {
-			SSPlatformUrl string `json:"ssplatformUrl"`
-		}
-		changePlatformReq := &ChangePlatformReq{SSPlatformUrl: req.PlatformApiBase}
-		switchPlatformReq := func() error {
-			err := call.CallServiceByPost(config.Config.GateWay.SwitchPlatform.Url, nil, changePlatformReq, &microServerRsp)
-			if err != nil {
-				return err
-			}
-			return nil
-		}
-		err := retry.Retry(switchPlatformReq, 3, time.Second*2)
-		if err != nil {
-			return microServerRsp, err
-		}
-	}
+	//if req.PlatformApiBase != config.Config.Platform.APIBase.Url && req.PlatformApiBase != "" {
+	//	type ChangePlatformReq struct {
+	//		SSPlatformUrl string `json:"ssplatformUrl"`
+	//	}
+	//	changePlatformReq := &ChangePlatformReq{SSPlatformUrl: req.PlatformApiBase}
+	//	switchPlatformReq := func() error {
+	//		err := call.CallServiceByPost(config.Config.GateWay.SwitchPlatform.Url, nil, changePlatformReq, &microServerRsp)
+	//		if err != nil {
+	//			return err
+	//		}
+	//		return nil
+	//	}
+	//	err := retry.Retry(switchPlatformReq, 3, time.Second*2)
+	//	if err != nil {
+	//		return microServerRsp, err
+	//	}
+	//}
 	// 调用网关的 "/space/v2/api/space/admin"
 	type CreateStruct struct {
 		ClientUUID           string `json:"clientUUID,omitempty"`

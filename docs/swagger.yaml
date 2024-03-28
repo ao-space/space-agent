@@ -65,6 +65,9 @@ definitions:
     type: object
   create.CreateReq:
     properties:
+      channelIdentified:
+        description: 通道是否认证
+        type: boolean
       clientPhoneModel:
         description: 客户端手机型号.
         type: string
@@ -334,6 +337,23 @@ definitions:
     properties:
       body:
         description: 请求体
+        type: string
+    type: object
+  identify.TicketReq:
+    properties:
+      boxUuid:
+        type: string
+      platformUrl:
+        description: 平台的url
+        type: string
+    type: object
+  identify.TicketRsp:
+    properties:
+      expiresAt:
+        description: 过期时间，秒时间戳
+        type: string
+      ticket:
+        description: 临时ticket用于通道实名认证，web携带后可以临时访问平台
         type: string
     type: object
   method.UpdateDocumentMethodReq:
@@ -945,6 +965,34 @@ paths:
           schema:
             $ref: '#/definitions/dto.BaseRspStr'
       summary: run docker containers [for client bluetooth/LAN]
+      tags:
+      - Pair
+  /agent/v1/api/bind/identify/ticket:
+    post:
+      consumes:
+      - text/plain
+      description: 实名认证，client获取临时ticket
+      operationId: GetTicket
+      parameters:
+      - description: boxuuid
+        in: body
+        name: ticketReq
+        required: true
+        schema:
+          $ref: '#/definitions/identify.TicketReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code=AG-200 成功;
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.BaseRspStr'
+            - properties:
+                results:
+                  $ref: '#/definitions/identify.TicketRsp'
+              type: object
+      summary: 获取临时ticket [客户端蓝牙/局域网调用/网关call调用]
       tags:
       - Pair
   /agent/v1/api/bind/init:

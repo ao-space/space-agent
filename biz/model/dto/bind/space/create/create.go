@@ -25,6 +25,7 @@ type CreateReq struct {
 	SpaceName            string                         `json:"spaceName" binding:"required"`          // 空间名称
 	Password             string                         `json:"password" binding:"required"`           // 空间密码
 	EnableInternetAccess bool                           `json:"enableInternetAccess"`                  // 是否启用互联网通道
+	ChannelIdentified    bool                           `json:"channelIdentified"`                     // 通道是否认证
 	PlatformApiBase      string                         `json:"platformApiBase"`                       // Platform api url setting, e.g. "https://ao.space"`
 	VerifyMethod         []*document.VerificationMethod `json:"verificationMethod" binding:"required"` // did 的验证方法
 }
