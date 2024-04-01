@@ -17,23 +17,26 @@ EXE=$(NAME)$(shell go env GOEXE)
 DATE=$(shell date '+%F-%T')
 BRANCH=$(shell git symbolic-ref HEAD | cut -d"/" -f 3)
 COMMIT=$(shell git rev-parse HEAD | cut -c1-7)
+ARCH ?= riscv64
 VERSIONNUMBER="1.0.1"
 VERSION=$(NAME)--"Agent-"$(VERSIONNUMBER)--$(DATE)-$(BRANCH)-$(COMMIT)
 LDFLAGS=-ldflags "-s -w -X 'main.Version=${VERSION}' -X 'main.VersionNumber=${VERSIONNUMBER}'"
 SOURCES=$(shell ls **/*.go)
-
 
 .PHONY: all
 all: exe
 
 .PHONY: exe
 exe: $(SOURCES) Makefile
-	echo "building..."
-	go env -w GO111MODULE=on
-	go env -w GOPROXY="https://goproxy.io,direct"
-	go build $(OPTIONS) $(LDFLAGS) -o build/$(NAME)
+        echo "building..."
+        #swag init -g biz/web/http_server.go
+        go env -w GO111MODULE=on
+        go env -w GOPROXY="https://goproxy.io,direct"
+        # GOOS=linux GOARCH=${ARCH} go build $(OPTIONS) $(LDFLAGS) -o build/$(NAME)
+        go build $(OPTIONS) $(LDFLAGS) -o build/$(NAME)
 
 .PHONY: clean
 clean:
 	go clean -i
 	rm -rf build/*
+

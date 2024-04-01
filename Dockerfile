@@ -44,7 +44,7 @@ RUN set -eux; \
 	apt remove docker.io -y ; \
 	rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /work/build/system-agent /usr/local/bin/system-agent
+COPY --from=builder /work/build/aospace /usr/local/bin/aospace
 COPY --from=builder /work/supervisord.conf /etc/supervisor/supervisord.conf
 
 EXPOSE 5678

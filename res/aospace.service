@@ -1,0 +1,10 @@
+[Unit]
+Description=AO.space Agent
+After=bluetooth.target network.target time-sync.target
+
+[Service]
+ExecStart=/usr/local/bin/aospace
+Restart=always
+
+[Install]
+WantedBy=default.target
