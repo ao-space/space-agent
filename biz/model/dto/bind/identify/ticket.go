@@ -1,7 +1,7 @@
 package identify
 
 type TicketRsp struct {
-	Ticket    string `json:"ticket"`    // 临时ticket用于通道实名认证，web携带后可以临时访问平台
+	Ticket    string `json:"ticket"`    // 临时ticket用于通道认证，web携带后可以临时访问平台
 	ExpiresAt string `json:"expiresAt"` // 过期时间，秒时间戳
 }
 

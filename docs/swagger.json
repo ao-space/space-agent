@@ -2256,7 +2256,7 @@
                     "type": "string"
                 },
                 "ticket": {
-                    "description": "临时ticket用于通道实名认证，web携带后可以临时访问平台",
+                    "description": "临时ticket用于通道认证，web携带后可以临时访问平台",
                     "type": "string"
                 }
             }
