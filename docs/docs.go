@@ -220,7 +220,7 @@ const docTemplate = `{
         },
         "/agent/v1/api/bind/identify/ticket": {
             "post": {
-                "description": "实名认证，client获取临时ticket",
+                "description": "通道认证，client获取临时ticket",
                 "consumes": [
                     "text/plain"
                 ],

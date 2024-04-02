@@ -11,7 +11,7 @@ import (
 
 // GetTicket godoc
 // @Summary 获取临时ticket [客户端蓝牙/局域网调用/网关call调用]
-// @Description 实名认证，client获取临时ticket
+// @Description 通道认证，client获取临时ticket
 // @ID GetTicket
 // @Tags Pair
 // @Accept  plain

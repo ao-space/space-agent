@@ -971,7 +971,7 @@ paths:
     post:
       consumes:
       - text/plain
-      description: 实名认证，client获取临时ticket
+      description: 通道认证，client获取临时ticket
       operationId: GetTicket
       parameters:
       - description: boxuuid
