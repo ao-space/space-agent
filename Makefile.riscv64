@@ -28,12 +28,10 @@ all: exe
 
 .PHONY: exe
 exe: $(SOURCES) Makefile
-        echo "building..."
-        #swag init -g biz/web/http_server.go
-        go env -w GO111MODULE=on
-        go env -w GOPROXY="https://goproxy.io,direct"
-        # GOOS=linux GOARCH=${ARCH} go build $(OPTIONS) $(LDFLAGS) -o build/$(NAME)
-        go build $(OPTIONS) $(LDFLAGS) -o build/$(NAME)
+    echo "building..."
+    go env -w GO111MODULE=on
+    go env -w GOPROXY="https://goproxy.io,direct"
+    go build $(OPTIONS) $(LDFLAGS) -o build/$(NAME)
 
 .PHONY: clean
 clean:
