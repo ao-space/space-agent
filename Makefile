@@ -17,7 +17,7 @@ EXE=$(NAME)$(shell go env GOEXE)
 DATE=$(shell date '+%F-%T')
 BRANCH=$(shell git symbolic-ref HEAD | cut -d"/" -f 3)
 COMMIT=$(shell git rev-parse HEAD | cut -c1-7)
-VERSIONNUMBER="1.0.1"
+VERSIONNUMBER="1.0.2"
 VERSION=$(NAME)--"Agent-"$(VERSIONNUMBER)--$(DATE)-$(BRANCH)-$(COMMIT)
 LDFLAGS=-ldflags "-s -w -X 'main.Version=${VERSION}' -X 'main.VersionNumber=${VERSIONNUMBER}'"
 SOURCES=$(shell ls **/*.go)
