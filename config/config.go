@@ -446,8 +446,54 @@ func init() {
 	Config.Version = v
 	if !v {
 		modifyConfigWhenRunInDocker()
+		mountPath := hardware_util.GetMountDir()
+		if mountPath != "" {
+			JoinMountPathInConfigPath(mountPath)
+		}
 		createLogFileDir()
 		writeDefaultConfigFile(*flagConfFile)
+	}
+}
+
+func JoinMountPathInConfigPath(mountPath string) {
+	p := []*string{
+		&Config.Log.AoLogDirBase,
+		&Config.Log.Path,
+		&Config.Box.CpuIdStoreFile,
+		&Config.Box.SnNumberStoreFile,
+		&Config.Box.HostIpFile,
+		&Config.Box.ApplyEmailStoreFile,
+		&Config.Box.BoxInfoFile,
+		&Config.Box.InternetServiceConfigFile,
+
+		&Config.Box.SwithStatusFile,
+		&Config.Box.WifiNamePasswdFile,
+		&Config.Box.BoxMetaAdminPair,
+		&Config.Box.RandDockercomposePassword,
+		&Config.Box.RandDockercomposeRedisPort,
+
+		&Config.Box.PublicSharedInfoFile,
+		&Config.Box.BoxKey.RsaKeyFile,
+		&Config.Box.BoxKey.RsaPubKeyFile,
+		&Config.Box.Disk.DiskInitialInfoFile,
+		&Config.Box.Disk.DeviceUuidRecordFile,
+		&Config.Box.Disk.DiskSharedInfoFile,
+		&Config.Box.ClientKey.RsaPubKeyFile,
+		&Config.Box.ClientKey.RsaPriKeyFile,
+		&Config.Box.ClientKey.SharedSecret,
+		&Config.Box.UpgradeConfig.SettingsFile,
+		&Config.Box.Cert.CertDir,
+		&Config.Docker.ComposeFile,
+		&Config.Docker.CustomComposeFile,
+		&Config.RunTime.BasePath,
+		&Config.Notification.UpgradeRecordFile,
+		&Config.Box.Disk.StorageVolumePath,
+		&Config.Box.Disk.NoDisksFileStoragePath,
+		&Config.Box.Disk.NoDisksFileStoragePathDockerDeploy,
+		&Config.GTClient.ConfigPath,
+		&Config.Box.DID.RootPath}
+	for _, v := range p {
+		*v = mountPath + *v
 	}
 }
 
@@ -459,46 +505,7 @@ func modifyConfigWhenRunInDocker() {
 	// 修改保存路径。
 	// 新增路径的配置项时，如果docker 中运行时, 需要在这里修改默认路径 !!!
 	if runInDocker {
-		p := []*string{
-			&Config.Log.AoLogDirBase,
-			&Config.Log.Path,
-			&Config.Box.CpuIdStoreFile,
-			&Config.Box.SnNumberStoreFile,
-			&Config.Box.HostIpFile,
-			&Config.Box.ApplyEmailStoreFile,
-			&Config.Box.BoxInfoFile,
-			&Config.Box.InternetServiceConfigFile,
 
-			&Config.Box.SwithStatusFile,
-			&Config.Box.WifiNamePasswdFile,
-			&Config.Box.BoxMetaAdminPair,
-			&Config.Box.RandDockercomposePassword,
-			&Config.Box.RandDockercomposeRedisPort,
-
-			&Config.Box.PublicSharedInfoFile,
-			&Config.Box.BoxKey.RsaKeyFile,
-			&Config.Box.BoxKey.RsaPubKeyFile,
-			&Config.Box.Disk.DiskInitialInfoFile,
-			&Config.Box.Disk.DeviceUuidRecordFile,
-			&Config.Box.Disk.DiskSharedInfoFile,
-			&Config.Box.ClientKey.RsaPubKeyFile,
-			&Config.Box.ClientKey.RsaPriKeyFile,
-			&Config.Box.ClientKey.SharedSecret,
-			&Config.Box.UpgradeConfig.SettingsFile,
-			&Config.Box.Cert.CertDir,
-			&Config.Docker.ComposeFile,
-			&Config.Docker.CustomComposeFile,
-			&Config.RunTime.BasePath,
-			&Config.Notification.UpgradeRecordFile,
-			&Config.Box.Disk.StorageVolumePath,
-			&Config.Box.Disk.NoDisksFileStoragePath,
-			&Config.Box.Disk.NoDisksFileStoragePathDockerDeploy,
-			&Config.GTClient.ConfigPath,
-			&Config.Box.DID.RootPath}
-
-		for _, v := range p {
-			*v = SpaceMountPath + *v
-		}
 		// fmt.Printf("Config.Box.SnNumberStoreFile: %v \n", Config.Box.SnNumberStoreFile)
 
 		// 调用地址修改

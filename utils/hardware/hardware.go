@@ -56,13 +56,13 @@ func GetHardwareChip() (string, error) {
 // RunningInDocker is program running in container ?
 func RunningInDocker() bool {
 	// 由于其他方法在某些 OS 上有失效的可能性，暂时用用户传入的环境变量来判断。
-	envkey := "AOSPACE_DATADIR"
-	dataDir := os.Getenv(envkey)
-	if len(dataDir) > 0 {
-		// fmt.Printf("RunningInDocker, dataDir:%v\n", dataDir)
-		return true
-	} else {
-		// fmt.Printf("RunningInDocker==false, dataDir:%v\n", dataDir)
+	_, err := os.Stat("/root/.dockerenv")
+	if err != nil {
 		return false
 	}
+	return true
+}
+
+func GetMountDir() string {
+	return os.Getenv("AOSPACE_DATADIR")
 }
