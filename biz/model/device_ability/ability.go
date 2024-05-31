@@ -99,7 +99,7 @@ func init() {
 
 	deviceAbility.AospaceAppSupport = true
 	deviceAbility.AospaceDevOptionSupport = true
-	deviceAbility.AospaceSwitchPlatformSupport = true
+	deviceAbility.AospaceSwitchPlatformSupport = false
 	deviceAbility.OpenSource = true
 	deviceAbility.UpgradeApiSupport = true
 }

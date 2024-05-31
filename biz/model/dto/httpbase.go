@@ -68,9 +68,9 @@ const (
 	AgentCodeSwitchTaskNotFoundErr = "AG-580" //切换任务未找到
 	AgentCodeConnectErr            = "AG-581" //连接错误
 	//AlreadyLatestVersion           = "AG-591"
-
-	GatewayCodeOkStr = "GW-200"
-	AccountCodeOkStr = "ACC-200"
+	AgentGetTicketFailed = "AG-616"
+	GatewayCodeOkStr     = "GW-200"
+	AccountCodeOkStr     = "ACC-200"
 )
 
 type BaseRsp struct {

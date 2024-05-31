@@ -18,6 +18,7 @@ import (
 	"agent/biz/web/handler/bind/bindinit"
 	"agent/biz/web/handler/bind/com/progress"
 	"agent/biz/web/handler/bind/com/start"
+	"agent/biz/web/handler/bind/identify"
 	internetserviceconfig "agent/biz/web/handler/bind/internet/service/config"
 	"agent/biz/web/handler/bind/password"
 	"agent/biz/web/handler/bind/revoke"
@@ -99,6 +100,7 @@ func ExternalRouter() *gin.Engine {
 					bind.GET("/internet/service/config", internetserviceconfig.GetConfig)
 					bind.POST("/password/verify", password.Verify)
 					bind.POST("/revoke", revoke.Revoke)
+					bind.POST("/identify/ticket", identify.GetTicket)
 				}
 
 				api.GET("/space/ready/check", space.ReadyCheck)
@@ -185,6 +187,7 @@ func InternalRouter() *gin.Engine {
 		{
 			bindGroup.POST("/internet/service/config", internetserviceconfig.PostConfig)
 			bindGroup.GET("/internet/service/config", internetserviceconfig.GetConfig)
+			bindGroup.POST("/identify/ticket", identify.GetTicket)
 		}
 
 		did := v1.Group("/did")

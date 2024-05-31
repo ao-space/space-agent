@@ -25,9 +25,11 @@ import (
 	"agent/biz/docker"
 	"agent/biz/model/device"
 	"agent/biz/model/gt"
+	"agent/biz/model/platform"
 	"agent/biz/service/network"
 	"agent/config"
 	"agent/utils"
+	"strings"
 
 	"agent/utils/logger"
 )
@@ -84,6 +86,13 @@ func networkSwitchV2(newSSP bool) error {
 
 		gwEnvFile := make(map[string]string)
 		gwEnvFile["APP_SSPLATFORM_URL"] = si.NewApiBaseUrl
+		for _, urls := range platform.BaseUrlMap {
+			if strings.EqualFold(urls.AppPSPlatformUrl, si.NewApiBaseUrl) {
+				gwEnvFile["APP_APPSTORE_APPAPI_URL"] = urls.AppAppstoreAppApiUrl
+				gwEnvFile["APP_APPSTORE_APPSIGN_URL"] = urls.AppAppstoreAppSignUrl
+				gwEnvFile["APP_PSPLATFORM_URL"] = si.NewApiBaseUrl
+			}
+		}
 		envFiles["aospace-gateway.env"] = gwEnvFile
 		err := gtConfig.Switch(remoteAPI, clientId, secret)
 		if err != nil {
