@@ -526,8 +526,10 @@ func modifyConfigWhenRunInDocker() {
 			}
 			Config.GateWay.LanPort = 12841
 			Config.GateWay.TlsLanPort = 18569
-
 		} else {
+			Config.EnvDefaultVal.SYSTEM_AGENT_URL_DEVICE_INFO = "http://localhost:5680/agent/v1/api/device/info"
+			Config.EnvDefaultVal.SYSTEM_AGENT_URL_BASE = "http://localhost:5680/agent/v1/api"
+			Config.Web.DockerLocalListenAddr = "localhost:5680"
 			Config.GateWay.LanPort = 80
 			Config.GateWay.TlsLanPort = 443
 		}
