@@ -12,37 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.20.6-bookworm as builder
+FROM debian:experimental as builder
 
 WORKDIR /work/
 
 COPY . .
 
-RUN apt update && apt install npm nodejs zip -y
-RUN cd web/boxdocker && npm install && npm run build && mv dist boxdocker && \
+RUN apt-get update && apt-get install golang-go npm nodejs zip -y
+RUN cd web/boxdocker && npm update && npm install && npm run build && mv dist boxdocker && \
         zip -r static_html.zip boxdocker && mv static_html.zip ../../res && cd ../../
 RUN go env -w GO111MODULE=on && make -f Makefile
 
-FROM debian:12
+FROM xfan1024/openeuler:23.03-light
 
 ENV LANG C.UTF-8
 ENV TZ=Asia/Shanghai \
     DEBIAN_FRONTEND=noninteractive
 
 RUN set -eux; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		ca-certificates \
-		netbase \
-		tzdata \
-        supervisor \
-		iputils-ping \
-		docker-compose \
-		curl \
-		cron \
-    ; \
-	apt remove docker.io -y ; \
-	rm -rf /var/lib/apt/lists/*
+        yum -y update; \
+        yum install -y \
+                ca-certificates \
+                net-tools \
+                tzdata \
+                supervisor \
+                iputils \
+                docker-compose \
+                curl \
+                cronie \
+        ; \
+        yum clean all;
 
 COPY --from=builder /work/build/aospace /usr/local/bin/aospace
 COPY --from=builder /work/supervisord.conf /etc/supervisor/supervisord.conf
