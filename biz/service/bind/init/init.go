@@ -35,6 +35,26 @@ type InitService struct {
 	PairedInfo *clientinfo.AdminPairedInfo
 }
 
+// allow overriding in tests
+var getConnectedNetworkFn = pair.GetConnectedNetwork
+var getInstalledVersionFn = version.GetInstalledAgentVersionRemovedNewLine
+
+// SetGetConnectedNetworkFuncForTest overrides network retrieval in tests.
+// It returns a restore func to reset the default.
+func SetGetConnectedNetworkFuncForTest(fn func() []*dtopair.Network) func() {
+	prev := getConnectedNetworkFn
+	getConnectedNetworkFn = fn
+	return func() { getConnectedNetworkFn = prev }
+}
+
+// SetGetInstalledVersionFuncForTest overrides version lookup in tests.
+// It returns a restore func to reset the default.
+func SetGetInstalledVersionFuncForTest(fn func() string) func() {
+	prev := getInstalledVersionFn
+	getInstalledVersionFn = fn
+	return func() { getInstalledVersionFn = prev }
+}
+
 func (svc *InitService) Process() dto.BaseRspStr {
 	logger.AppLogger().Debugf("InitService Process")
 	req := svc.Req.(*bindinit.InitReq)
@@ -67,7 +87,7 @@ func (svc *InitService) Process() dto.BaseRspStr {
 		PairedBool:             svc.PairedInfo.AlreadyBound(),
 		Connected:              connected,
 		InitialEstimateTimeSec: 180,
-		Networks:               pair.GetConnectedNetwork(),
+		Networks:               getConnectedNetworkFn(),
 		SSPUrl:                 device.GetApiBaseUrl(),
 		NewBindProcessSupport:  true,
 	}
@@ -80,7 +100,7 @@ func (svc *InitService) Process() dto.BaseRspStr {
 		rsp.ClientUuid = svc.PairedInfo.ClientUuid
 		rsp.BoxName = svc.PairedInfo.BoxName
 	}
-	boxVersion := version.GetInstalledAgentVersionRemovedNewLine()
+	boxVersion := getInstalledVersionFn()
 	if len(boxVersion) < 3 {
 		boxVersion = config.VersionNumber
 	}
@@ -89,8 +109,7 @@ func (svc *InitService) Process() dto.BaseRspStr {
 	rsp.GenerationEn = dtodevice.GetGenerationEn()
 	rsp.DeviceName = dtodevice.GetDeviceName()
 	rsp.DeviceNameEn = dtodevice.GetDeviceNameEn()
-	rsp.GenerationEn = dtodevice.GetGenerationEn()
-	rsp.GenerationEn = dtodevice.GetGenerationZh()
+	rsp.GenerationZh = dtodevice.GetGenerationZh()
 	rsp.ProductModel = dtodevice.GetProductModel()
 	rsp.DeviceAbility = device_ability.GetAbilityModel()
 	if device_ability.GetAbilityModel().RunInDocker {
