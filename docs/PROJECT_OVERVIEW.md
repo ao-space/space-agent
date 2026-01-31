@@ -172,6 +172,7 @@ space-agent 是 AO.space（开源版）一体化部署的核心入口服务，�
 - **内部 API 地址**：默认内部监听 `:5680` 或 `172.17.0.1:5680`，请结合 `config.Config.Web` 与部署方式使用。
 - **静态前端资源**：`web/boxdocker` 构建后打包进 `res/static_html.zip`，由服务内置提供。
 - **升级流程**：升级接口依赖后台任务与配置文件（`/etc/ao-space/upgrade/settings.json`）。
+- **测试日志路径**：测试进程默认把日志写入系统临时目录（可通过环境变量 `AOSPACE_LOG_DIR` 指定）。
 - **建议扩展**：
   - 将 swagger 生成纳入 CI 或 Makefile 目标，确保接口文档与代码同步。
   - 为关键业务（绑定、升级、Docker 启动）增加更完善的端到端测试。

@@ -2,7 +2,7 @@
 
 简体中文 | [English](./PLATFORM_DEPENDENCIES.md)
 
-本文档总结 space-agent 对平台的依赖点，以及通过 `PlatformEnabled` 开关实现平台可选运行的说明。
+本文档总结 space-agent 对平台的依赖点，以及通过 `PlatformEnabled` 开关实现平台可选运行的说明。测试进程会默认把日志写入系统临时目录（可通过环境变量 `AOSPACE_LOG_DIR` 指定）。
 
 ## 适用范围
 space-agent 是产品的服务端组件。平台相关能力包括：注册、互联网通道配置、升级检查、平台切换。现在这些能力都受 `config.Config.PlatformEnabled` 控制（默认 `false`）。

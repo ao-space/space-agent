@@ -2,7 +2,7 @@
 
 English | [简体中文](./PLATFORM_DEPENDENCIES_CN.md)
 
-This document summarizes where the server (space-agent) depends on the platform, and how to run without the platform using the new `PlatformEnabled` switch.
+This document summarizes where the server (space-agent) depends on the platform, and how to run without the platform using the new `PlatformEnabled` switch. Test processes write logs to the system temp directory by default (override with `AOSPACE_LOG_DIR`).
 
 ## Scope
 space-agent is the server component of the product. Platform features are used for registration, Internet tunnel setup, upgrade checks, and platform switching. These are now gated by `config.Config.PlatformEnabled` (default `false`).

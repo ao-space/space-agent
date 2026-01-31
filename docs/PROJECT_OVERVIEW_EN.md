@@ -158,3 +158,4 @@ APIs are based on `docs/swagger.yaml` and route definitions.
 - **Internal API address**: default internal :5680 or 172.17.0.1:5680.
 - **Static assets**: built into `res/static_html.zip`.
 - **Upgrade**: depends on upgrade settings in `/etc/ao-space/upgrade/settings.json`.
+- **Test log path**: test processes write logs to the system temp directory by default (override with `AOSPACE_LOG_DIR`).
