@@ -16,10 +16,16 @@ package version
 
 import (
 	"fmt"
+	"os/exec"
 	"testing"
 )
 
 func TestGetInstalledAgentVersion(t *testing.T) {
+	if _, err := exec.LookPath("dnf"); err != nil {
+		// TODO: Refactor GetInstalledAgentVersion to allow injecting a command runner so this test
+		// can run in CI without requiring dnf.
+		t.Skip("dnf not available")
+	}
 	version, err := GetInstalledAgentVersion()
 	if err != nil {
 		t.Fatal(err)

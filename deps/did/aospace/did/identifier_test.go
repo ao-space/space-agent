@@ -29,8 +29,14 @@ func TestIdentifier(t *testing.T) {
 	keyType := "RsaVerificationKey2018"
 	publicKeyPem := "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnN5jap7CGcqYURbLDVUa\nLc9kMxOyCMEykfwbQKXvTkPMkR9tKZmq8EqfG2d2OyUpF1TIfqHK7Q6d33yD02oO\nBTXZw1Ijkfxvu0KwG2zLV02FTuwZzgYa/AaP5iRZDx5GwTk/YFw+NTqT8Gf29a/L\n/ItcCfsEFLr3zMDXUcU9A7rBEy5ncva6RLNpXawegFGlCZa5+Gah8voKl8ZGpIgt\nlSc1IdnbPbBCYYlUATWLCLeYl+Q9/LslbpkFtdR+4M8vU7G1H+AQZ5fr2E9qX36I\nzcnchDmKq5bkbWQ9GJeZKqZTkhtCPBy4cphM8fHtZuoh1fA3VfF01N4KHT2bUdtp\nJwIDAQAB\n-----END PUBLIC KEY-----"
 
-	did.AddNewVerificationMethod(keyType, publicKeyPem, "k=v", "key-0")
-	did.AddNewVerificationMethodOfMultisig()
+	_, err = did.AddNewVerificationMethod(keyType, publicKeyPem, "k=v", "key-0")
+	if err != nil {
+		panic(err)
+	}
+	err = did.AddNewVerificationMethodOfMultisig([]string{"#key-0"}, []string{"#key-1"})
+	if err != nil {
+		panic(err)
+	}
 
 	didDoc := did.Document(true)
 	js, err := json.Marshal(didDoc)
@@ -137,7 +143,7 @@ func TestFromDocument(t *testing.T) {
 	}
 
 	if len(methods) > 1 {
-		err = didObj.DeleteVerificationMethodOfQuery("credentialType=password")
+		_, err = didObj.DeleteVerificationMethodOfQuery("credentialType=password")
 		if err != nil {
 			panic(err)
 		}

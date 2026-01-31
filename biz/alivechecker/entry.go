@@ -168,8 +168,9 @@ func StartTestNetwork() {
 func TestNetwork() {
 	result := &model.NetworkTestResult{}
 
+	var ok bool
 	if config.Config.PlatformEnabled {
-		ok, _ := pingFn(config.Config.NetworkCheck.CloudHost.Url)
+		ok, _ = pingFn(config.Config.NetworkCheck.CloudHost.Url)
 		result.PingCloudHost = ok
 	}
 	ok, _ = pingFn(config.Config.NetworkCheck.ThirdPartyHost.Url)

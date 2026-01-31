@@ -11,6 +11,7 @@ func TestTestNetworkUsesLatestResults(t *testing.T) {
 	origCurl := curlFn
 	origCurlHeader := curlHeaderFn
 	origGetDomain := getAdminDomainFn
+	origPlatformEnabled := config.Config.PlatformEnabled
 
 	origCloudHost := config.Config.NetworkCheck.CloudHost.Url
 	origThirdParty := config.Config.NetworkCheck.ThirdPartyHost.Url
@@ -24,6 +25,7 @@ func TestTestNetworkUsesLatestResults(t *testing.T) {
 		curlFn = origCurl
 		curlHeaderFn = origCurlHeader
 		getAdminDomainFn = origGetDomain
+		config.Config.PlatformEnabled = origPlatformEnabled
 
 		config.Config.NetworkCheck.CloudHost.Url = origCloudHost
 		config.Config.NetworkCheck.ThirdPartyHost.Url = origThirdParty
@@ -34,6 +36,7 @@ func TestTestNetworkUsesLatestResults(t *testing.T) {
 	})
 
 	// set deterministic hosts for assertions
+	config.Config.PlatformEnabled = true
 	config.Config.NetworkCheck.CloudHost.Url = "cloud-host"
 	config.Config.NetworkCheck.ThirdPartyHost.Url = "third-party"
 	config.Config.NetworkCheck.CloudIpv4.Url = "cloud-ipv4"
