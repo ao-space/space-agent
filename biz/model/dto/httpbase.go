@@ -41,10 +41,6 @@ const (
 	AgentCodeUnpairedBeforeStr    = "AG-462"
 	AgentCodeAdminPwdError        = "AG-463"
 	AgentCodeRepeatedRequest      = "AG-464"
-	AgentCodeTryOutCodeError      = "AG-465" // 试用码错误
-	AgentCodeTryOutCodeExpired    = "AG-466" // 试用码过期
-	AgentCodeTryOutCodeHasUsed    = "AG-467" // 试用码已经使用过了
-	AgentCodeTryOutCodeDisabled   = "AG-468" // 试用码禁用
 	AgentCodeDockerPulling        = "AG-469" // 容器下载中
 	AgentCodeDockerStarting       = "AG-470" // 容器启动中
 	AgentCodeDockerStarted        = "AG-471" // 容器已经启动

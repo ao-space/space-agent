@@ -36,5 +36,4 @@ type Info struct {
 	TheBoxPublicKey   string             `json:"boxPublicKey"`
 
 	QrCode             string `json:"boxQrCode"`          // 绑定二维码
-	TryoutCodeVerified bool   `json:"tryoutCodeVerified"` // 试用码是否验证通过(仅在 PC 试用场景下使用).
 }

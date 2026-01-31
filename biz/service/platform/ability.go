@@ -27,6 +27,10 @@ import (
 var platformApis *platform.PlatformAPIs
 
 func InitPlatformAbility() *platform.PlatformAPIs {
+	if !config.Config.PlatformEnabled {
+		logger.AppLogger().Warnf("platform disabled, skip InitPlatformAbility")
+		return nil
+	}
 	var headers = map[string]string{
 		"Request-Id": random.GenUUID(),
 	}
@@ -44,10 +48,16 @@ func InitPlatformAbility() *platform.PlatformAPIs {
 }
 
 func CheckPlatformAbility(uri string) bool {
+	if !config.Config.PlatformEnabled {
+		return false
+	}
 	if platformApis == nil {
 		platformApis = InitPlatformAbility()
 	}
 
+	if platformApis == nil {
+		return false
+	}
 	for _, apis := range platformApis.PlatformAPIs {
 		//logger.AppLogger().Debugf(apis.URI)
 		if uri == apis.URI {

@@ -37,6 +37,7 @@ var runInDocker bool
 
 var Config = struct {
 	DebugMode                                 bool `default:"false"` // 调试模式。会控制是否打开 swagger 等。
+	PlatformEnabled                           bool `default:"false"` // 是否启用平台相关能力（注册、升级、互联网通道等）
 	OverwriteDockerCompose                    bool `default:"true"`  // 启动时是否覆盖 docker-compose.yml。"true" 表示覆盖。
 	EnableSecurityChip                        bool `default:"true"`  // 是否启用加密芯片。
 	EncryptLanSessionData                     bool `default:"true"`  // 加密局域网通信数据

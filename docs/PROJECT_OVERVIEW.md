@@ -1,5 +1,7 @@
 # space-agent 项目概览
 
+简体中文 | [English](./PROJECT_OVERVIEW_EN.md)
+
 > 基于当前仓库代码生成（主要参考 `README.md`、`main.go`、`biz/web/routers/*`、`docs/swagger.yaml`、`config/config.go`、`Dockerfile`、`Makefile`、`script/*` 等）。
 
 ## 1. 项目背景与用途
@@ -104,7 +106,6 @@ space-agent 是 AO.space（开源版）一体化部署的核心入口服务，�
 - `POST /agent/v1/api/bind/password/verify`：验证管理员密码（`password.VerifyReq` -> `password.VerifyRsp`）。
 - `POST /agent/v1/api/bind/revoke`：解除绑定（`revoke.RevokeReq` -> `revoke.RevokeRsp`）。
 - `POST /agent/v1/api/admin/revoke`：管理员解绑（`pair.RevokeReq` -> `call.MicroServerRsp`）。
-- `POST /agent/v1/api/pair/tryout/code`：试用码验证（无 body -> `dto.BaseRspStr`）。
 - `GET /agent/v1/api/pair/init`：有线绑定初始化（`pair.InitResult`）。
 - `GET /agent/v1/api/pair/net/localips`：获取本地 IP（`[]pair.Network`）。
 - `GET /agent/v1/api/pair/net/netconfig`：获取 Wi‑Fi 列表（`[]pair.WifiListRsp`）。
@@ -155,6 +156,7 @@ space-agent 是 AO.space（开源版）一体化部署的核心入口服务，�
 ### 测试
 - 项目包含部分单元测试（如 `biz/model/did/*_test.go`、`utils/jwt/*_test.go` 等）。
 - 常规运行：`go test ./...`（需保证依赖和环境齐备）。
+  - 全量单测建议使用 `go test ./...`，但注意部分测试/代码路径依赖系统环境（如 Docker、dnf、nmcli、硬件信息/文件路径等），在 CI 或非目标设备上可能需要跳过或进行依赖注入替换。
 
 ### 部署
 - Docker 构建：`docker build -t local/space-agent:{tag} .`（见 `README.md`）。
@@ -165,6 +167,7 @@ space-agent 是 AO.space（开源版）一体化部署的核心入口服务，�
 ## 7. 常见注意事项和扩展建议
 
 - **调试模式**：`config.Config.DebugMode` 影响 Swagger 与日志接口暴露（见 `biz/web/routers/server.go` 与 README 中说明）。
+- **平台依赖与可选性**：平台依赖点与可选模式见 `docs/PLATFORM_DEPENDENCIES_CN.md` / `docs/PLATFORM_DEPENDENCIES.md`（默认 `PlatformEnabled=false`，仅用服务端+客户端即可运行）。
 - **单容器模式**：环境变量 `AOSPACE_SINGLE_DOCKER_MODE` 会改变启动流程（`main.go`）。
 - **内部 API 地址**：默认内部监听 `:5680` 或 `172.17.0.1:5680`，请结合 `config.Config.Web` 与部署方式使用。
 - **静态前端资源**：`web/boxdocker` 构建后打包进 `res/static_html.zip`，由服务内置提供。

@@ -20,12 +20,7 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 const routes = [
     {
         path: '/',
-        redirect: '/index',
-    },
-    {
-        path: '/index',
-        name: 'index',
-        component: () => import('@/pages/index.vue'),
+        redirect: '/code',
     },
     {
         path: '/code',

@@ -25,11 +25,13 @@ func ArrayEqual(a, b []string) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	sort.Strings(a)
-	sort.Strings(b)
+	aCopy := append([]string(nil), a...)
+	bCopy := append([]string(nil), b...)
+	sort.Strings(aCopy)
+	sort.Strings(bCopy)
 
-	for i := range a {
-		if a[i] != b[i] {
+	for i := range aCopy {
+		if aCopy[i] != bCopy[i] {
 			return false
 		}
 	}

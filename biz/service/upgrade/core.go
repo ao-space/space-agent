@@ -153,6 +153,9 @@ func GetLatestVersionMetadata() (upgrade.OverallInfo, error) {
 }
 
 func CheckLatestVersion() (upgrade.VersionFromPlatformV2, error) {
+	if !config.Config.PlatformEnabled {
+		return upgrade.VersionFromPlatformV2{}, fmt.Errorf("platform disabled")
+	}
 	apiBase := config.Config.Platform.APIBase.Url
 	urlPath := config.Config.Platform.LatestVersionV2.Path
 	versionDesc := upgrade.VersionFromPlatformV2{}

@@ -155,7 +155,9 @@ func StartTestNetwork() {
 			totalTry = 2
 		}
 		for i := 0; i < totalTry; i++ {
-			TestCloudHost()
+			if config.Config.PlatformEnabled {
+				TestCloudHost()
+			}
 			time.Sleep(time.Second * 3)
 		}
 
@@ -166,16 +168,20 @@ func StartTestNetwork() {
 func TestNetwork() {
 	result := &model.NetworkTestResult{}
 
-	ok, _ := pingFn(config.Config.NetworkCheck.CloudHost.Url)
-	result.PingCloudHost = ok
+	if config.Config.PlatformEnabled {
+		ok, _ := pingFn(config.Config.NetworkCheck.CloudHost.Url)
+		result.PingCloudHost = ok
+	}
 	ok, _ = pingFn(config.Config.NetworkCheck.ThirdPartyHost.Url)
 	result.PingThirdPartyHost = ok
-	ok, _ = pingFn(config.Config.NetworkCheck.CloudIpv4.Url)
-	result.PingCloudIpv4 = ok
-	ok, _ = curlFn(config.Config.NetworkCheck.CloudStatusHost.Url)
-	result.CurlCloudStatusHost = ok
-	ok, _ = curlHeaderFn(config.Config.NetworkCheck.CloudStatusIpv4.Url)
-	result.CurlHttpHeaderCloudStatusIpv4 = ok
+	if config.Config.PlatformEnabled {
+		ok, _ = pingFn(config.Config.NetworkCheck.CloudIpv4.Url)
+		result.PingCloudIpv4 = ok
+		ok, _ = curlFn(config.Config.NetworkCheck.CloudStatusHost.Url)
+		result.CurlCloudStatusHost = ok
+		ok, _ = curlHeaderFn(config.Config.NetworkCheck.CloudStatusIpv4.Url)
+		result.CurlHttpHeaderCloudStatusIpv4 = ok
+	}
 	domain := getAdminDomainFn()
 	if len(domain) > 0 {
 		curlFn(path.Join(domain, config.Config.NetworkCheck.BoxStatusPath.Url))

@@ -69,7 +69,7 @@ func main() {
 	device.InitDeviceKey()
 	clientinfo.InitClientInfo()
 
-	if !strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") {
+	if !strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") && config.Config.PlatformEnabled {
 		go platform.InitPlatformAbility()
 		serviceswithplatform.RetryUnfinishedStatus()
 		upgrade.CronForUpgrade()
@@ -87,7 +87,7 @@ func main() {
 	alivechecker.Start()
 
 	// 检测是否需要发送升级推送
-	if !strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") {
+	if !strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") && config.Config.PlatformEnabled {
 		go upgrade.CheckUpgradeSucc()
 	}
 
