@@ -19,6 +19,7 @@ import (
 	"agent/config"
 	"agent/utils/rpi/network"
 	"fmt"
+	"net"
 	"sort"
 	"strconv"
 	"strings"
@@ -243,6 +244,10 @@ func GetConnectedNetwork() []*dtopair.Network {
 
 			arr := strings.Split(string(ipaddr), ":")
 			if len(arr) >= 2 {
+				if !isValidLanOrRoutableHost(arr[0]) {
+					logger.AppLogger().Warnf("GetConnectedNetwork skip loopback/invalid host from HostIpFile: %v", arr[0])
+					return []*dtopair.Network{}
+				}
 				logger.AppLogger().Debugf("GetConnectedNetwork, IsFileExist, Ip:%v", string(arr[0]))
 				ret := make([]*dtopair.Network, 0)
 				ret = append(ret, &dtopair.Network{Ip: arr[0], Wire: true, WifiName: "",
@@ -270,6 +275,10 @@ func GetConnectedNetwork() []*dtopair.Network {
 		if len(arr) > 1 {
 			ip = arr[0]
 		}
+		if !isValidLanOrRoutableHost(ip) {
+			logger.AppLogger().Warnf("GetConnectedNetwork skip loopback/invalid ip from network iface: %v", ip)
+			continue
+		}
 
 		n := &dtopair.Network{Ip: ip, Wire: true,
 			WifiName: v.GeneralDevice,
@@ -287,4 +296,22 @@ func GetConnectedNetwork() []*dtopair.Network {
 	}
 
 	return rt
+}
+
+func isValidLanOrRoutableHost(host string) bool {
+	h := strings.TrimSpace(strings.Trim(host, "[]"))
+	if h == "" {
+		return false
+	}
+	if strings.EqualFold(h, "localhost") {
+		return false
+	}
+	ip := net.ParseIP(h)
+	if ip == nil {
+		return true
+	}
+	if ip.IsLoopback() || ip.IsUnspecified() {
+		return false
+	}
+	return true
 }

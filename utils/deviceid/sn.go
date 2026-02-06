@@ -15,10 +15,13 @@
 package deviceid
 
 import (
+	"agent/utils/logger"
 	"fmt"
 	"strconv"
 	"strings"
 
+	"github.com/dungeonsnd/gocom/encrypt/hash/sha256"
+	"github.com/dungeonsnd/gocom/encrypt/random"
 	"github.com/dungeonsnd/gocom/file/fileutil"
 )
 
@@ -40,23 +43,28 @@ func GetSnNumber(snNumberStoreFile string) (string, error) {
 	if fileutil.IsFileExist(snNumberStoreFile) {
 		// fmt.Printf("GetSnNumber,%v exist\n", snNumberStoreFile)
 		if content, err := fileutil.ReadFromFile(snNumberStoreFile); err != nil {
-			fmt.Printf("GetSnNumber, ReadFromFile err: %v\n", err)
+			logger.AppLogger().Warnf("GetSnNumber read file failed: file=%v, err=%v", snNumberStoreFile, err)
 			return "", err
 		} else {
 			return string(content), nil
 		}
 	} else if strings.EqualFold(currentChip(), RPI) || strings.EqualFold(currentChip(), RK3568Dev) {
-		fmt.Printf("GetSnNumber,%v not exist, so current hardware is chip:%v\n", snNumberStoreFile, currentChip())
+		logger.AppLogger().Warnf("GetSnNumber file not found on unsupported chip: file=%v, chip=%v", snNumberStoreFile, currentChip())
 		return "", fmt.Errorf("unsupported on this hardware platform")
 	} else {
-		fmt.Printf("GetSnNumber,%v not exist, so current hardware is rk's production\n", snNumberStoreFile)
+		logger.AppLogger().Infof("GetSnNumber file not found, fallback to vendor storage: file=%v", snNumberStoreFile)
 		sn, err := getVendorSnNumber()
 		if err != nil {
-			fmt.Printf("GetSnNumber, getVendorSnNumber err: %v\n", err)
-			return "", err
-		} else {
-			return sn, nil // 二代正式板
+			logger.AppLogger().Warnf("GetSnNumber vendor storage failed: err=%v", err)
+			// In dev/docker host mode there may be no vendor storage. Generate a stable fallback SN.
+			fallback := strings.ToUpper(sha256.HashHex([]byte(random.GenUUID()), 1)[:SnNumberLength])
+			if wErr := fileutil.WriteToFile(snNumberStoreFile, []byte(fallback), false); wErr != nil {
+				logger.AppLogger().Warnf("GetSnNumber write fallback sn failed: file=%v, err=%v", snNumberStoreFile, wErr)
+			}
+			logger.AppLogger().Warnf("GetSnNumber use generated fallback sn: %v", fallback)
+			return fallback, nil
 		}
+		return sn, nil // 二代正式板
 	}
 }
 

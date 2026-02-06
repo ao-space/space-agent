@@ -46,10 +46,16 @@ func Start() {
 	// start internal web server
 	if strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") {
 		go internalWebServer.Start()
-	} else {
-		docker.SubscribeAsyncDockerNetwork(func(status int) {
-			go internalWebServer.Start()
-		})
+		return
 	}
+
+	if !config.Config.EnableDockerManage {
+		go internalWebServer.Start()
+		return
+	}
+
+	docker.SubscribeAsyncDockerNetwork(func(status int) {
+		go internalWebServer.Start()
+	})
 
 }

@@ -212,7 +212,7 @@ func cutOSVersion(rawVersion string) string {
 		suffix := ".aarch64"
 		r, err := regexp.Compile(prefix + ".*" + suffix)
 		if err != nil {
-			fmt.Printf("failed regexp.Compile r, err:%v\n", err)
+			logger.AppLogger().Warnf("failed regexp.Compile for os version parser: %v", err)
 			return ""
 		}
 		version := r.FindString(rawVersion)
@@ -240,7 +240,7 @@ func parseImagesVersion(s string) ([]device.ServiceVersion, error) {
 		if err != nil {
 			return serviceVersion, fmt.Errorf("parseImagesVersion, failed JsonDecode, err:%v", err)
 		} else {
-			fmt.Printf("%+v\n\n", obj)
+			logger.AppLogger().Debugf("parseImagesVersion item: %+v", obj)
 			serviceVersion = append(serviceVersion, obj)
 		}
 	}

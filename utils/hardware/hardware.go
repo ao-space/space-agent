@@ -15,6 +15,7 @@
 package hardware
 
 import (
+	"agent/utils/logger"
 	"fmt"
 	"os"
 	"strings"
@@ -58,11 +59,7 @@ func RunningInDocker() bool {
 	// 由于其他方法在某些 OS 上有失效的可能性，暂时用用户传入的环境变量来判断。
 	envkey := "AOSPACE_DATADIR"
 	dataDir := os.Getenv(envkey)
-	if len(dataDir) > 0 {
-		fmt.Printf("RunningInDocker, dataDir:%v\n", dataDir)
-		return true
-	} else {
-		fmt.Printf("RunningInDocker==false, dataDir:%v\n", dataDir)
-		return false
-	}
+	inDocker := len(dataDir) > 0
+	logger.AppLogger().Debugf("RunningInDocker: %v, %v=%v", inDocker, envkey, dataDir)
+	return inDocker
 }

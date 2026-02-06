@@ -16,6 +16,7 @@ package dengineapi
 
 import (
 	"agent/utils/docker/dockermodel"
+	"agent/utils/logger"
 	"context"
 	"fmt"
 	"github.com/docker/docker/api/types/filters"
@@ -109,7 +110,7 @@ func CreateContainer(cli *client.Client, req *CreateContainerReq) (string, error
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("ID: %s\n", body.ID)
+	logger.DockerLogger().Infof("container created: name=%v, id=%v, image=%v", req.ContainerName, body.ID, req.ImageName)
 	return body.ID, nil
 }
 

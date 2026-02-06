@@ -63,9 +63,11 @@ var eventLoopNormal *simpleeventbus.EventLoop
 var tickerStartProgress *time.Ticker
 
 func init() {
-	writeDefaultDockerComposeFile()
-	if hardware.RunningInDocker() {
-		writeUpgradeComposeFile()
+	if config.Config.EnableDockerManage {
+		writeDefaultDockerComposeFile()
+		if hardware.RunningInDocker() {
+			writeUpgradeComposeFile()
+		}
 	}
 }
 

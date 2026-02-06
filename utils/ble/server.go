@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /*
  * @Author: wenchao
  * @Date: 2021-11-10 10:44:41
@@ -54,7 +53,6 @@ func Start(serviceName_, serviceUUID_ string, onRecvCb service.OnRecvCallbackFun
 	// fmt.Printf("before gatt.NewDevice \n")
 	d, err := gatt.NewDevice(option.DefaultServerOptions...)
 	if err != nil {
-		fmt.Printf("Failed to open device, err: %s\n", err)
 		logger.AppLogger().Warnf("Failed to open device, err: %v", err)
 		return fmt.Errorf("Failed to open device, err: %s", err)
 	}
@@ -63,13 +61,11 @@ func Start(serviceName_, serviceUUID_ string, onRecvCb service.OnRecvCallbackFun
 	// Register optional handlers.
 	d.Handle(
 		gatt.CentralConnected(func(c gatt.Central) {
-			fmt.Printf("Connect, ID:%v, MTU:%v, certral:%v\n", c.ID(), c.MTU(), c)
 			mtu = c.MTU()
 			logger.AppLogger().Infof("#### BLUETOOTH Connect, ID:%v, MTU:%v, certral:%v", c.ID(), c.MTU(), c)
 			service.SetConnected(true)
 		}),
 		gatt.CentralDisconnected(func(c gatt.Central) {
-			fmt.Printf("Disconnect: ID:%v, certral:%v\n", c.ID(), c)
 			logger.AppLogger().Warnf("#### BLUETOOTH Disconnect, ID:%v, MTU:%v, certral:%v", c.ID(), c.MTU(), c)
 			service.SetConnected(false)
 		}),
