@@ -17,7 +17,7 @@ package config
 import (
 	hardware_util "agent/utils/hardware"
 	"flag"
-	"fmt"
+	"log"
 	"os"
 	"strings"
 	"testing"
@@ -39,6 +39,7 @@ var Config = struct {
 	DebugMode                                 bool `default:"false"` // 调试模式。会控制是否打开 swagger 等。
 	PlatformEnabled                           bool `default:"false"` // 是否启用平台相关能力（注册、升级、互联网通道等）
 	OverwriteDockerCompose                    bool `default:"true"`  // 启动时是否覆盖 docker-compose.yml。"true" 表示覆盖。
+	EnableDockerManage                        bool `default:"true"`  // 是否由 space-agent 管理 docker 微服务（false 时仅提供配对/API 能力）
 	EnableSecurityChip                        bool `default:"true"`  // 是否启用加密芯片。
 	EncryptLanSessionData                     bool `default:"true"`  // 加密局域网通信数据
 	EnableBackupRestoreSupportWhenRunAsDocker bool `default:"false"` // 容器化部署时, 是否启动备份恢复功能.
@@ -527,6 +528,27 @@ func modifyConfigWhenRunInDocker() {
 			}
 			Config.GateWay.LanPort = 12841
 			Config.GateWay.TlsLanPort = 18569
+		} else if !Config.EnableDockerManage {
+			addr := []*string{&Config.AliveChecker.GateWay.UrlGateway,
+				&Config.GateWay.Revoke.Url,
+				&Config.GateWay.APIRoot.Url,
+				&Config.Account.User.Url,
+				&Config.Account.Member.Url,
+				&Config.Account.AdminCreate.Url,
+				&Config.Account.SpaceAdmin.Url,
+				&Config.Account.NetworkChannelInfo.Url,
+				&Config.Account.NetworkChannelWan.Url,
+				&Config.Account.AdminSetPassword.Url,
+				&Config.Account.AdminPasswordCheck.Url,
+				&Config.Account.AdminRevoke.Url,
+				&Config.Account.AdminInitial.Url,
+				&Config.Account.Migrate.Url,
+				&Config.Redis.Addr,
+				&Config.GateWay.SwitchPlatform.Url}
+			for _, v := range addr {
+				*v = strings.ReplaceAll(*v, "localhost:8080", "aospace-gateway:8080")
+				*v = strings.ReplaceAll(*v, "127.0.0.1:6379", "aospace-redis:6379")
+			}
 		} else {
 			Config.EnvDefaultVal.SYSTEM_AGENT_URL_DEVICE_INFO = "http://localhost:5680/agent/v1/api/device/info"
 			Config.EnvDefaultVal.SYSTEM_AGENT_URL_BASE = "http://localhost:5680/agent/v1/api"
@@ -551,11 +573,11 @@ func createLogFileDir() {
 func readExistingConfigFile(f string) {
 	b, err := fileutil.ReadFromFile(f)
 	if err != nil {
-		fmt.Printf("ReadFromFile config %v fail, err: %+v\n\n", f, err)
+		log.Printf("read config file failed: file=%v, err=%+v", f, err)
 	} else {
 		err1 := yaml.Unmarshal(b, &Config)
 		if err1 != nil {
-			fmt.Printf("Unmarshal config file %v fail, err: %+v\n\n", f, err1)
+			log.Printf("unmarshal config file failed: file=%v, err=%+v", f, err1)
 		}
 	}
 }
@@ -563,8 +585,7 @@ func readExistingConfigFile(f string) {
 func removeExistingConfigFile(f string) {
 	err := fileutil.WriteToFile(f, []byte{}, true)
 	if err != nil {
-		fmt.Printf("failed removeExistingConfigFile, WriteToFile file:%v, err: %+v\n",
-			f, err)
+		log.Printf("remove existing config file failed: file=%v, err=%+v", f, err)
 		return
 	}
 }
@@ -572,7 +593,7 @@ func removeExistingConfigFile(f string) {
 func writeDefaultConfigFile(f string) {
 	out, err := yaml.Marshal(Config)
 	if err != nil {
-		fmt.Printf("failed  yaml.Marshal: %+v\n", err)
+		log.Printf("marshal default config failed: err=%+v", err)
 		return
 	}
 	// fmt.Printf("@@@@ DefaultConfigFile:\n%+v\n\n", string(out))

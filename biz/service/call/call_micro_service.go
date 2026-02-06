@@ -28,6 +28,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -38,7 +39,19 @@ import (
 	"github.com/dungeonsnd/gocom/encrypt/random"
 )
 
+func normalizeInternalServiceURL(raw string) string {
+	// In single-docker mode, loopback points to the agent container itself.
+	// Gateway must be reached by service name over compose network.
+	if os.Getenv("AOSPACE_SINGLE_DOCKER_MODE") == "true" && os.Getenv("AOSPACE_DATADIR") != "" {
+		u := strings.ReplaceAll(raw, "localhost:8080", "aospace-gateway:8080")
+		u = strings.ReplaceAll(u, "127.0.0.1:8080", "aospace-gateway:8080")
+		return u
+	}
+	return raw
+}
+
 func CallServiceByPost(url string, headers map[string]string, req, rsp interface{}) error {
+	url = normalizeInternalServiceURL(url)
 
 	if headers == nil {
 		headers = map[string]string{"Request-Id": random.GenUUID()}
@@ -57,6 +70,8 @@ func CallServiceByPost(url string, headers map[string]string, req, rsp interface
 }
 
 func CallServiceByGet(url string, headers map[string]string, req, rsp interface{}) error {
+	url = normalizeInternalServiceURL(url)
+
 	if headers == nil {
 		headers = map[string]string{"Request-Id": random.GenUUID()}
 	}
@@ -81,6 +96,8 @@ func CallServiceByForm(method, url string, reqMap map[string]string, rsp interfa
 }
 
 func CallServiceByFormStr(method, url string, reqStr string, rsp interface{}) (*http.Response, error) {
+	url = normalizeInternalServiceURL(url)
+
 	if len(method) < 1 {
 		method = "POST"
 	}

@@ -89,8 +89,8 @@ func (b *DeviceInfo) SetAllInfo() error {
 	// 方式2: 根据硬件生成
 	btId, err := deviceid.GetBtId(config.Config.Box.CpuIdStoreFile, config.Config.Box.SnNumberStoreFile)
 	if err != nil {
-		err1 := fmt.Errorf("GET GetRPIBtId failed, no btid now, err:%v", err)
-		logger.AppLogger().Warnf("%v", err1)
+		logger.AppLogger().Warnf("GetBtId failed in SetAllInfo, fallback to generated btid, err:%v", err)
+		btId = getFallbackBtId()
 	}
 	boxUuid, err := deviceid.GetProductId(config.Config.Box.CpuIdStoreFile)
 	if err != nil {
@@ -123,8 +123,8 @@ func setDeviceInitData() error {
 	// 方式2: 根据硬件生成
 	btId, err := deviceid.GetBtId(config.Config.Box.CpuIdStoreFile, config.Config.Box.SnNumberStoreFile)
 	if err != nil {
-		err1 := fmt.Errorf("GET GetRPIBtId failed, no btid now, err:%v", err)
-		logger.AppLogger().Warnf("%v", err1)
+		logger.AppLogger().Warnf("GetBtId failed in setDeviceInitData, fallback to generated btid, err:%v", err)
+		btId = getFallbackBtId()
 	}
 	boxUuid, err := deviceid.GetProductId(config.Config.Box.CpuIdStoreFile)
 	if err != nil {
@@ -190,17 +190,21 @@ func GetQrCode() string {
 	if device_ability.GetAbilityModel().DeviceModelNumber >= device_ability.SN_SUPPORTED_FROM_MODEL_NUMBER {
 		snNumber, err := deviceid.GetSnNumber(config.Config.Box.SnNumberStoreFile)
 		if err != nil {
-			err1 := fmt.Errorf("failed GetSnNumber, err:%v", err)
-			// logger.AppLogger().Debugf("%v", err1)
-			return err1.Error()
+			logger.AppLogger().Warnf("GetQrCode failed GetSnNumber, fallback to generated sn, err:%v", err)
+			snNumber = getFallbackSnNumber()
+			if len(strings.TrimSpace(snNumber)) == 0 {
+				return getFallbackQrCodeByBtId()
+			}
 		}
 		return fmt.Sprintf("%v?sn=%v", UrlQrCodeDomain, snNumber)
 	} else if device_ability.GetAbilityModel().DeviceModelNumber <= device_ability.SN_GEN_CLOUD_DOCKER {
 		snNumber, err := deviceid.GetSnNumber(config.Config.Box.SnNumberStoreFile)
 		if err != nil {
-			err1 := fmt.Errorf("failed GetSnNumber, err:%v", err)
-			// logger.AppLogger().Debugf("%v", err1)
-			return err1.Error()
+			logger.AppLogger().Warnf("GetQrCode failed GetSnNumber in docker mode, fallback to generated sn, err:%v", err)
+			snNumber = getFallbackSnNumber()
+			if len(strings.TrimSpace(snNumber)) == 0 {
+				return getFallbackQrCodeByBtId()
+			}
 		}
 		logger.AppLogger().Debugf("GetQrCode, snNumber:%v", snNumber)
 
@@ -240,6 +244,40 @@ func GetQrCode() string {
 		}
 		return fmt.Sprintf("%v?btid=%v", UrlQrCodeDomain, btId)
 	}
+}
+
+func getFallbackBtId() string {
+	btId, err := deviceid.GetBtId(config.Config.Box.CpuIdStoreFile, config.Config.Box.SnNumberStoreFile)
+	if err == nil && len(strings.TrimSpace(btId)) > 0 {
+		return btId
+	}
+	productId, pErr := deviceid.GetProductId(config.Config.Box.CpuIdStoreFile)
+	if pErr != nil || len(strings.TrimSpace(productId)) == 0 {
+		logger.AppLogger().Warnf("fallback btid generation failed, GetProductId err:%v", pErr)
+		return ""
+	}
+	// keep generated btid in the same 16-char hash shape.
+	return deviceid.HashHex(productId)
+}
+
+func getFallbackQrCodeByBtId() string {
+	btId := getFallbackBtId()
+	if len(strings.TrimSpace(btId)) == 0 {
+		return UrlQrCodeDomain
+	}
+	return fmt.Sprintf("%v?btid=%v", UrlQrCodeDomain, btId)
+}
+
+func getFallbackSnNumber() string {
+	productId, err := deviceid.GetProductId(config.Config.Box.CpuIdStoreFile)
+	if err != nil || len(strings.TrimSpace(productId)) == 0 {
+		logger.AppLogger().Warnf("fallback sn generation failed, GetProductId err:%v", err)
+		return ""
+	}
+	if len(productId) >= 16 {
+		return strings.ToUpper(productId[:16])
+	}
+	return strings.ToUpper(productId)
 }
 
 func GetDeviceInfo() *DeviceInfo {

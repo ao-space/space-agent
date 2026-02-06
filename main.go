@@ -35,7 +35,6 @@ import (
 	"agent/biz/service/upgrade"
 	"agent/biz/web"
 	"agent/utils/logger"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -57,17 +56,21 @@ func main() {
 
 	logger.AppLogger().Infof("================[%v Started] [system-agent version:%v]================",
 		os.Args[0], config.Version+"-"+config.VersionNumber)
-
-	fmt.Printf("AoLogDirBase:%+v\n", config.Config.Log.AoLogDirBase)
-	fmt.Printf("singleDockerModeEnv:%+v\n", os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv))
+	logger.AppLogger().Infof("startup config: AoLogDirBase=%v, singleDockerModeEnv=%v, platformEnabled=%v, dockerManage=%v",
+		config.Config.Log.AoLogDirBase,
+		os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv),
+		config.Config.PlatformEnabled,
+		config.Config.EnableDockerManage)
 
 	if err := AgentCmd.Execute(); err != nil {
-		fmt.Println(err)
+		logger.AppLogger().Errorf("agent command execute failed: %v", err)
 		os.Exit(1)
 	}
+	logger.AppLogger().Infof("initializing device identity and keys")
 	device.InitDeviceInfo()
 	device.InitDeviceKey()
 	clientinfo.InitClientInfo()
+	logger.AppLogger().Infof("device identity initialized")
 
 	if !strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") && config.Config.PlatformEnabled {
 		go platform.InitPlatformAbility()
@@ -76,15 +79,24 @@ func main() {
 	}
 
 	// 启动 web/http api 服务
+	logger.AppLogger().Infof("starting web api services")
 	web.Start()
+	logger.AppLogger().Infof("web api services started")
 
 	// 启动 docker 微服务创建或启动
-	if strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") {
-		docker.MigrateFileStorageData()
+	if config.Config.EnableDockerManage {
+		logger.AppLogger().Infof("starting docker services management")
+		if strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") {
+			docker.MigrateFileStorageData()
+		} else {
+			docker.Start()
+		}
+		logger.AppLogger().Infof("docker services management initialized")
 	} else {
-		docker.Start()
+		logger.AppLogger().Infof("Docker management disabled by config")
 	}
 	alivechecker.Start()
+	logger.AppLogger().Infof("alivechecker started")
 
 	// 检测是否需要发送升级推送
 	if !strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") && config.Config.PlatformEnabled {
@@ -93,11 +105,13 @@ func main() {
 
 	// 日志目录监控
 	log_dir_monitor.Start()
+	logger.AppLogger().Infof("log directory monitor started")
 
 	if err := leveldb.OpenDB(); err != nil {
-		fmt.Printf("\nFailed leveldb.OpenDB, err:%v\n", err)
-		os.Exit(0)
+		logger.LevelDBLogger().Errorf("failed leveldb.OpenDB: %v", err)
+		os.Exit(2)
 	}
+	logger.LevelDBLogger().Infof("leveldb opened successfully")
 
 	quitChan := make(chan os.Signal)
 	signal.Notify(quitChan, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM,
@@ -106,7 +120,7 @@ func main() {
 	for s := range quitChan {
 		switch s {
 		case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
-			fmt.Printf("signal %v\n", s)
+			logger.AppLogger().Infof("receive signal: %v", s)
 			GracefullExit()
 		case syscall.SIGUSR1:
 			// fmt.Println("usr1 signal", s)

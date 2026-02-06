@@ -16,6 +16,7 @@ package dengineapi
 
 import (
 	"agent/utils/docker/dockermodel"
+	"agent/utils/logger"
 	"bytes"
 	"context"
 	"fmt"
@@ -38,8 +39,7 @@ func PullImageWithoutAuth(cli *client.Client, imageName string) error {
 }
 
 func PullImageByAuthStr(cli *client.Client, imageName string, authStr string) error {
-
-	fmt.Printf(">>>> imageName: %v, authStr=%v \n", imageName, authStr)
+	logger.DockerLogger().Infof("pull image start: image=%v, has_auth=%v", imageName, authStr != "")
 
 	events, err := cli.ImagePull(context.Background(), imageName, types.ImagePullOptions{
 		All:           false,
@@ -54,8 +54,7 @@ func PullImageByAuthStr(cli *client.Client, imageName string, authStr string) er
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(events)
 	s := buf.String()
-	fmt.Printf("#### ImagePull return: %v\n", s)
-	// fmt.Println("image pull success")
+	logger.DockerLogger().Debugf("pull image response: image=%v, response_len=%v", imageName, len(s))
 	return nil
 }
 

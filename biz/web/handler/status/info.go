@@ -29,7 +29,9 @@ import (
 	"agent/biz/model/dto/status"
 	"agent/config"
 	"fmt"
+	"net"
 	"net/http"
+	"strings"
 
 	"agent/utils/logger"
 	"github.com/dungeonsnd/gocom/encrypt/random"
@@ -74,14 +76,18 @@ func Info(c *gin.Context) {
 
 	abilityModel := device_ability.GetAbilityModel()
 	if abilityModel.RunInDocker {
-		err := fileutil.WriteToFile(config.Config.Box.HostIpFile, []byte(c.Request.Host), true)
-		if err != nil {
-			err1 := fmt.Errorf("failed write HostIpFile, %+v", err)
-			logger.AppLogger().Debugf("info POST, %+v", err1)
-			c.JSON(http.StatusOK, dto.BaseRspStr{Code: dto.AgentCodeServerErrorStr,
-				RequestId: random.GenUUID(),
-				Message:   err1.Error()})
-			return
+		if persistableHost(c.Request.Host) {
+			err := fileutil.WriteToFile(config.Config.Box.HostIpFile, []byte(c.Request.Host), true)
+			if err != nil {
+				err1 := fmt.Errorf("failed write HostIpFile, %+v", err)
+				logger.AppLogger().Debugf("info POST, %+v", err1)
+				c.JSON(http.StatusOK, dto.BaseRspStr{Code: dto.AgentCodeServerErrorStr,
+					RequestId: random.GenUUID(),
+					Message:   err1.Error()})
+				return
+			}
+		} else {
+			logger.AppLogger().Debugf("skip writing HostIpFile for request host:%q", c.Request.Host)
 		}
 		result.QrCode = device.GetQrCode()
 	}
@@ -90,4 +96,30 @@ func Info(c *gin.Context) {
 		Message:   "OK",
 		RequestId: random.GenUUID(),
 		Results:   result})
+}
+
+func persistableHost(hostport string) bool {
+	host := strings.TrimSpace(hostport)
+	if host == "" {
+		return false
+	}
+	parsedHost := host
+	if h, _, err := net.SplitHostPort(host); err == nil {
+		parsedHost = h
+	}
+	parsedHost = strings.TrimSpace(strings.Trim(parsedHost, "[]"))
+	if parsedHost == "" {
+		return false
+	}
+	if strings.EqualFold(parsedHost, "localhost") {
+		return false
+	}
+	ip := net.ParseIP(parsedHost)
+	if ip == nil {
+		return true
+	}
+	if ip.IsLoopback() || ip.IsUnspecified() {
+		return false
+	}
+	return true
 }

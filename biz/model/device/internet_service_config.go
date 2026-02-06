@@ -17,7 +17,6 @@ package device
 import (
 	"agent/config"
 	"agent/utils/logger"
-	"fmt"
 	"sync"
 
 	"github.com/dungeonsnd/gocom/file/fileutil"
@@ -33,10 +32,10 @@ var lock sync.Mutex
 func init() {
 	c = &InternetServiceConfig{EnableInternetAccess: true}
 	if !fileutil.IsFileExist(config.Config.Box.InternetServiceConfigFile) {
-		fmt.Printf("InternetServiceConfig file not exist, %v \n", config.Config.Box.InternetServiceConfigFile)
+		logger.AppLogger().Infof("InternetServiceConfig file not exist, create default: %v", config.Config.Box.InternetServiceConfigFile)
 		writeToFile()
 	} else {
-		fmt.Printf("InternetServiceConfig file exist, %v \n", config.Config.Box.InternetServiceConfigFile)
+		logger.AppLogger().Infof("InternetServiceConfig file exists: %v", config.Config.Box.InternetServiceConfigFile)
 	}
 	readFromFile()
 }

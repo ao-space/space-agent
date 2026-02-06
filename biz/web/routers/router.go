@@ -43,13 +43,15 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spkg/zipfs"
 )
 
 func ExternalRouter() *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Recovery(), accessLogMiddleware("external"))
 
 	addHtmlZipHandler(router)
 
@@ -138,7 +140,8 @@ func ExternalRouter() *gin.Engine {
 }
 
 func InternalRouter() *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Recovery(), accessLogMiddleware("internal"))
 
 	v1 := router.Group("/agent/v1/api")
 	{
@@ -196,6 +199,47 @@ func InternalRouter() *gin.Engine {
 	return router
 }
 
+func accessLogMiddleware(server string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		requestURI := c.Request.URL.Path
+		if c.Request.URL.RawQuery != "" {
+			requestURI += "?" + c.Request.URL.RawQuery
+		}
+
+		c.Next()
+
+		status := c.Writer.Status()
+		latencyMs := time.Since(start).Milliseconds()
+		requestId := c.GetHeader("Request-Id")
+		errMsg := c.Errors.String()
+
+		fields := []interface{}{
+			"server", server,
+			"method", c.Request.Method,
+			"uri", requestURI,
+			"status", status,
+			"latency_ms", latencyMs,
+			"client_ip", c.ClientIP(),
+			"request_id", requestId,
+			"user_agent", c.Request.UserAgent(),
+			"size", c.Writer.Size(),
+		}
+		if errMsg != "" {
+			fields = append(fields, "errors", errMsg)
+		}
+
+		switch {
+		case status >= http.StatusInternalServerError:
+			logger.AccessLogger().Errorw("http request", fields...)
+		case status >= http.StatusBadRequest:
+			logger.AccessLogger().Warnw("http request", fields...)
+		default:
+			logger.AccessLogger().Infow("http request", fields...)
+		}
+	}
+}
+
 func addHtmlZipHandler(router *gin.Engine) error {
 
 	buf := res.GetContentStaticHtmlZip()
@@ -203,7 +247,6 @@ func addHtmlZipHandler(router *gin.Engine) error {
 	fs, err := zipfs.NewFromReaderAt(reader, int64(len(buf)), nil)
 	if err != nil {
 		err1 := fmt.Errorf("Failed NewFromReaderAt, err: %v", err)
-		fmt.Printf("%+v\n", err1)
 		logger.AppLogger().Errorf("%+v", err1)
 	}
 

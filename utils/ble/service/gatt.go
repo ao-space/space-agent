@@ -15,7 +15,7 @@
 package service
 
 import (
-	"log"
+	"agent/utils/logger"
 
 	"github.com/paypal/gatt"
 )
@@ -32,7 +32,7 @@ func NewGattService() *gatt.Service {
 	s.AddCharacteristic(attrServiceChangedUUID).HandleNotifyFunc(
 		func(r gatt.Request, n gatt.Notifier) {
 			go func() {
-				log.Printf("TODO: indicate client when the services are changed")
+				logger.AppLogger().Debugf("TODO: indicate client when the services are changed")
 			}()
 		})
 	return s

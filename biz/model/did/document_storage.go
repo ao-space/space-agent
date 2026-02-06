@@ -45,16 +45,14 @@ func init() {
 	go func() {
 		spaceKeyPri, spaceKeyPub, err := rsa.GenRsaKey(2048)
 		if err != nil {
-			fmt.Printf("\ninit GenRsaKey, spaceKey err:%v\n", err)
-			logger.AppLogger().Debugf("init GenRsaKey, spaceKey err:%v", err)
+			logger.AppLogger().Warnf("init GenRsaKey, spaceKey err:%v", err)
 		}
 		preGeneratedSpaceKeyPri = spaceKeyPri
 		preGeneratedSpaceKeyPub = spaceKeyPub
 
 		passwordKeyPri, passwordKeyPub, err := rsa.GenRsaKey(2048)
 		if err != nil {
-			fmt.Printf("\ninit GenRsaKey, passwordKey err:%v\n", err)
-			logger.AppLogger().Debugf("init GenRsaKey, passwordKey err:%v", err)
+			logger.AppLogger().Warnf("init GenRsaKey, passwordKey err:%v", err)
 		}
 		preGeneratedPasswordKeyPri = passwordKeyPri
 		preGeneratedPasswordKeyPub = passwordKeyPub
@@ -170,7 +168,7 @@ func getEncryptedPrivatePasswordKey(levelDBTrans *leveldb.Trans, aoId string) ([
 			leveldb.KNameOfPasswordRSAPri(aoId), err)
 		return nil, exist, err
 	}
-	fmt.Printf("\ngetPasswordKey, leveldb.Has:%v, err:%v\n",
+	logger.AppLogger().Debugf("getPasswordKey, leveldb.Has:%v, err:%v",
 		leveldb.KNameOfPasswordRSAPri(aoId), err)
 
 	var encryptedPriKeyBytes []byte

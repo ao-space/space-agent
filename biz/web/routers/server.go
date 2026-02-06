@@ -40,8 +40,7 @@ type HttpServer interface {
 
 // Start external web server start
 func (w *ExternalWebServer) Start() {
-	fmt.Printf("startWebServer \n")
-	logger.AppLogger().Infof("startWebServer")
+	logger.AppLogger().Infof("startWebServer, listen=%v", config.Config.Web.DefaultListenAddr)
 
 	if gin.Mode() == gin.DebugMode {
 		w.Router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -49,14 +48,13 @@ func (w *ExternalWebServer) Start() {
 	err := w.Router.Run(config.Config.Web.DefaultListenAddr)
 	if err != nil {
 		logger.AppLogger().Errorf("Failed startWebServer, err: %v", err)
-		os.Exit(-1)
+		os.Exit(2)
 	}
 	return
 }
 
 // Start internal web server start
 func (w *InternalWebServer) Start() {
-	fmt.Printf("startWebServerDockerLocal \n")
 	logger.AppLogger().Infof("startWebServerDockerLocal")
 
 	if gin.Mode() == gin.DebugMode {
@@ -73,7 +71,6 @@ func (w *InternalWebServer) Start() {
 	err := w.Router.Run(localListenAddr)
 	if err != nil {
 		err1 := fmt.Errorf("Failed startWebServerDockerLocal using %v, err: %v", localListenAddr, err)
-		fmt.Printf("%+v\n", err1)
 		logger.AppLogger().Errorf("%+v", err1)
 		// os.Exit(0) // 可能不是致命的
 	} else {
