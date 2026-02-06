@@ -12,15 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.20.6-bookworm as builder
+FROM node:22.2.0-alpine3.19 as npm-builder
+
+WORKDIR /work/
+
+COPY ./web/boxdocker ./web/boxdocker
+
+RUN	apk add --no-cache zip
+RUN cd web/boxdocker && npm install && npm run build && mv dist boxdocker && \
+        zip -r static_html.zip boxdocker && mkdir ../../res && mv static_html.zip ../../res
+
+FROM golang:1.22.3-alpine3.20 as golang-builder
 
 WORKDIR /work/
 
 COPY . .
 
-RUN apt update && apt install npm nodejs zip -y
-RUN cd web/boxdocker && npm install && npm run build && mv dist boxdocker && \
-        zip -r static_html.zip boxdocker && mv static_html.zip ../../res && cd ../../
+COPY --from=npm-builder /work/res /work/res
+
+RUN apk add --no-cache make
 RUN go env -w GO111MODULE=on && make -f Makefile
 
 FROM debian:12
@@ -44,8 +54,8 @@ RUN set -eux; \
 	apt remove docker.io -y ; \
 	rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /work/build/aospace /usr/local/bin/aospace
-COPY --from=builder /work/supervisord.conf /etc/supervisor/supervisord.conf
+COPY --from=golang-builder /work/build/aospace /usr/local/bin/aospace
+COPY --from=golang-builder /work/supervisord.conf /etc/supervisor/supervisord.conf
 
 EXPOSE 5678
 
