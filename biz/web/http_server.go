@@ -18,6 +18,8 @@ import (
 	"agent/biz/docker"
 	"agent/biz/web/routers"
 	"agent/config"
+	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -41,8 +43,13 @@ func Start() {
 
 	go externalWebServer.Start()
 
-	docker.SubscribeAsyncDockerNetwork(func(status int) {
-		// start internal web server
+	// start internal web server
+	if strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") {
 		go internalWebServer.Start()
-	})
+	} else {
+		docker.SubscribeAsyncDockerNetwork(func(status int) {
+			go internalWebServer.Start()
+		})
+	}
+
 }

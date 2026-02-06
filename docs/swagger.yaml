@@ -1,9 +1,55 @@
 definitions:
-  bindinit.InitReq:
+  agent_biz_model_upgrade.VersionDownInfo:
     properties:
-      clientUuid:
+      downloaded:
+        type: boolean
+      pkgPath:
         type: string
-      clientVersion:
+      updateTime:
+        type: string
+      versionId:
+        type: string
+    type: object
+  agent_biz_web_handler_bind_internet_service_config.ConfigReq:
+    properties:
+      clientUUID:
+        type: string
+      enableInternetAccess:
+        type: boolean
+      platformApiBase:
+        description: Platform api url setting, e.g. "https://ao.space"`
+        type: string
+    type: object
+  agent_biz_web_handler_bind_internet_service_config.ConfigRsp:
+    properties:
+      connectedNetwork:
+        items:
+          $ref: '#/definitions/pair.Network'
+        type: array
+      enableInternetAccess:
+        type: boolean
+      enableLAN:
+        type: boolean
+      enableP2P:
+        type: boolean
+      userDomain:
+        type: string
+    type: object
+  agent_biz_web_handler_bind_internet_service_config.GetConfigRsp:
+    properties:
+      connectedNetwork:
+        items:
+          $ref: '#/definitions/pair.Network'
+        type: array
+      enableInternetAccess:
+        type: boolean
+      enableLAN:
+        type: boolean
+      enableP2P:
+        type: boolean
+      platformApiBase:
+        type: string
+      userDomain:
         type: string
     type: object
   call.MicroServerRsp:
@@ -19,48 +65,6 @@ definitions:
   certificate.LanCert:
     properties:
       cert:
-        type: string
-    type: object
-  config.ConfigReq:
-    properties:
-      clientUUID:
-        type: string
-      enableInternetAccess:
-        type: boolean
-      platformApiBase:
-        description: Platform api url setting, e.g. "https://ao.space"`
-        type: string
-    type: object
-  config.ConfigRsp:
-    properties:
-      connectedNetwork:
-        items:
-          $ref: '#/definitions/pair.Network'
-        type: array
-      enableInternetAccess:
-        type: boolean
-      enableLAN:
-        type: boolean
-      enableP2P:
-        type: boolean
-      userDomain:
-        type: string
-    type: object
-  config.GetConfigRsp:
-    properties:
-      connectedNetwork:
-        items:
-          $ref: '#/definitions/pair.Network'
-        type: array
-      enableInternetAccess:
-        type: boolean
-      enableLAN:
-        type: boolean
-      enableP2P:
-        type: boolean
-      platformApiBase:
-        type: string
-      userDomain:
         type: string
     type: object
   create.CreateReq:
@@ -120,7 +124,8 @@ definitions:
   device.BoxDeviceVersion:
     properties:
       deviceAbility:
-        $ref: '#/definitions/device_ability.DeviceAbility'
+        allOf:
+        - $ref: '#/definitions/device_ability.DeviceAbility'
         description: 设备能力模型
       deviceLogoUrl:
         description: 设备图片链接
@@ -267,6 +272,7 @@ definitions:
   dockermodel.DockerContainer:
     properties:
       created:
+        format: int64
         type: integer
       hostConfig:
         additionalProperties:
@@ -476,7 +482,8 @@ definitions:
       connected:
         type: integer
       deviceAbility:
-        $ref: '#/definitions/device_ability.DeviceAbility'
+        allOf:
+        - $ref: '#/definitions/device_ability.DeviceAbility'
         description: 设备能力模型
       deviceLogoUrl:
         description: 设备图片链接
@@ -709,9 +716,6 @@ definitions:
       status:
         description: 状态
         type: string
-      tryoutCodeVerified:
-        description: 试用码是否验证通过(仅在 PC 试用场景下使用).
-        type: boolean
       version:
         description: 客户端版本
         type: string
@@ -771,12 +775,13 @@ definitions:
   upgrade.Task:
     properties:
       KernelImg:
-        $ref: '#/definitions/upgrade.VersionDownInfo'
+        $ref: '#/definitions/agent_biz_model_upgrade.VersionDownInfo'
       cFile:
-        $ref: '#/definitions/upgrade.VersionDownInfo'
+        allOf:
+        - $ref: '#/definitions/agent_biz_model_upgrade.VersionDownInfo'
         description: docker-compose.yml
       containerImg:
-        $ref: '#/definitions/upgrade.VersionDownInfo'
+        $ref: '#/definitions/agent_biz_model_upgrade.VersionDownInfo'
       doneDownTime:
         type: string
       doneInstallTime:
@@ -790,7 +795,7 @@ definitions:
       reboot:
         type: boolean
       rpmPkg:
-        $ref: '#/definitions/upgrade.VersionDownInfo'
+        $ref: '#/definitions/agent_biz_model_upgrade.VersionDownInfo'
       startDownTime:
         type: string
       startInstallTime:
@@ -807,17 +812,6 @@ definitions:
         type: boolean
       autoInstall:
         type: boolean
-    type: object
-  upgrade.VersionDownInfo:
-    properties:
-      downloaded:
-        type: boolean
-      pkgPath:
-        type: string
-      updateTime:
-        type: string
-      versionId:
-        type: string
     type: object
 info:
   contact:
@@ -957,12 +951,14 @@ paths:
       description: get aospace server base info.
       operationId: BindInit
       parameters:
-      - description: query params
-        in: body
-        name: initReq
-        required: true
-        schema:
-          $ref: '#/definitions/bindinit.InitReq'
+      - description: client uuid
+        in: query
+        name: clientUuid
+        type: string
+      - description: client version
+        in: query
+        name: clientVersion
+        type: string
       produces:
       - application/json
       responses:
@@ -999,7 +995,7 @@ paths:
             - $ref: '#/definitions/dto.BaseRspStr'
             - properties:
                 results:
-                  $ref: '#/definitions/config.GetConfigRsp'
+                  $ref: '#/definitions/agent_biz_web_handler_bind_internet_service_config.GetConfigRsp'
               type: object
       summary: get internet tunnel config [for client/gateway bluetooth/LAN]
       tags:
@@ -1018,7 +1014,7 @@ paths:
         name: configReq
         required: true
         schema:
-          $ref: '#/definitions/config.ConfigReq'
+          $ref: '#/definitions/agent_biz_web_handler_bind_internet_service_config.ConfigReq'
       produces:
       - application/json
       responses:
@@ -1029,7 +1025,7 @@ paths:
             - $ref: '#/definitions/dto.BaseRspStr'
             - properties:
                 results:
-                  $ref: '#/definitions/config.ConfigRsp'
+                  $ref: '#/definitions/agent_biz_web_handler_bind_internet_service_config.ConfigRsp'
               type: object
       summary: config internet tunnel [for client/gateway bluetooth/LAN]
       tags:
@@ -1506,21 +1502,6 @@ paths:
       summary: get Wi-Fi list  [for client]
       tags:
       - net
-  /agent/v1/api/pair/tryout/code:
-    post:
-      consumes:
-      - text/plain
-      operationId: TryOutCode
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: code=AG-200 success;
-          schema:
-            $ref: '#/definitions/dto.BaseRspStr'
-      summary: verify trial code [for web client LAN]
-      tags:
-      - TryOut
   /agent/v1/api/pairing:
     post:
       consumes:

@@ -43,6 +43,10 @@ import (
 // 向平台注册盒子
 func ServiceRegisterBox() error {
 	logger.AppLogger().Debugf("ServiceRegisterBox")
+	if !config.Config.PlatformEnabled {
+		logger.AppLogger().Warnf("platform disabled, skip ServiceRegisterBox")
+		return nil
+	}
 
 	//先获取 box-reg-key
 	if boxRegKeyInfo, err := GetDeviceRegKey(""); err != nil {
@@ -126,6 +130,9 @@ type BoxRegKeyInfo struct {
 func GetDeviceRegKey(apiBaseUrl string) (*BoxRegKeyInfo, error) {
 
 	logger.AppLogger().Debugf("getBoxRegKey")
+	if !config.Config.PlatformEnabled {
+		return nil, fmt.Errorf("platform disabled")
+	}
 
 	// 平台请求结构
 	type authStruct struct {

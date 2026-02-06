@@ -38,6 +38,7 @@ type SnInfo struct {
 
 func GetSnNumber(snNumberStoreFile string) (string, error) {
 	if fileutil.IsFileExist(snNumberStoreFile) {
+		// fmt.Printf("GetSnNumber,%v exist\n", snNumberStoreFile)
 		if content, err := fileutil.ReadFromFile(snNumberStoreFile); err != nil {
 			fmt.Printf("GetSnNumber, ReadFromFile err: %v\n", err)
 			return "", err
@@ -45,11 +46,13 @@ func GetSnNumber(snNumberStoreFile string) (string, error) {
 			return string(content), nil
 		}
 	} else if strings.EqualFold(currentChip(), RPI) || strings.EqualFold(currentChip(), RK3568Dev) {
+		fmt.Printf("GetSnNumber,%v not exist, so current hardware is chip:%v\n", snNumberStoreFile, currentChip())
 		return "", fmt.Errorf("unsupported on this hardware platform")
 	} else {
+		fmt.Printf("GetSnNumber,%v not exist, so current hardware is rk's production\n", snNumberStoreFile)
 		sn, err := getVendorSnNumber()
 		if err != nil {
-			// fmt.Printf("GetSnNumber, getVendorSnNumber err: %v\n", err)
+			fmt.Printf("GetSnNumber, getVendorSnNumber err: %v\n", err)
 			return "", err
 		} else {
 			return sn, nil // 二代正式板

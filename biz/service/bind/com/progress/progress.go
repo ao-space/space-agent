@@ -20,8 +20,13 @@ import (
 	"agent/biz/model/dto"
 	"agent/biz/model/dto/bind/com/progress"
 	"agent/biz/service/base"
+	"agent/config"
 	"agent/utils/logger"
+	"agent/utils/tools"
 	"fmt"
+	"os"
+	"strings"
+	"time"
 )
 
 type ComProgressService struct {
@@ -32,13 +37,37 @@ type ComProgressService struct {
 func (svc *ComProgressService) Process() dto.BaseRspStr {
 	logger.AppLogger().Debugf("ComProgressService Process")
 	svc.PairedInfo = clientinfo.GetAdminPairedInfo()
-	dockerStatus := docker.GetDockerStatus()
 	if svc.PairedInfo.AlreadyBound() {
 		err := fmt.Errorf("pairedStatus:%+v", svc.PairedInfo.Status())
 		return dto.BaseRspStr{Code: dto.AgentCodeAlreadyPairedStr,
 			Message: err.Error()}
 	}
+
+	singleDockerModeEnv := os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv)
+	logger.AppLogger().Debugf("ComProgressService Process, singleDockerModeEnv:%v", singleDockerModeEnv)
+	if strings.EqualFold(singleDockerModeEnv, "true") {
+		go svc.startSpacePrograms()
+		time.Sleep(12 * time.Second)
+		rsp := &progress.ProgressRsp{ComStatus: docker.ContainersStarted, Progress: 100}
+		svc.Rsp = rsp
+		return svc.BaseService.Process()
+	}
+
+	dockerStatus := docker.GetDockerStatus()
 	rsp := &progress.ProgressRsp{ComStatus: dockerStatus, Progress: docker.GetStartingProgress()}
 	svc.Rsp = rsp
 	return svc.BaseService.Process()
+}
+
+func (svc *ComProgressService) startSpacePrograms() error {
+	cmd := "bash"
+	scripts := []string{"/usr/local/bin/start.sh"}
+	logger.AppLogger().Debugf("startSpacePrograms, will RunCmd script: %v %v", cmd, strings.Join(scripts, " "))
+	_, stdout, err := tools.RunCmd(cmd, scripts)
+	if err != nil {
+		logger.AppLogger().Warnf("%v %v, stdout:%v, err:%v", cmd, strings.Join(scripts, " "), stdout, err)
+	} else {
+		logger.AppLogger().Debugf("%v %v succ", cmd, strings.Join(scripts, " "))
+	}
+	return err
 }

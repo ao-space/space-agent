@@ -19,6 +19,7 @@ import (
 	"agent/biz/model/dto"
 	modelsp "agent/biz/model/switch-platform"
 	"agent/biz/service/encwrapper"
+	"agent/config"
 	"agent/utils"
 	"errors"
 	"fmt"
@@ -32,6 +33,10 @@ import (
 func ServiceSwitchPlatform(req *modelsp.SwitchPlatformReq) (dto.BaseRspStr, error) {
 	logger.AppLogger().Debugf("ServiceSwitchPlatform, req:%+v", req)
 	logger.AccessLogger().Debugf("[ServiceSwitchPlatform], req:%+v", req)
+	if !config.Config.PlatformEnabled {
+		err := fmt.Errorf("platform disabled")
+		return dto.BaseRspStr{Code: dto.AgentCodeUnsupportedFunction, Message: err.Error()}, err
+	}
 
 	err := encwrapper.Check()
 	if err != nil {

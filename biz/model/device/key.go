@@ -122,7 +122,7 @@ func InitDeviceKeyNormal() {
 
 	logger.AppLogger().Debugf("InitdeviceKey, devicePriKeyBytes length=%v", len(devicePublicKey))
 	logger.AppLogger().Debugf("InitdeviceKey, devicePublicKey length=%v", len(devicePublicKey))
-	logger.AppLogger().Debugf("InitdeviceKey, devicePublicKey=%v", devicePublicKey)
+	// logger.AppLogger().Debugf("InitdeviceKey, devicePublicKey=%v", devicePublicKey)
 }
 
 func GetDevicePriKey() []byte {

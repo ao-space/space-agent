@@ -32,12 +32,20 @@ import (
 // @Tags Pair
 // @Accept  plain
 // @Produce  json
-// @Param   initReq      body bindinit.InitReq true  "query params"
+// @Param   clientUuid    query string false  "client uuid"
+// @Param   clientVersion query string false  "client version"
 // @Success 200 {object} dto.BaseRspStr{results=pair.InitResult} "code=AG-200 success;"
 // @Router /agent/v1/api/bind/init [GET]
 func Init(c *gin.Context) {
 	logger.AppLogger().Debugf("%+v", c.Request)
 	var reqObject bindinit.InitReq
 	svc := new(servicesinit.InitService)
+	_ = c.ShouldBindQuery(&reqObject)
+	if c.Request.Method == http.MethodGet {
+		svc.InitLanService("", c.Request.Header, c)
+		svc.Req = &reqObject
+		c.JSON(http.StatusOK, svc.Process())
+		return
+	}
 	c.JSON(http.StatusOK, svc.InitLanService("", c.Request.Header, c).Enter(svc, &reqObject))
 }

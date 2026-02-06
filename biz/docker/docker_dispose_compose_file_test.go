@@ -16,6 +16,8 @@ package docker
 
 import (
 	"agent/config"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -24,6 +26,34 @@ import (
 )
 
 func TestWriteDefaultDockerComposeFile(t *testing.T) {
+	tempDir := t.TempDir()
+
+	origCustomComposeFile := config.Config.Docker.CustomComposeFile
+	origComposeFile := config.Config.Docker.ComposeFile
+	origRandPassword := config.Config.Box.RandDockercomposePassword
+	origRandPort := config.Config.Box.RandDockercomposeRedisPort
+	origRedisAddr := config.Config.Redis.Addr
+	origRedisPassword := config.Config.Redis.Password
+
+	config.Config.Docker.CustomComposeFile = filepath.Join(tempDir, "docker-compose.yml")
+	config.Config.Docker.ComposeFile = filepath.Join(tempDir, "docker-compose_runtime.yml")
+	config.Config.Box.RandDockercomposePassword = filepath.Join(tempDir, "rand_password.data")
+	config.Config.Box.RandDockercomposeRedisPort = filepath.Join(tempDir, "rand_port.data")
+	config.Config.Redis.Addr = "127.0.0.1"
+	config.Config.Redis.Password = ""
+
+	t.Cleanup(func() {
+		config.Config.Docker.CustomComposeFile = origCustomComposeFile
+		config.Config.Docker.ComposeFile = origComposeFile
+		config.Config.Box.RandDockercomposePassword = origRandPassword
+		config.Config.Box.RandDockercomposeRedisPort = origRandPort
+		config.Config.Redis.Addr = origRedisAddr
+		config.Config.Redis.Password = origRedisPassword
+		_ = os.Remove(config.Config.Docker.CustomComposeFile)
+		_ = os.Remove(config.Config.Box.RandDockercomposePassword)
+		_ = os.Remove(config.Config.Box.RandDockercomposeRedisPort)
+	})
+
 	writeDefaultDockerComposeFile()
 
 	if fileutil.IsFileNotExist(config.Config.Box.RandDockercomposeRedisPort) {

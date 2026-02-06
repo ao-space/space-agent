@@ -15,6 +15,10 @@
 package logger
 
 import (
+	"os"
+	"path/filepath"
+	"strings"
+
 	zaplogger "agent/deps/logger"
 
 	"go.uber.org/zap"
@@ -36,6 +40,43 @@ var (
 
 func SetLogPath(p string) {
 	path = p
+}
+
+func init() {
+	path = initLogPath()
+	zaplogger.SetDefaultLoggerPath(path)
+}
+
+func initLogPath() string {
+	if envPath := os.Getenv("AOSPACE_LOG_DIR"); envPath != "" {
+		return ensureTrailingSlash(envPath)
+	}
+	if isTestProcess() {
+		return ensureTrailingSlash(filepath.Join(os.TempDir(), "aospace-agent-test"))
+	}
+	return path
+}
+
+func isTestProcess() bool {
+	for _, arg := range os.Args {
+		if strings.HasPrefix(arg, "-test.") || strings.HasPrefix(arg, "-test=") {
+			return true
+		}
+	}
+	if len(os.Args) > 0 && strings.HasSuffix(os.Args[0], ".test") {
+		return true
+	}
+	return false
+}
+
+func ensureTrailingSlash(p string) string {
+	if p == "" {
+		return p
+	}
+	if strings.HasSuffix(p, string(os.PathSeparator)) {
+		return p
+	}
+	return p + string(os.PathSeparator)
 }
 
 func SetLogConfig(MaxSize, MaxBackups, MaxAge int, Compress bool) {

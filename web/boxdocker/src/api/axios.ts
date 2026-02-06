@@ -28,8 +28,3 @@ axios.defaults.transformRequest = function (data) {
 export function getAgentInfo() {
     return axios.get("/agent/info");
 }
-
-export function validateCode(tryoutCode,email) {
-    return axios.post("/agent/v1/api/pair/tryout/code",{tryoutCode,email});
-}
-

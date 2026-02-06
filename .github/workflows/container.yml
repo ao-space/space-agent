@@ -23,7 +23,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  EULIX_REGISTRY: hub.eulix.xyz
   HUAWEICLOUD_REGISTRY_SH: swr.cn-east-3.myhuaweicloud.com
   HUAWEICLOUD_REGISTRY_BJ: swr.cn-north-4.myhuaweicloud.com
   HUAWEICLOUD_REGISTRY_GZ: swr.cn-south-1.myhuaweicloud.com
@@ -71,14 +70,6 @@ jobs:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Log into registry ${{ env.EULIX_REGISTRY }}
-      if: github.event_name != 'pull_request'
-      uses: docker/login-action@v2
-      with:
-        registry: ${{ env.EULIX_REGISTRY }}
-        username: ${{ secrets.EULIX_REGISTRY_USERNAME }}
-        password: ${{ secrets.EULIX_REGISTRY_PASSWORD }}
 
     - name: Log into registry Docker Hub
       if: github.event_name != 'pull_request'
@@ -149,7 +140,6 @@ jobs:
       with:
         images: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          ${{ env.EULIX_REGISTRY }}/${{ env.IMAGE_NAME }}
           aospace/${{ env.GITHUB_REPOSITORY_NAME }}
           ${{ env.HUAWEICLOUD_REGISTRY_SH }}/${{ env.IMAGE_NAME }}
           ${{ env.HUAWEICLOUD_REGISTRY_BJ }}/${{ env.IMAGE_NAME }}

@@ -59,10 +59,10 @@ func RunningInDocker() bool {
 	envkey := "AOSPACE_DATADIR"
 	dataDir := os.Getenv(envkey)
 	if len(dataDir) > 0 {
-		// fmt.Printf("RunningInDocker, dataDir:%v\n", dataDir)
+		fmt.Printf("RunningInDocker, dataDir:%v\n", dataDir)
 		return true
 	} else {
-		// fmt.Printf("RunningInDocker==false, dataDir:%v\n", dataDir)
+		fmt.Printf("RunningInDocker==false, dataDir:%v\n", dataDir)
 		return false
 	}
 }

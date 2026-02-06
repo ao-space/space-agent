@@ -15,10 +15,10 @@
 package config
 
 import (
-	"agent/deps/logger"
 	hardware_util "agent/utils/hardware"
 	"flag"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -35,8 +35,9 @@ var runInDocker bool
 // 以下配置项尽量都包含默认值. 让用户零配置启动.
 // 系统OS镜像构建时，没有复制默认的 yml 配置文件. 原因是这里已经设置了默认值，不想在项目组重复设置默认值.
 
-type configSt struct {
+var Config = struct {
 	DebugMode                                 bool `default:"false"` // 调试模式。会控制是否打开 swagger 等。
+	PlatformEnabled                           bool `default:"false"` // 是否启用平台相关能力（注册、升级、互联网通道等）
 	OverwriteDockerCompose                    bool `default:"true"`  // 启动时是否覆盖 docker-compose.yml。"true" 表示覆盖。
 	EnableSecurityChip                        bool `default:"true"`  // 是否启用加密芯片。
 	EncryptLanSessionData                     bool `default:"true"`  // 加密局域网通信数据
@@ -89,11 +90,10 @@ type configSt struct {
 		AoLogDirCheckCronExp string `default:"0 0 4 * *"`  // 所有程序日志目录定时检测的 cron 表达式. 比如 0 0 4 * * 表示每天 4时 0分 0秒执行一次逻辑。
 		Path                 string `default:"/opt/logs/system-agent/"`
 		Filename             string `default:"system-agent"`
-		MaxAge               uint32 `default:"7"`    // 文件最多保留多少天后被覆盖.
-		RotationSize         int64  `default:"10"`   // 多少MBytes生成新文件.
-		RotationCount        uint32 `default:"20"`   // 多少个文件之后覆盖最早的文件.
-		Level                uint32 `default:"6"`    // InfoLevel=4, DebugLevel=5, logrus.TraceLevel=6 . 暂时没用到.
-		LevelString          string `default:"info"` // 默认info.  debug, info, warn, error, dpanic, panic, fatal
+		MaxAge               uint32 `default:"7"`  // 文件最多保留多少天后被覆盖.
+		RotationSize         int64  `default:"10"` // 多少MBytes生成新文件.
+		RotationCount        uint32 `default:"20"` // 多少个文件之后覆盖最早的文件.
+		Level                uint32 `default:"6"`  // InfoLevel=4, DebugLevel=5, logrus.TraceLevel=6 . 暂时没用到.
 	}
 
 	EnableKeyboard bool `default:"false"`
@@ -196,8 +196,9 @@ type configSt struct {
 		}
 
 		RunInDocker struct {
-			AoSpaceDataDirEnv string `default:"AOSPACE_DATADIR"`  // 数据存储目录
-			RunNetworkModeEnv string `default:"RUN_NETWORK_MODE"` // docker-compose 中的 nginx 网络配置键名称
+			AoSpaceDataDirEnv          string `default:"AOSPACE_DATADIR"`  // 数据存储目录
+			RunNetworkModeEnv          string `default:"RUN_NETWORK_MODE"` // docker-compose 中的 nginx 网络配置键名称
+			AoSpaceSingleDockerModeEnv string `default:"AOSPACE_SINGLE_DOCKER_MODE"`
 		}
 
 		Cert struct {
@@ -411,9 +412,7 @@ type configSt struct {
 		Password string `default:"mysecretpassword"`
 		DBIndex  int    `default:"0"`
 	}
-}
-
-var Config configSt
+}{}
 
 var ConfFile = "/etc/ao-space/system-agent.yml"   // 默认配置文件
 var ConfFileCustom1 = "/opt/tmp/system-agent.yml" // 用户自定义配置文件
@@ -439,8 +438,6 @@ func init() {
 		AutoReloadInterval: time.Second * 15,
 		AutoReloadCallback: func(config interface{}) {
 			// fmt.Printf("config file changed:\n%+v\n", config)
-			cfg := config.(*configSt)
-			logger.SetLevel(cfg.Log.LevelString)
 		}}).Load(&Config, ConfFileCustom1, *flagConfFile)
 
 	Config.Version = v
@@ -502,35 +499,41 @@ func modifyConfigWhenRunInDocker() {
 		// fmt.Printf("Config.Box.SnNumberStoreFile: %v \n", Config.Box.SnNumberStoreFile)
 
 		// 调用地址修改
-		// aospace-all-in-one
-		Config.EnvDefaultVal.SYSTEM_AGENT_URL_DEVICE_INFO = "http://aospace-all-in-one:5680/agent/v1/api/device/info"
-		Config.EnvDefaultVal.SYSTEM_AGENT_URL_BASE = "http://aospace-all-in-one:5680/agent/v1/api"
-		// DockerLocalListenAddr
-		Config.Web.DockerLocalListenAddr = "aospace-all-in-one:5680"
-		addr := []*string{&Config.AliveChecker.GateWay.UrlGateway,
-			&Config.GateWay.Revoke.Url,
-			&Config.GateWay.APIRoot.Url,
-			&Config.Account.User.Url,
-			&Config.Account.Member.Url,
-			&Config.Account.AdminCreate.Url,
-			&Config.Account.SpaceAdmin.Url,
-			&Config.Account.NetworkChannelInfo.Url,
-			&Config.Account.NetworkChannelWan.Url,
-			&Config.Account.AdminSetPassword.Url,
-			&Config.Account.AdminPasswordCheck.Url,
-			&Config.Account.AdminRevoke.Url,
-			&Config.Account.AdminInitial.Url,
-			&Config.Account.Migrate.Url,
-			&Config.Redis.Addr,
-			&Config.GateWay.SwitchPlatform.Url}
-		for _, v := range addr {
-			*v = strings.ReplaceAll(*v, "localhost:8080", "aospace-gateway:8080")
-			*v = strings.ReplaceAll(*v, "127.0.0.1:6379", "aospace-redis:6379")
+		if !strings.EqualFold(os.Getenv(Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") {
+			// aospace-all-in-one
+			Config.EnvDefaultVal.SYSTEM_AGENT_URL_DEVICE_INFO = "http://aospace-all-in-one:5680/agent/v1/api/device/info"
+			Config.EnvDefaultVal.SYSTEM_AGENT_URL_BASE = "http://aospace-all-in-one:5680/agent/v1/api"
+			// DockerLocalListenAddr
+			Config.Web.DockerLocalListenAddr = "aospace-all-in-one:5680"
+			addr := []*string{&Config.AliveChecker.GateWay.UrlGateway,
+				&Config.GateWay.Revoke.Url,
+				&Config.GateWay.APIRoot.Url,
+				&Config.Account.User.Url,
+				&Config.Account.Member.Url,
+				&Config.Account.AdminCreate.Url,
+				&Config.Account.SpaceAdmin.Url,
+				&Config.Account.NetworkChannelInfo.Url,
+				&Config.Account.NetworkChannelWan.Url,
+				&Config.Account.AdminSetPassword.Url,
+				&Config.Account.AdminPasswordCheck.Url,
+				&Config.Account.AdminRevoke.Url,
+				&Config.Account.AdminInitial.Url,
+				&Config.Account.Migrate.Url,
+				&Config.Redis.Addr,
+				&Config.GateWay.SwitchPlatform.Url}
+			for _, v := range addr {
+				*v = strings.ReplaceAll(*v, "localhost:8080", "aospace-gateway:8080")
+				*v = strings.ReplaceAll(*v, "127.0.0.1:6379", "aospace-redis:6379")
+			}
+			Config.GateWay.LanPort = 12841
+			Config.GateWay.TlsLanPort = 18569
+		} else {
+			Config.EnvDefaultVal.SYSTEM_AGENT_URL_DEVICE_INFO = "http://localhost:5680/agent/v1/api/device/info"
+			Config.EnvDefaultVal.SYSTEM_AGENT_URL_BASE = "http://localhost:5680/agent/v1/api"
+			Config.Web.DockerLocalListenAddr = "localhost:5680"
+			Config.GateWay.LanPort = 80
+			Config.GateWay.TlsLanPort = 443
 		}
-
-		// All
-		Config.GateWay.LanPort = 12841
-		Config.GateWay.TlsLanPort = 18569
 
 	}
 	// fmt.Printf("######################## Config.Log.Path:%v\n",

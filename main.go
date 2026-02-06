@@ -26,6 +26,7 @@ import (
 	"agent/biz/disk_space_monitor/log_dir_monitor"
 	"agent/biz/docker"
 	"agent/config"
+	"strings"
 
 	"agent/biz/model/clientinfo"
 	"agent/biz/model/device"
@@ -50,13 +51,16 @@ func main() {
 		int(config.Config.Log.RotationCount),
 		int(config.Config.Log.MaxAge), false)
 	logger.PrecreateAllLoggers()
-	logger.SetLevel(config.Config.Log.LevelString)
 
 	config.Version = Version
 	config.VersionNumber = VersionNumber
 
 	logger.AppLogger().Infof("================[%v Started] [system-agent version:%v]================",
 		os.Args[0], config.Version+"-"+config.VersionNumber)
+
+	fmt.Printf("AoLogDirBase:%+v\n", config.Config.Log.AoLogDirBase)
+	fmt.Printf("singleDockerModeEnv:%+v\n", os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv))
+
 	if err := AgentCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -64,18 +68,28 @@ func main() {
 	device.InitDeviceInfo()
 	device.InitDeviceKey()
 	clientinfo.InitClientInfo()
-	go platform.InitPlatformAbility()
-	serviceswithplatform.RetryUnfinishedStatus()
-	upgrade.CronForUpgrade()
+
+	if !strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") && config.Config.PlatformEnabled {
+		go platform.InitPlatformAbility()
+		serviceswithplatform.RetryUnfinishedStatus()
+		upgrade.CronForUpgrade()
+	}
+
 	// 启动 web/http api 服务
 	web.Start()
 
 	// 启动 docker 微服务创建或启动
-	docker.Start()
+	if strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") {
+		docker.MigrateFileStorageData()
+	} else {
+		docker.Start()
+	}
 	alivechecker.Start()
 
 	// 检测是否需要发送升级推送
-	go upgrade.CheckUpgradeSucc()
+	if !strings.EqualFold(os.Getenv(config.Config.Box.RunInDocker.AoSpaceSingleDockerModeEnv), "true") && config.Config.PlatformEnabled {
+		go upgrade.CheckUpgradeSucc()
+	}
 
 	// 日志目录监控
 	log_dir_monitor.Start()

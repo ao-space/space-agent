@@ -145,6 +145,11 @@ docker restart aospace-all-in-one
 
 在电脑浏览器访问地址 `http://192.168.124.11:5678/swagger/index.html` 打开 swagger 界面，其中的 ip 地址是你盒子的局域网地址。
 
+## 文档
+
+- 项目概览：`docs/PROJECT_OVERVIEW.md` | `docs/PROJECT_OVERVIEW_EN.md`
+- 平台依赖分析：`docs/PLATFORM_DEPENDENCIES_CN.md` | `docs/PLATFORM_DEPENDENCIES.md`
+
 ## 贡献指南
 
 我们非常欢迎对本项目进行贡献。以下是一些指导原则和建议，希望能够帮助您参与到项目中来。

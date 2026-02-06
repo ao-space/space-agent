@@ -28,7 +28,6 @@ import (
 	"agent/biz/model/dto"
 	"agent/biz/model/dto/status"
 	"agent/config"
-	"agent/utils/deviceid"
 	"fmt"
 	"net/http"
 
@@ -85,12 +84,6 @@ func Info(c *gin.Context) {
 			return
 		}
 		result.QrCode = device.GetQrCode()
-
-		snNumber, err := deviceid.GetSnNumber(config.Config.Box.SnNumberStoreFile)
-		result.TryoutCodeVerified = false
-		if err == nil && len(snNumber) > 0 {
-			result.TryoutCodeVerified = true
-		}
 	}
 
 	c.IndentedJSON(http.StatusOK, dto.BaseRspStr{Code: dto.AgentCodeOkStr,
