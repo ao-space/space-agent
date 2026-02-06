@@ -19,6 +19,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -97,6 +98,10 @@ func TestJWT(t *testing.T) {
 }
 
 func TestJWTCustom(t *testing.T) {
+	if os.Getenv("ENABLE_SECURITY_CHIP_TESTS") != "1" {
+		// TODO: Add a mock signer to run this test without a security-chip service.
+		t.Skip("ENABLE_SECURITY_CHIP_TESTS is not set")
+	}
 	expiredAt := time.Now().Add(24 * time.Hour * 365 * 3)
 
 	boxUuid := random.GenUUID()

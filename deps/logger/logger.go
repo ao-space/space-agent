@@ -15,6 +15,10 @@
 package logger
 
 import (
+	"os"
+	"path/filepath"
+	"strings"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -57,6 +61,39 @@ var mDefaultLoggerPath string
 func init() {
 	mLogger = make(map[string]*zap.SugaredLogger)
 	mDefaultLoggerPath = "./"
+	mDefaultLoggerPath = initDefaultLoggerPath()
+}
+
+func initDefaultLoggerPath() string {
+	if envPath := os.Getenv("AOSPACE_LOG_DIR"); envPath != "" {
+		return ensureTrailingSlash(envPath)
+	}
+	if isTestProcess() {
+		return ensureTrailingSlash(filepath.Join(os.TempDir(), "aospace-agent-test"))
+	}
+	return "./"
+}
+
+func isTestProcess() bool {
+	for _, arg := range os.Args {
+		if strings.HasPrefix(arg, "-test.") || strings.HasPrefix(arg, "-test=") {
+			return true
+		}
+	}
+	if len(os.Args) > 0 && strings.HasSuffix(os.Args[0], ".test") {
+		return true
+	}
+	return false
+}
+
+func ensureTrailingSlash(p string) string {
+	if p == "" {
+		return p
+	}
+	if strings.HasSuffix(p, string(os.PathSeparator)) {
+		return p
+	}
+	return p + string(os.PathSeparator)
 }
 
 func SetDefaultLoggerPath(defaultLoggerPath string) {

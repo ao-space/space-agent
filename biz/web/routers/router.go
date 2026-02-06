@@ -82,8 +82,6 @@ func ExternalRouter() *gin.Engine {
 
 				pairapis := api.Group("/pair")
 				{
-					pairapis.POST("/tryout/code", pair.TryOutCode)
-					pairapis.POST("/init", pair.TryOutCode)
 					pairapis.GET("/net/localips", pairnet.LocalIps)
 					pairapis.GET("/net/netconfig", pairnet.NetConfig)
 					pairapis.GET("/init", pair.Init)

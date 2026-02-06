@@ -33,8 +33,8 @@ import (
 // @Tags Pair
 // @Accept  plain
 // @Produce  json
-// @Param   configReq      body dtoconfig.ConfigReq true  "config params"
-// @Success 200 {object} dto.BaseRspStr{results=dtoconfig.ConfigRsp} "code=AG-200 success;"
+// @Param   configReq      body ConfigReq true  "config params"
+// @Success 200 {object} dto.BaseRspStr{results=ConfigRsp} "code=AG-200 success;"
 // @Router /agent/v1/api/bind/internet/service/config [POST]
 func PostConfig(c *gin.Context) {
 	logger.AppLogger().Debugf("%+v", c.Request)
@@ -58,7 +58,7 @@ func PostConfig(c *gin.Context) {
 // @Accept  plain
 // @Produce  json
 // @Param   body query string true "clientUuid and aoid"
-// @Success 200 {object} dto.BaseRspStr{results=dtoconfig.GetConfigRsp} "code=AG-200 success;"
+// @Success 200 {object} dto.BaseRspStr{results=GetConfigRsp} "code=AG-200 success;"
 // @Router /agent/v1/api/bind/internet/service/config [GET]
 func GetConfig(c *gin.Context) {
 	logger.AppLogger().Debugf("%+v", c.Request)

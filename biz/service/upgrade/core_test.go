@@ -15,11 +15,20 @@
 package upgrade
 
 import (
+	"agent/config"
 	"fmt"
+	"os"
 	"testing"
 )
 
 func TestCheckLatestVersion(t *testing.T) {
+	if os.Getenv("ENABLE_PLATFORM_TESTS") != "1" {
+		// TODO: Add a platform API mock (or fixture server) so this test runs in CI without external dependency.
+		t.Skip("ENABLE_PLATFORM_TESTS is not set")
+	}
+	origEnabled := config.Config.PlatformEnabled
+	config.Config.PlatformEnabled = true
+	t.Cleanup(func() { config.Config.PlatformEnabled = origEnabled })
 	versionDesc, err := CheckLatestVersion()
 	if err != nil {
 		t.Fatalf("failed to get latest version")

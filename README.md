@@ -145,6 +145,11 @@ docker restart aospace-all-in-one
 Open the swagger interface by accessing the address `http://{your-host-ip}:5678/swagger/index.html` in your computer's browser,
 where the ip address is the LAN address of your box.
 
+## Documentation
+
+- Project Overview: `docs/PROJECT_OVERVIEW.md` | `docs/PROJECT_OVERVIEW_EN.md`
+- Platform Dependency Analysis: `docs/PLATFORM_DEPENDENCIES.md` | `docs/PLATFORM_DEPENDENCIES_CN.md`
+
 ## Contribution Guidelines
 
 Contributions to this project are very welcome. Here are some guidelines and suggestions to help you get involved in the project.

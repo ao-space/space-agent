@@ -146,6 +146,10 @@ func (svc *SpaceCreateService) Process() dto.BaseRspStr {
 
 func (svc *SpaceCreateService) registerDevice(req *create.CreateReq) (*dto.BaseRspStr, error) {
 	logger.AppLogger().Debugf("registerDevice, req:%+v ", req)
+	if req.EnableInternetAccess && !config.Config.PlatformEnabled {
+		err := fmt.Errorf("platform disabled")
+		return &dto.BaseRspStr{Code: dto.AgentCodeUnsupportedFunction, Message: err.Error()}, err
+	}
 
 	// 调用平台注册盒子接口
 	err := pair.ServiceRegisterBox()

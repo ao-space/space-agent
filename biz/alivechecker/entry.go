@@ -41,6 +41,11 @@ var tickerDockerAliveChecker *time.Ticker
 var tickerNetworkChecker *time.Ticker
 var checkers []AliveChecker
 var tickCnt int64
+// allow overriding in tests
+var pingFn = Ping
+var curlFn = Curl
+var curlHeaderFn = CurlHttpHeader
+var getAdminDomainFn = clientinfo.GetAdminDomain
 
 func Start() {
 	StartTestNetwork()
@@ -150,7 +155,9 @@ func StartTestNetwork() {
 			totalTry = 2
 		}
 		for i := 0; i < totalTry; i++ {
-			TestCloudHost()
+			if config.Config.PlatformEnabled {
+				TestCloudHost()
+			}
 			time.Sleep(time.Second * 3)
 		}
 
@@ -161,19 +168,24 @@ func StartTestNetwork() {
 func TestNetwork() {
 	result := &model.NetworkTestResult{}
 
-	ok, _ := Ping(config.Config.NetworkCheck.CloudHost.Url)
-	result.PingCloudHost = ok
-	Ping(config.Config.NetworkCheck.ThirdPartyHost.Url)
+	var ok bool
+	if config.Config.PlatformEnabled {
+		ok, _ = pingFn(config.Config.NetworkCheck.CloudHost.Url)
+		result.PingCloudHost = ok
+	}
+	ok, _ = pingFn(config.Config.NetworkCheck.ThirdPartyHost.Url)
 	result.PingThirdPartyHost = ok
-	Ping(config.Config.NetworkCheck.CloudIpv4.Url)
-	result.PingCloudIpv4 = ok
-	Curl(config.Config.NetworkCheck.CloudStatusHost.Url)
-	result.CurlCloudStatusHost = ok
-	CurlHttpHeader(config.Config.NetworkCheck.CloudStatusIpv4.Url)
-	result.CurlHttpHeaderCloudStatusIpv4 = ok
-	domain := clientinfo.GetAdminDomain()
+	if config.Config.PlatformEnabled {
+		ok, _ = pingFn(config.Config.NetworkCheck.CloudIpv4.Url)
+		result.PingCloudIpv4 = ok
+		ok, _ = curlFn(config.Config.NetworkCheck.CloudStatusHost.Url)
+		result.CurlCloudStatusHost = ok
+		ok, _ = curlHeaderFn(config.Config.NetworkCheck.CloudStatusIpv4.Url)
+		result.CurlHttpHeaderCloudStatusIpv4 = ok
+	}
+	domain := getAdminDomainFn()
 	if len(domain) > 0 {
-		Curl(path.Join(domain, config.Config.NetworkCheck.BoxStatusPath.Url))
+		curlFn(path.Join(domain, config.Config.NetworkCheck.BoxStatusPath.Url))
 	}
 
 	model.Refresh(result)

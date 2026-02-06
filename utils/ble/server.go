@@ -20,8 +20,6 @@
  * @LastEditTime: 2021-11-22 11:22:55
  * @Description:
  */
-// +build
-
 package ble
 
 import (
